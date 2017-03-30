@@ -7,8 +7,29 @@
         <description><![CDATA[Writing Haskell and the regex package.]]></description>
         <atom:link href="http://blog.regex.uk/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 28 Mar 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 29 Mar 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>regex-0.11.0.0</title>
+    <link>http://blog.regex.uk/posts/2017-03-29-update.html</link>
+    <description><![CDATA[<p>0.11.0.0 is out with another (and final) round of API simplification.</p>
+<ul>
+<li>Simplify API (<a href="https://github.com/iconnect/regex/issues/97">#97</a>)</li>
+<li>Rename Location to RELocation (<a href="https://github.com/iconnect/regex/issues/98">#98</a>)</li>
+<li>Rename the MacrosDescriptor Fields (<a href="https://github.com/iconnect/regex/issues/99">#99</a>)</li>
+</ul>
+<p>The main change is the first, which aims to make life easier for the developer that loads up the <a href="http://hs.regex.uk">Hackage contents page</a> for the first time.</p>
+<ul>
+<li><p>The <code>Internal</code> folder has been renamed to <code>ZeInternals</code> to drop it down to the bottom of the Hackage contents page. the incoming developer should just this interior stuff as it is not part of the official API, and it is dropped to the bottom accordingly.</p></li>
+<li><p><code>Text.RE.TDFA.RE</code> and <code>Text.RE.PCRE.RE</code> have been moved under <code>ZeInternals</code> as <code>TDFA</code> and <code>PCRE</code>, rspectively — an obvious move in retrospect! Now the <code>Text.RE.TDFA</code> and <code>Text.RE.PCRE</code> trees are just variants of the one module (Text.RE.TDFA.ByteString.Lazy), varied according the RE flavour and the type of the text you want to match. (Again, this was in response to feedback.)</p></li>
+<li><p>The <code>Text.RE.Types.*</code> modules have been banished under <code>ZeInternals</code>.</p></li>
+<li><p><code>Text.RE.IsRegex</code>, <code>Text.RE.ReOptions</code> and <code>Text.RE.Replace</code> have been established as the API modules for the <code>IsRegex</code> class, the RE options and the general replace API. Some of the <code>Replace</code> module does not belong io the API and is providing internal interfaces so <code>Text.RE.Replace</code> just re-exports from <code>Text.RE.ZEInternals.Replace</code>.</p></li>
+</ul>
+<p>Share and Enjoy!</p>]]></description>
+    <pubDate>Wed, 29 Mar 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.regex.uk/posts/2017-03-29-update.html</guid>
+    <dc:creator>Chris Dornan</dc:creator>
+</item>
+<item>
     <title>regex-0.10.0.3</title>
     <link>http://blog.regex.uk/posts/2017-03-28-update.html</link>
     <description><![CDATA[<p>The preparation for regex-1.0.0.0 is almost complete.</p>
