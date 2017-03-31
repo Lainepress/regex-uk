@@ -88,6 +88,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Control.Exception</span>
 <span class="kw">import           </span><span class="dt">Control.Monad</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span>
+<span class="kw">import           </span><span class="dt">Data.Char</span>
 <span class="kw">import qualified</span> <span class="dt">Data.HashMap.Lazy</span>                        <span class="kw">as</span> <span class="dt">HML</span>
 <span class="kw">import           </span><span class="dt">Data.Functor.Identity</span>
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
@@ -97,6 +98,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
 <span class="kw">import qualified</span> <span class="dt">Shelly</span>                                   <span class="kw">as</span> <span class="dt">SH</span>
 <span class="kw">import           </span><span class="dt">System.Directory</span>
+<span class="kw">import           </span><span class="dt">System.FilePath</span>
 <span class="kw">import           </span><span class="dt">System.Environment</span>
 <span class="kw">import           </span><span class="dt">System.Exit</span>
 <span class="kw">import           </span><span class="dt">System.IO</span>
@@ -137,7 +139,7 @@ main <span class="fu">=</span> <span class="kw">do</span>
         , prg <span class="st">&quot; --regex&quot;</span>
         , prg <span class="st">&quot; --regex &lt;macro-id&gt;&quot;</span>
         , prg <span class="st">&quot;[--test]&quot;</span>
-        , prg <span class="st">&quot;(-|&lt;in-file&gt;) [-|&lt;out-fileß&gt;]&quot;</span>
+        , prg <span class="st">&quot;(-|&lt;in-file&gt;) [-|&lt;out-file&gt;]&quot;</span>
         ]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">
 <span class="fu">--</span>
@@ -146,20 +148,26 @@ main <span class="fu">=</span> <span class="kw">do</span>
 
 <span class="ot">test ::</span> <span class="dt">IO</span> ()
 test <span class="fu">=</span> <span class="kw">do</span>
-  putStrLn <span class="st">&quot;============================================================&quot;</span>
-  putStrLn <span class="st">&quot;Testing the macro environment.&quot;</span>
-  putStrLn <span class="st">&quot;nginx-log-processor&quot;</span>
-  dumpMacroTable        <span class="st">&quot;nginx-log-processor&quot;</span> regexType lp_env
-  me_ok <span class="ot">&lt;-</span> testMacroEnv <span class="st">&quot;nginx-log-processor&quot;</span> regexType lp_env
-  putStrLn <span class="st">&quot;============================================================&quot;</span>
-  putStrLn <span class="st">&quot;Testing the log processor on reference data.&quot;</span>
-  putStrLn <span class="st">&quot;&quot;</span>
-  lp_ok <span class="ot">&lt;-</span> test_log_processor
-  putStrLn <span class="st">&quot;============================================================&quot;</span>
-  <span class="kw">case</span> me_ok <span class="fu">&amp;&amp;</span> lp_ok <span class="kw">of</span>
-    <span class="dt">True</span>  <span class="ot">-&gt;</span> return ()
-    <span class="dt">False</span> <span class="ot">-&gt;</span> exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span>
+    putStrLn <span class="st">&quot;============================================================&quot;</span>
+    putStrLn <span class="st">&quot;Testing the macro environment.&quot;</span>
+    putStrLn <span class="st">&quot;nginx-log-processor&quot;</span>
+    is_docs <span class="ot">&lt;-</span> doesDirectoryExist <span class="st">&quot;docs&quot;</span>
+    when is_docs <span class="fu">$</span>
+      dumpMacroTable  (fp <span class="st">&quot;docs&quot;</span> <span class="st">&quot;.txt&quot;</span>) (fp <span class="st">&quot;docs&quot;</span> <span class="st">&quot;-src.txt&quot;</span>) regexType lp_env
+    dumpMacroTable    (fp <span class="st">&quot;data&quot;</span> <span class="st">&quot;.txt&quot;</span>) (fp <span class="st">&quot;data&quot;</span> <span class="st">&quot;-src.txt&quot;</span>) regexType lp_env
+    me_ok <span class="ot">&lt;-</span> testMacroEnv <span class="st">&quot;nginx-log-processor&quot;</span> regexType lp_env
+    putStrLn <span class="st">&quot;============================================================&quot;</span>
+    putStrLn <span class="st">&quot;Testing the log processor on reference data.&quot;</span>
+    putStrLn <span class="st">&quot;&quot;</span>
+    lp_ok <span class="ot">&lt;-</span> test_log_processor
+    putStrLn <span class="st">&quot;============================================================&quot;</span>
+    <span class="kw">case</span> me_ok <span class="fu">&amp;&amp;</span> lp_ok <span class="kw">of</span>
+      <span class="dt">True</span>  <span class="ot">-&gt;</span> return ()
+      <span class="dt">False</span> <span class="ot">-&gt;</span> exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span>
+  <span class="kw">where</span>
+    fp dir sfx <span class="fu">=</span> dir <span class="fu">&lt;/&gt;</span> (rty_s <span class="fu">++</span> <span class="st">&quot;-nginx-log-processor&quot;</span> <span class="fu">++</span> sfx)
 
+    rty_s      <span class="fu">=</span> map toLower <span class="fu">$</span> presentRegexType regexType
 
 <span class="ot">test_log_processor ::</span> <span class="dt">IO</span> <span class="dt">Bool</span>
 test_log_processor <span class="fu">=</span> <span class="kw">do</span>

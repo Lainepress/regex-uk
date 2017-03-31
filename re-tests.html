@@ -83,9 +83,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">module</span> <span class="dt">Main</span> (main) <span class="kw">where</span>
 
 <span class="kw">import           </span><span class="dt">Control.Exception</span>
+<span class="kw">import           </span><span class="dt">Control.Monad</span>
 <span class="kw">import           </span><span class="dt">Data.Array</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span>          <span class="kw">as</span> <span class="dt">B</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>     <span class="kw">as</span> <span class="dt">LBS</span>
+<span class="kw">import           </span><span class="dt">Data.Char</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Foldable</span>                  <span class="kw">as</span> <span class="dt">F</span>
 <span class="kw">import qualified</span> <span class="dt">Data.HashMap.Strict</span>            <span class="kw">as</span> <span class="dt">HM</span>
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
@@ -97,6 +99,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Data.Typeable</span>
 <span class="kw">import           </span><span class="dt">Language.Haskell.TH.Quote</span>
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
+<span class="kw">import           </span><span class="dt">System.Directory</span>
+<span class="kw">import           </span><span class="dt">System.FilePath</span>
 <span class="kw">import           </span><span class="dt">Test.SmallCheck.Series</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty.HUnit</span>
@@ -156,8 +160,15 @@ prelude_tests <span class="fu">=</span> testGroup <span class="st">&quot;Prelude
   <span class="kw">where</span>
     tc rty m_env <span class="fu">=</span>
       testCase (show rty) <span class="fu">$</span> <span class="kw">do</span>
-        dumpMacroTable <span class="st">&quot;macros&quot;</span> rty m_env
-        assertBool <span class="st">&quot;testMacroEnv&quot;</span> <span class="fu">=&lt;&lt;</span> testMacroEnv <span class="st">&quot;prelude&quot;</span> rty m_env</code></pre></div>
+        is_docs <span class="ot">&lt;-</span> doesDirectoryExist <span class="st">&quot;docs&quot;</span>
+        when is_docs <span class="fu">$</span>
+          dumpMacroTable (fp <span class="st">&quot;docs&quot;</span> <span class="st">&quot;.txt&quot;</span>) (fp <span class="st">&quot;docs&quot;</span> <span class="st">&quot;-src.txt&quot;</span>) rty m_env
+        dumpMacroTable   (fp <span class="st">&quot;data&quot;</span> <span class="st">&quot;.txt&quot;</span>) (fp <span class="st">&quot;data&quot;</span> <span class="st">&quot;-src.txt&quot;</span>) rty m_env
+        assertBool <span class="st">&quot;testMacroEnv&quot;</span> <span class="fu">=&lt;&lt;</span> testMacroEnv <span class="st">&quot;prelude&quot;</span> rty m_env
+      <span class="kw">where</span>
+        fp dir sfx <span class="fu">=</span> dir <span class="fu">&lt;/&gt;</span> (rty_s <span class="fu">++</span> <span class="st">&quot;-macros&quot;</span> <span class="fu">++</span> sfx)
+
+        rty_s      <span class="fu">=</span> map toLower <span class="fu">$</span> presentRegexType rty</code></pre></div>
 <h2 id="core-matchreplace-tests">Core Match/Replace Tests</h2>
 <h3>
 test vectors
