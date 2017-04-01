@@ -104,10 +104,7 @@ This pragma is a just technical pragma, combined with the <code>Prelude.Compat</
 For this tutorial we will use classic Haskell strings but any application dealing with bulk text will probably want to choose one of the other options.
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TDFA.String</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Capture</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Match</span></code></pre></div>
+<span class="kw">import           </span><span class="dt">Text.RE.TDFA.String</span></code></pre></div>
 <p>If you are predominantly matching against a single type in your module then you will probably find it more convenient to use the relevant module rather than than the more polymorphic opertors but it is really a matter of convenience.</p>
 We will also need access to a small selection of common libraries for our examples.
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Control.Applicative</span>
@@ -395,7 +392,7 @@ Each type of RE — TDFA and PCRE — has it own complile-time options and execu
 <span class="co">-- and its @CompOption@ and @ExecOption@ types (the compile-time and</span>
 <span class="co">-- execution time options, respectively); each back end will define an</span>
 <span class="co">-- @REOptions@ type that fills out these three type parameters with the</span>
-<span class="co">-- apropriate types</span>
+<span class="co">-- apropriate types (see, for example, &quot;Text.RE.ZeInternals.TDFA&quot;)</span>
 <span class="kw">data</span> <span class="dt">REOptions_</span> r c e <span class="fu">=</span>
   <span class="dt">REOptions</span>
     {<span class="ot"> optionsMacs ::</span> <span class="fu">!</span>(<span class="dt">Macros</span> r)    <span class="co">-- ^ the available TestBench RE macros</span>
@@ -570,15 +567,15 @@ gen_all <span class="fu">=</span> <span class="kw">do</span>
     pd <span class="st">&quot;re-prep&quot;</span>
     pd <span class="st">&quot;re-tests&quot;</span>
     pd <span class="st">&quot;TestKit&quot;</span>
-    pd <span class="st">&quot;RE/IsRegex&quot;</span>
     pd <span class="st">&quot;RE/REOptions&quot;</span>
     pd <span class="st">&quot;RE/Tools/Edit&quot;</span>
     pd <span class="st">&quot;RE/Tools/Grep&quot;</span>
-    pd <span class="st">&quot;RE/Tools/Lex&quot;</span>
     pd <span class="st">&quot;RE/Tools/Sed&quot;</span>
+    pd <span class="st">&quot;RE/ZeInternals/Lex&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/NamedCaptures&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Replace&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/TestBench&quot;</span>
+    pd <span class="st">&quot;RE/ZeInternals/Types/IsRegex&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Matches&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Match&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Capture&quot;</span>

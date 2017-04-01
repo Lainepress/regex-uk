@@ -102,6 +102,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">System.Directory</span>
 <span class="kw">import           </span><span class="dt">System.FilePath</span>
 <span class="kw">import           </span><span class="dt">Test.SmallCheck.Series</span>
+<span class="kw">import           </span><span class="dt">TestKit</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty.HUnit</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty.SmallCheck</span>          <span class="kw">as</span> <span class="dt">SC</span>
@@ -110,7 +111,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import qualified</span> <span class="dt">Text.Regex.TDFA</span>                <span class="kw">as</span> <span class="dt">TDFA_</span>
 <span class="kw">import           </span><span class="dt">Text.RE</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
-<span class="kw">import           </span><span class="dt">Text.RE.IsRegex</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE</span>                   <span class="kw">as</span> <span class="dt">PCRE</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA</span>                   <span class="kw">as</span> <span class="dt">TDFA</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
@@ -118,11 +118,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.AddCaptureNames</span>
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.NamedCaptures</span>
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.PreludeMacros</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.TestBench</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Capture</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Match</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Matches</span>
 <span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
 
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.String</span>            <span class="kw">as</span> <span class="dt">P_ST</span>

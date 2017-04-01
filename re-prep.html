@@ -96,13 +96,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">System.IO</span>
 <span class="kw">import           </span><span class="dt">TestKit</span>
 <span class="kw">import           </span><span class="dt">Text.Heredoc</span>
+<span class="kw">import           </span><span class="dt">Text.RE</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Tools.Grep</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA.ByteString.Lazy</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.Text</span>                        <span class="kw">as</span> <span class="dt">TT</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Capture</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Match</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Replace</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">main ::</span> <span class="dt">IO</span> ()
 main <span class="fu">=</span> <span class="kw">do</span>
@@ -204,15 +203,15 @@ gen_all <span class="fu">=</span> <span class="kw">do</span>
     pd <span class="st">&quot;re-prep&quot;</span>
     pd <span class="st">&quot;re-tests&quot;</span>
     pd <span class="st">&quot;TestKit&quot;</span>
-    pd <span class="st">&quot;RE/IsRegex&quot;</span>
     pd <span class="st">&quot;RE/REOptions&quot;</span>
     pd <span class="st">&quot;RE/Tools/Edit&quot;</span>
     pd <span class="st">&quot;RE/Tools/Grep&quot;</span>
-    pd <span class="st">&quot;RE/Tools/Lex&quot;</span>
     pd <span class="st">&quot;RE/Tools/Sed&quot;</span>
+    pd <span class="st">&quot;RE/ZeInternals/Lex&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/NamedCaptures&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Replace&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/TestBench&quot;</span>
+    pd <span class="st">&quot;RE/ZeInternals/Types/IsRegex&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Matches&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Match&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Capture&quot;</span>
