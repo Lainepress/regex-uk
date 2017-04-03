@@ -91,14 +91,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   , include
   , cmp
   , dumpMacroTable
+  , sortImports
+  , read_file
+  , write_file
   ) <span class="kw">where</span>
 
 <span class="kw">import           </span><span class="dt">Control.Applicative</span>
 <span class="kw">import           </span><span class="dt">Control.Exception</span>
 <span class="kw">import qualified</span> <span class="dt">Control.Monad</span>                            <span class="kw">as</span> <span class="dt">M</span>
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span>
+<span class="kw">import           </span><span class="dt">Data.List</span>
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span>
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
 <span class="kw">import qualified</span> <span class="dt">Shelly</span>                                   <span class="kw">as</span> <span class="dt">SH</span>
 <span class="kw">import           </span><span class="dt">System.Directory</span>
@@ -106,12 +110,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">System.Exit</span>
 <span class="kw">import           </span><span class="dt">System.IO</span>
 <span class="kw">import           </span><span class="dt">Text.Printf</span>
+<span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Tools.Grep</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Match</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Replace</span></code></pre></div>
+<span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span></code></pre></div>
 <h2 id="vrn-and-friends">Vrn and friends</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Vrn</span> <span class="fu">=</span> <span class="dt">Vrn</span> { _vrn_a, _vrn_b, _vrn_c, _<span class="ot">vrn_d ::</span> <span class="dt">Int</span> }
   <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>,<span class="dt">Ord</span>)
@@ -226,12 +229,28 @@ test_pp lab loop test_file gold_file <span class="fu">=</span> <span class="kw">
 <h2 id="simple-include-processor">simple include processor</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">include ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
 include <span class="fu">=</span> sed&#39; <span class="fu">$</span> <span class="dt">Select</span>
-    [ <span class="dt">Function</span> [re<span class="fu">|^%</span>include <span class="fu">$</span>{file}(<span class="fu">@</span>{<span class="fu">%</span>string})<span class="fu">$|</span>] <span class="dt">TOP</span>   incl
-    , <span class="dt">Function</span> [re<span class="fu">|^.*$|</span>]                           <span class="dt">TOP</span> <span class="fu">$</span> \_ _ _ _<span class="ot">-&gt;</span>return <span class="dt">Nothing</span>
+    [ <span class="dt">Function</span> [re<span class="fu">|^%</span>include <span class="fu">$</span>{file}(<span class="fu">@</span>{<span class="fu">%</span>string})<span class="fu">$|</span>]                              <span class="dt">TOP</span> incl
+    , <span class="dt">Function</span> [re<span class="fu">|^%</span>include <span class="fu">$</span>{file}(<span class="fu">@</span>{<span class="fu">%</span>string}) <span class="fu">*</span>exclude <span class="fu">*$</span>{rex}(<span class="fu">@</span>{<span class="fu">%</span>string})<span class="fu">$|</span>] <span class="dt">TOP</span> incl
+    , <span class="dt">Function</span> [re<span class="fu">|^.*$|</span>]                                                        <span class="dt">TOP</span> nop
     ]
   <span class="kw">where</span>
-    incl _ mtch _ _ <span class="fu">=</span> <span class="dt">Just</span> <span class="fu">&lt;$&gt;</span> LBS.readFile (prs_s <span class="fu">$</span> mtch <span class="fu">!$$</span> [cp<span class="fu">|</span>file<span class="fu">|</span>])
-    prs_s           <span class="fu">=</span> maybe (error <span class="st">&quot;include&quot;</span>) T.unpack <span class="fu">.</span> parseString</code></pre></div>
+    incl _ mtch _ _ <span class="fu">=</span> include&#39; mtch
+    nop  _ _    _ _ <span class="fu">=</span> return <span class="dt">Nothing</span>
+
+<span class="ot">include&#39; ::</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)
+include&#39; mtch <span class="fu">=</span> <span class="kw">do</span>
+    ftr <span class="ot">&lt;-</span> <span class="kw">case</span> prs_s <span class="fu">&lt;$&gt;</span> mtch <span class="fu">!$$?</span> [cp<span class="fu">|</span>rex<span class="fu">|</span>] <span class="kw">of</span>
+      <span class="dt">Nothing</span>     <span class="ot">-&gt;</span> return id
+      <span class="dt">Just</span> re_lbs <span class="ot">-&gt;</span> excl <span class="fu">&lt;$&gt;</span> makeRegex re_lbs
+    <span class="dt">Just</span> <span class="fu">.</span> ftr <span class="fu">&lt;$&gt;</span> LBS.readFile (prs_s <span class="fu">$</span> mtch <span class="fu">!$$</span> [cp<span class="fu">|</span>file<span class="fu">|</span>])
+  <span class="kw">where</span>
+<span class="ot">    excl ::</span> <span class="dt">RE</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
+    excl rex <span class="fu">=</span>
+        LBS.unlines <span class="fu">.</span> map (matchesSource <span class="fu">.</span> getLineMatches)
+          <span class="fu">.</span> filter (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches)
+          <span class="fu">.</span> grepFilter rex
+
+    prs_s  <span class="fu">=</span> maybe (error <span class="st">&quot;include&#39;&quot;</span>) T.unpack <span class="fu">.</span> parseString</code></pre></div>
 <h2 id="cmp">cmp</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">cmp ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Bool</span>
 cmp src dst <span class="fu">=</span> handle hdl <span class="fu">$</span> <span class="kw">do</span>
@@ -254,6 +273,33 @@ cmp src dst <span class="fu">=</span> handle hdl <span class="fu">$</span> <span
 dumpMacroTable fp_t fp_s rty m_env <span class="fu">=</span> <span class="kw">do</span>
   writeFile fp_t <span class="fu">$</span> formatMacroTable   rty              m_env
   writeFile fp_s <span class="fu">$</span> formatMacroSources rty <span class="dt">ExclCaptures</span> m_env</code></pre></div>
+<h2 id="sortimports">sortImports</h2>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">sortImports ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
+sortImports lbs <span class="fu">=</span>
+    LBS.unlines <span class="fu">$</span> map (matchesSource <span class="fu">.</span> getLineMatches) <span class="fu">$</span>
+      hdr <span class="fu">++</span> sortBy cMp bdy
+  <span class="kw">where</span>
+    cMp ln1 ln2 <span class="fu">=</span> <span class="kw">case</span> (extr ln1,extr ln2) <span class="kw">of</span>
+        (<span class="dt">Nothing</span>,<span class="dt">Nothing</span>) <span class="ot">-&gt;</span> <span class="dt">EQ</span>
+        (<span class="dt">Nothing</span>,<span class="dt">Just</span> _ ) <span class="ot">-&gt;</span> <span class="dt">GT</span>
+        (<span class="dt">Just</span> _ ,<span class="dt">Nothing</span>) <span class="ot">-&gt;</span> <span class="dt">LT</span>
+        (<span class="dt">Just</span> x ,<span class="dt">Just</span>  y) <span class="ot">-&gt;</span> compare x y
+
+    extr <span class="dt">Line</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">case</span> allMatches getLineMatches <span class="kw">of</span>
+      mtch<span class="fu">:</span>_  <span class="ot">-&gt;</span> mtch <span class="fu">!$$?</span> [cp<span class="fu">|</span>mod<span class="fu">|</span>]
+      _       <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
+
+    (hdr,bdy) <span class="fu">=</span> span (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches) lns
+    lns       <span class="fu">=</span> grepFilter rex lbs
+    rex        <span class="fu">=</span> [re<span class="fu">|^</span><span class="kw">import </span>+(<span class="kw">qualified</span>)? +${mod}([^ ].*)$|]</code></pre></div>
+<h2 id="read_file-and-write_file">read_file and write_file</h2>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">read_file ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
+read_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.getContents
+read_file fp  <span class="fu">=</span> LBS.readFile fp
+
+<span class="ot">write_file ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span><span class="dt">IO</span> ()
+write_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.putStr
+write_file fp  <span class="fu">=</span> LBS.writeFile fp</code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

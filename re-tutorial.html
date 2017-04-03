@@ -102,18 +102,23 @@ This pragma is a just technical pragma, combined with the <code>Prelude.Compat</
 </ul></li>
 </ul>
 For this tutorial we will use classic Haskell strings but any application dealing with bulk text will probably want to choose one of the other options.
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Control.Applicative</span>
+<span class="kw">import           </span><span class="dt">Data.Maybe</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Text</span>                      <span class="kw">as</span> <span class="dt">T</span>
+<span class="kw">import           </span><span class="dt">Prelude.Compat</span>
+<span class="kw">import           </span><span class="dt">TestKit</span>
+<span class="kw">import           </span><span class="dt">Text.Printf</span>
+<span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA.String</span></code></pre></div>
 <p>If you are predominantly matching against a single type in your module then you will probably find it more convenient to use the relevant module rather than than the more polymorphic opertors but it is really a matter of convenience.</p>
 We will also need access to a small selection of common libraries for our examples.
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Control.Applicative</span>
-<span class="kw">import           </span><span class="dt">Data.Maybe</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text</span>                      <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import           </span><span class="dt">Text.Printf</span></code></pre></div>
-And finally we a special edition of the prelude (see the commentary for the pragma section above) and a small specail toolkit will be used to help manage the example calculations.
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Prelude.Compat</span>
-<span class="kw">import           </span><span class="dt">TestKit</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">\end{code}
+
+<span class="dt">And</span> finally we a special edition <span class="kw">of</span> the prelude (see the commentary for
+the pragma section above) and a small specail toolkit will be used to help
+manage the example calculations<span class="fu">.</span>
+\begin{code}</code></pre></div>
 This allows simple calculations to be defined stylistically in the source program, presented as calculations when rendered in HTML and tested that they have the expected result.
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> length []
 <span class="dv">0</span></code></pre></div>
@@ -571,34 +576,29 @@ gen_all <span class="fu">=</span> <span class="kw">do</span>
     pd <span class="st">&quot;RE/Tools/Edit&quot;</span>
     pd <span class="st">&quot;RE/Tools/Grep&quot;</span>
     pd <span class="st">&quot;RE/Tools/Sed&quot;</span>
-    pd <span class="st">&quot;RE/ZeInternals/Lex&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/NamedCaptures&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Replace&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/TestBench&quot;</span>
+    pd <span class="st">&quot;RE/ZeInternals/Tools/Lex&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/IsRegex&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Matches&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Match&quot;</span>
     pd <span class="st">&quot;RE/ZeInternals/Types/Capture&quot;</span>
     <span class="co">-- render the tutorial in HTML</span>
-    prep_tut <span class="dt">Doc</span> <span class="st">&quot;examples/re-tutorial-master.lhs&quot;</span> <span class="st">&quot;tmp/re-tutorial.lhs&quot;</span>
     createDirectoryIfMissing <span class="dt">False</span> <span class="st">&quot;tmp&quot;</span>
-    pandoc_lhs&#39;
-      <span class="st">&quot;re-tutorial.lhs&quot;</span>
-      <span class="st">&quot;examples/re-tutorial.lhs&quot;</span>
-      <span class="st">&quot;tmp/re-tutorial.lhs&quot;</span>
-      <span class="st">&quot;docs/re-tutorial.html&quot;</span>
-    <span class="co">-- generate the tutorial-based tests</span>
-    gm <span class="ot">&lt;-</span> genMode
-    prep_tut gm <span class="st">&quot;examples/re-tutorial-master.lhs&quot;</span> <span class="st">&quot;examples/re-tutorial.lhs&quot;</span>
-    putStrLn <span class="st">&quot;&gt;&gt; examples/re-tutorial.lhs&quot;</span>
+    gen_tutorial <span class="st">&quot;tutorial&quot;</span>
+    gen_tutorial <span class="st">&quot;tutorial-options&quot;</span>
+    gen_tutorial <span class="st">&quot;tutorial-replacing&quot;</span>
+    gen_tutorial <span class="st">&quot;tutorial-testbench&quot;</span>
+    gen_tutorial <span class="st">&quot;tutorial-tools&quot;</span>
     pages
   <span class="kw">where</span>
     pd fnm <span class="fu">=</span> <span class="kw">case</span> (mtch <span class="fu">!$$?</span> [cp<span class="fu">|</span>fdr<span class="fu">|</span>],mtch <span class="fu">!$$?</span> [cp<span class="fu">|</span>mnm<span class="fu">|</span>]) <span class="kw">of</span>
-        (<span class="dt">Nothing</span> ,<span class="dt">Just</span> mnm) <span class="ot">-&gt;</span> pandoc_lhs (<span class="st">&quot;Text.RE.&quot;</span>          <span class="fu">&lt;&gt;</span>mnm) (<span class="st">&quot;Text/&quot;</span>    <span class="fu">&lt;&gt;</span>fnm<span class="fu">&lt;&gt;</span><span class="st">&quot;.lhs&quot;</span>) (<span class="st">&quot;docs/&quot;</span><span class="fu">&lt;&gt;</span>mnm<span class="fu">&lt;&gt;</span><span class="st">&quot;.html&quot;</span>)
-        (<span class="dt">Just</span> fdr,<span class="dt">Just</span> mnm) <span class="ot">-&gt;</span> pandoc_lhs (<span class="st">&quot;Text.RE.&quot;</span><span class="fu">&lt;&gt;</span>fdr<span class="fu">&lt;&gt;</span><span class="st">&quot;.&quot;</span><span class="fu">&lt;&gt;</span>mnm) (<span class="st">&quot;Text/&quot;</span>    <span class="fu">&lt;&gt;</span>fnm<span class="fu">&lt;&gt;</span><span class="st">&quot;.lhs&quot;</span>) (<span class="st">&quot;docs/&quot;</span><span class="fu">&lt;&gt;</span>mnm<span class="fu">&lt;&gt;</span><span class="st">&quot;.html&quot;</span>)
-        _                   <span class="ot">-&gt;</span> pandoc_lhs (<span class="st">&quot;examples/&quot;</span><span class="fu">&lt;&gt;</span>fnm<span class="fu">&lt;&gt;</span><span class="st">&quot;.lhs&quot;</span> ) (<span class="st">&quot;examples/&quot;</span><span class="fu">&lt;&gt;</span>fnm<span class="fu">&lt;&gt;</span><span class="st">&quot;.lhs&quot;</span>) (<span class="st">&quot;docs/&quot;</span><span class="fu">&lt;&gt;</span>fnm<span class="fu">&lt;&gt;</span><span class="st">&quot;.html&quot;</span>)
+        (<span class="dt">Nothing</span> ,<span class="dt">Just</span> mnm) <span class="ot">-&gt;</span> pandoc_lhs (<span class="st">&quot;Text.RE.&quot;</span>          <span class="fu">++</span>mnm) (<span class="st">&quot;Text/&quot;</span>    <span class="fu">++</span>fnm<span class="fu">++</span><span class="st">&quot;.lhs&quot;</span>) (<span class="st">&quot;docs/&quot;</span><span class="fu">++</span>mnm<span class="fu">++</span><span class="st">&quot;.html&quot;</span>)
+        (<span class="dt">Just</span> fdr,<span class="dt">Just</span> mnm) <span class="ot">-&gt;</span> pandoc_lhs (<span class="st">&quot;Text.RE.&quot;</span><span class="fu">++</span>fdr<span class="fu">++</span><span class="st">&quot;.&quot;</span><span class="fu">++</span>mnm) (<span class="st">&quot;Text/&quot;</span>    <span class="fu">++</span>fnm<span class="fu">++</span><span class="st">&quot;.lhs&quot;</span>) (<span class="st">&quot;docs/&quot;</span><span class="fu">++</span>mnm<span class="fu">++</span><span class="st">&quot;.html&quot;</span>)
+        _                   <span class="ot">-&gt;</span> pandoc_lhs (<span class="st">&quot;examples/&quot;</span><span class="fu">++</span>fnm<span class="fu">++</span><span class="st">&quot;.lhs&quot;</span> ) (<span class="st">&quot;examples/&quot;</span><span class="fu">++</span>fnm<span class="fu">++</span><span class="st">&quot;.lhs&quot;</span>) (<span class="st">&quot;docs/&quot;</span><span class="fu">++</span>fnm<span class="fu">++</span><span class="st">&quot;.html&quot;</span>)
       <span class="kw">where</span>
-        mtch <span class="fu">=</span> fnm <span class="fu">TT.?=~</span> [re<span class="fu">|^</span><span class="dt">RE</span><span class="fu">/</span>(<span class="fu">$</span>{fdr}(<span class="dt">Internal</span><span class="fu">|</span><span class="dt">PCRE</span><span class="fu">|</span><span class="dt">TDFA</span><span class="fu">|</span><span class="dt">Testbench</span><span class="fu">|</span><span class="dt">Tools</span><span class="fu">|</span><span class="dt">Types</span>)<span class="fu">/</span>)<span class="fu">?$</span>{mnm}(<span class="fu">@</span>{<span class="fu">%</span>id})<span class="fu">|</span>]</code></pre></div>
+        mtch <span class="fu">=</span> fnm <span class="fu">TS.?=~</span> [re<span class="fu">|^</span><span class="dt">RE</span><span class="fu">/</span>(<span class="fu">$</span>{fdr}(<span class="dt">Internal</span><span class="fu">|</span><span class="dt">PCRE</span><span class="fu">|</span><span class="dt">TDFA</span><span class="fu">|</span><span class="dt">Testbench</span><span class="fu">|</span><span class="dt">Tools</span><span class="fu">|</span><span class="dt">Types</span>)<span class="fu">/</span>)<span class="fu">?$</span>{mnm}(<span class="fu">@</span>{<span class="fu">%</span>id})<span class="fu">|</span>]</code></pre></div>
 </div>
 <p>See <a href="re-prep.html">examples/re-prep.lhs</a></p>
 <h2 id="example-parsing-re-macros">Example: parsing RE macros</h2>
@@ -697,7 +697,7 @@ extract fp rex <span class="fu">=</span> extr <span class="fu">.</span> LBS.line
 <p>And here is the scanner for recognising the literate fragments.</p>
 <div class="includedcodeblock">
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">scan ::</span> <span class="dt">RE</span> <span class="ot">-&gt;</span> [<span class="dt">LBS.ByteString</span>] <span class="ot">-&gt;</span> [<span class="dt">Token</span>]
-scan rex <span class="fu">=</span> grepScript
+scan rex <span class="fu">=</span> grepWithScript
     [ (,) [re<span class="fu">|</span>\\begin\{code\}<span class="fu">|</span>] <span class="fu">$</span> \i <span class="ot">-&gt;</span> chk <span class="fu">$</span> <span class="dt">Bra</span> i
     , (,) rex                   <span class="fu">$</span> \_ <span class="ot">-&gt;</span> chk   <span class="dt">Hit</span>
     , (,) [re<span class="fu">|</span>\\end\{code\}<span class="fu">|</span>]   <span class="fu">$</span> \i <span class="ot">-&gt;</span> chk <span class="fu">$</span> <span class="dt">Ket</span> i

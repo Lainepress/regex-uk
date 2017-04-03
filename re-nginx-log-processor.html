@@ -88,27 +88,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Control.Monad</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span>
 <span class="kw">import           </span><span class="dt">Data.Char</span>
-<span class="kw">import qualified</span> <span class="dt">Data.HashMap.Lazy</span>                        <span class="kw">as</span> <span class="dt">HML</span>
 <span class="kw">import           </span><span class="dt">Data.Functor.Identity</span>
+<span class="kw">import qualified</span> <span class="dt">Data.HashMap.Lazy</span>                        <span class="kw">as</span> <span class="dt">HML</span>
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
 <span class="kw">import           </span><span class="dt">Data.String</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span>
 <span class="kw">import           </span><span class="dt">Data.Time</span>
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
 <span class="kw">import           </span><span class="dt">System.Directory</span>
-<span class="kw">import           </span><span class="dt">System.FilePath</span>
 <span class="kw">import           </span><span class="dt">System.Environment</span>
 <span class="kw">import           </span><span class="dt">System.Exit</span>
+<span class="kw">import           </span><span class="dt">System.FilePath</span>
 <span class="kw">import           </span><span class="dt">System.IO</span>
 <span class="kw">import           </span><span class="dt">TestKit</span>
+<span class="kw">import           </span><span class="dt">Text.Printf</span>
 <span class="kw">import           </span><span class="dt">Text.RE</span>
 <span class="kw">import           </span><span class="dt">Text.RE.PCRE.ByteString.Lazy</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.String</span>                      <span class="kw">as</span> <span class="dt">S</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span>
 <span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
-<span class="kw">import           </span><span class="dt">Text.Printf</span></code></pre></div>
+<span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
+<span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">main ::</span> <span class="dt">IO</span> ()
 main <span class="fu">=</span> <span class="kw">do</span>
   as  <span class="ot">&lt;-</span> getArgs

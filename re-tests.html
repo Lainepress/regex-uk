@@ -102,35 +102,35 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">System.Directory</span>
 <span class="kw">import           </span><span class="dt">System.FilePath</span>
 <span class="kw">import           </span><span class="dt">Test.SmallCheck.Series</span>
-<span class="kw">import           </span><span class="dt">TestKit</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty.HUnit</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty.SmallCheck</span>          <span class="kw">as</span> <span class="dt">SC</span>
+<span class="kw">import           </span><span class="dt">TestKit</span>
 <span class="kw">import           </span><span class="dt">Text.Heredoc</span>
-<span class="kw">import qualified</span> <span class="dt">Text.Regex.PCRE</span>                <span class="kw">as</span> <span class="dt">PCRE_</span>
-<span class="kw">import qualified</span> <span class="dt">Text.Regex.TDFA</span>                <span class="kw">as</span> <span class="dt">TDFA_</span>
 <span class="kw">import           </span><span class="dt">Text.RE</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE</span>                   <span class="kw">as</span> <span class="dt">PCRE</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.ByteString</span>        <span class="kw">as</span> <span class="dt">P_BS</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.ByteString.Lazy</span>   <span class="kw">as</span> <span class="dt">PLBS</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.Sequence</span>          <span class="kw">as</span> <span class="dt">P_SQ</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.String</span>            <span class="kw">as</span> <span class="dt">P_ST</span>
+<span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
+<span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA</span>                   <span class="kw">as</span> <span class="dt">TDFA</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.ByteString</span>        <span class="kw">as</span> <span class="dt">T_BS</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.ByteString.Lazy</span>   <span class="kw">as</span> <span class="dt">TLBS</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.Sequence</span>          <span class="kw">as</span> <span class="dt">T_SQ</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.String</span>            <span class="kw">as</span> <span class="dt">T_ST</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.Text</span>              <span class="kw">as</span> <span class="dt">T_TX</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.Text.Lazy</span>         <span class="kw">as</span> <span class="dt">TLTX</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
+<span class="kw">import           </span><span class="dt">Text.RE.Tools.Find</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span>
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.AddCaptureNames</span>
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.NamedCaptures</span>
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.PreludeMacros</span>
-<span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
-
-<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.String</span>            <span class="kw">as</span> <span class="dt">P_ST</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.ByteString</span>        <span class="kw">as</span> <span class="dt">P_BS</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.ByteString.Lazy</span>   <span class="kw">as</span> <span class="dt">PLBS</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.Sequence</span>          <span class="kw">as</span> <span class="dt">P_SQ</span>
-
-<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.String</span>            <span class="kw">as</span> <span class="dt">T_ST</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.ByteString</span>        <span class="kw">as</span> <span class="dt">T_BS</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.ByteString.Lazy</span>   <span class="kw">as</span> <span class="dt">TLBS</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.Sequence</span>          <span class="kw">as</span> <span class="dt">T_SQ</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.Text</span>              <span class="kw">as</span> <span class="dt">T_TX</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.Text.Lazy</span>         <span class="kw">as</span> <span class="dt">TLTX</span></code></pre></div>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
+<span class="kw">import qualified</span> <span class="dt">Text.Regex.PCRE</span>                <span class="kw">as</span> <span class="dt">PCRE_</span>
+<span class="kw">import qualified</span> <span class="dt">Text.Regex.TDFA</span>                <span class="kw">as</span> <span class="dt">TDFA_</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">main ::</span> <span class="dt">IO</span> ()
 main <span class="fu">=</span> defaultMain <span class="fu">$</span>
   testGroup <span class="st">&quot;Tests&quot;</span>
@@ -144,6 +144,7 @@ main <span class="fu">=</span> defaultMain <span class="fu">$</span>
     , many_tests
     , escape_tests
     , add_capture_names_tests
+    , find_tests
     , misc_tests
     ]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | check that our self-testing macro environments are good</span>
@@ -604,14 +605,14 @@ escape_tests <span class="fu">=</span> testGroup <span class="st">&quot;Escape T
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">named_capture_tests ::</span> <span class="dt">TestTree</span>
 named_capture_tests <span class="fu">=</span> localOption (<span class="dt">SmallCheckDepth</span> <span class="dv">4</span>) <span class="fu">$</span>
   testGroup <span class="st">&quot;NamedCaptures&quot;</span>
-    [ formatScanTestTree
-    , analyseTokensTestTree
+    [ format_scan_tests
+    , analyse_tokens_tests
     ]
 
 <span class="kw">instance</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Serial</span> m <span class="dt">Token</span>
 
-<span class="ot">formatScanTestTree ::</span> <span class="dt">TestTree</span>
-formatScanTestTree <span class="fu">=</span>
+<span class="ot">format_scan_tests ::</span> <span class="dt">TestTree</span>
+format_scan_tests <span class="fu">=</span>
   testGroup <span class="st">&quot;FormatToken/Scan Properties&quot;</span>
     [ localOption (<span class="dt">SmallCheckDepth</span> <span class="dv">4</span>) <span class="fu">$</span>
         SC.testProperty <span class="st">&quot;formatTokens == formatTokens0&quot;</span> <span class="fu">$</span>
@@ -622,8 +623,8 @@ formatScanTestTree <span class="fu">=</span>
                     scan (formatTokens&#39; idFormatTokenREOptions tks) <span class="fu">==</span> tks
     ]
 
-<span class="ot">analyseTokensTestTree ::</span> <span class="dt">TestTree</span>
-analyseTokensTestTree <span class="fu">=</span>
+<span class="ot">analyse_tokens_tests ::</span> <span class="dt">TestTree</span>
+analyse_tokens_tests <span class="fu">=</span>
   testGroup <span class="st">&quot;Analysing [Token] Unit Tests&quot;</span>
     [ tc [here<span class="fu">|</span>foobar<span class="fu">|</span>]                                       []
     , tc [here<span class="fu">||</span>]                                             []
@@ -651,7 +652,7 @@ analyseTokensTestTree <span class="fu">=</span>
 
     xnc <span class="fu">=</span> either oops (snd <span class="fu">.</span> fst) <span class="fu">.</span> extractNamedCaptures
       <span class="kw">where</span>
-        oops <span class="fu">=</span> error <span class="st">&quot;analyseTokensTestTree: unexpected parse failure&quot;</span></code></pre></div>
+        oops <span class="fu">=</span> error <span class="st">&quot;analyse_tokens_tests: unexpected parse failure&quot;</span></code></pre></div>
 <h2 id="addcapturenames-tests">AddCaptureNames Tests</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">add_capture_names_tests ::</span> <span class="dt">TestTree</span>
 add_capture_names_tests <span class="fu">=</span> testGroup <span class="st">&quot;AddCaptureNames Tests&quot;</span>
@@ -687,12 +688,48 @@ test_add_capture_name lab tst x <span class="fu">=</span> testCase lab <span cla
       [ (<span class="dt">CaptureName</span> <span class="st">&quot;x&quot;</span>,<span class="dv">1</span>)
       , (<span class="dt">CaptureName</span> <span class="st">&quot;y&quot;</span>,<span class="dv">2</span>)
       ]</code></pre></div>
+<h2 id="the-find-tests">The Find Tests</h2>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">find_tests ::</span> <span class="dt">TestTree</span>
+find_tests <span class="fu">=</span> testGroup <span class="st">&quot;Find Tests&quot;</span>
+    [ testCase <span class="st">&quot;examples/&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+        fps <span class="ot">&lt;-</span> findMatches findMethods [re<span class="fu">|^</span>re<span class="fu">-.*</span>\<span class="fu">.</span>lhs<span class="fu">|</span>] <span class="st">&quot;examples/&quot;</span>
+        example_paths <span class="fu">@=?</span> fps
+    ]
+
+<span class="ot">example_paths ::</span> [<span class="dt">String</span>]
+example_paths <span class="fu">=</span>
+  [ <span class="st">&quot;examples/re-gen-cabals.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-gen-modules.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-include.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-nginx-log-processor.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-prep.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-sort-imports.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tests.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-master.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-options-master.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-options.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-replacing-master.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-replacing.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-testbench-master.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-testbench.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-tools-master.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial-tools.lhs&quot;</span>
+  , <span class="st">&quot;examples/re-tutorial.lhs&quot;</span>
+  ]
+
+<span class="ot">findMethods ::</span> <span class="dt">FindMethods</span> <span class="dt">String</span>
+findMethods <span class="fu">=</span>
+  <span class="dt">FindMethods</span>
+    { doesDirectoryExistDM <span class="fu">=</span> doesDirectoryExist
+    , listDirectoryDM      <span class="fu">=</span> getDirectoryContents
+    , combineDM            <span class="fu">=</span> (<span class="fu">&lt;/&gt;</span>)
+    }</code></pre></div>
 <h2 id="the-miscelaneous-tests">The Miscelaneous Tests</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">misc_tests ::</span> <span class="dt">TestTree</span>
 misc_tests <span class="fu">=</span> testGroup <span class="st">&quot;Miscelaneous Tests&quot;</span>
     [ testGroup <span class="st">&quot;CaptureID&quot;</span>
         [ testCase <span class="st">&quot;CaptureID lookup failure&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
-            ok <span class="ot">&lt;-</span> isValidError <span class="fu">$</span> findCaptureID [cp<span class="fu">|</span>foo<span class="fu">|</span>] <span class="fu">$</span> reCaptureNames [re<span class="fu">|</span>foo<span class="fu">|</span>]
+            ok <span class="ot">&lt;-</span> isValidError <span class="fu">$</span> unsafeFindCaptureID [cp<span class="fu">|</span>foo<span class="fu">|</span>] <span class="fu">$</span> reCaptureNames [re<span class="fu">|</span>foo<span class="fu">|</span>]
             assertBool <span class="st">&quot;failed&quot;</span> ok
         ]
     , testGroup <span class="st">&quot;QQ&quot;</span>
