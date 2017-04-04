@@ -82,8 +82,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   <span class="co">-- * RE Options</span>
     <span class="dt">SimpleREOptions</span>(<span class="fu">..</span>)
   , <span class="dt">REOptions_</span>(<span class="fu">..</span>)
-  <span class="co">-- * The IsOption Class</span>
-  , <span class="dt">IsOption</span>(<span class="fu">..</span>)
   <span class="co">-- * The Macro Tables</span>
   , <span class="dt">Macros</span>
   , <span class="dt">MacroID</span>(<span class="fu">..</span>)
@@ -125,13 +123,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
     ,<span class="ot"> optionsExec ::</span> <span class="fu">!</span>e             <span class="co">-- ^ the back end execution-time options</span>
     }
   <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
-<h2 id="the-isoption-class">The IsOption Class</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | a number of types can be used to encode &#39;REOptions_&#39;, each of which</span>
-<span class="co">-- is made a member of this class</span>
-<span class="kw">class</span> <span class="dt">IsOption</span> o r c e <span class="fu">|</span>
-    e <span class="ot">-&gt;</span> r, c <span class="ot">-&gt;</span> e , e <span class="ot">-&gt;</span> c, r <span class="ot">-&gt;</span> c, c <span class="ot">-&gt;</span> r, r <span class="ot">-&gt;</span> e <span class="kw">where</span>
-  <span class="co">-- | convert the @o@ type into an @REOptions r c e@</span>
-<span class="ot">  makeREOptions ::</span> o <span class="ot">-&gt;</span> <span class="dt">REOptions_</span> r c e</code></pre></div>
 <h2 id="the-macro-tables">The Macro Tables</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | our macro tables are parameterised over the backend @RE@ type and</span>
 <span class="co">-- and just associate each @MacroID@ with an @RE@ (which may in turn</span>

@@ -100,7 +100,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Control.Exception</span>
 <span class="kw">import qualified</span> <span class="dt">Control.Monad</span>                            <span class="kw">as</span> <span class="dt">M</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span>
-<span class="kw">import           </span><span class="dt">Data.List</span>
+<span class="kw">import qualified</span> <span class="dt">Data.List</span>                                <span class="kw">as</span> <span class="dt">L</span>
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span>
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
@@ -277,7 +277,7 @@ dumpMacroTable fp_t fp_s rty m_env <span class="fu">=</span> <span class="kw">do
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">sortImports ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
 sortImports lbs <span class="fu">=</span>
     LBS.unlines <span class="fu">$</span> map (matchesSource <span class="fu">.</span> getLineMatches) <span class="fu">$</span>
-      hdr <span class="fu">++</span> sortBy cMp bdy
+      hdr <span class="fu">++</span> L.sortBy cMp bdy
   <span class="kw">where</span>
     cMp ln1 ln2 <span class="fu">=</span> <span class="kw">case</span> (extr ln1,extr ln2) <span class="kw">of</span>
         (<span class="dt">Nothing</span>,<span class="dt">Nothing</span>) <span class="ot">-&gt;</span> <span class="dt">EQ</span>

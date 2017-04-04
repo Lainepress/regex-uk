@@ -692,8 +692,8 @@ test_add_capture_name lab tst x <span class="fu">=</span> testCase lab <span cla
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">find_tests ::</span> <span class="dt">TestTree</span>
 find_tests <span class="fu">=</span> testGroup <span class="st">&quot;Find Tests&quot;</span>
     [ testCase <span class="st">&quot;examples/&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
-        fps <span class="ot">&lt;-</span> findMatches findMethods [re<span class="fu">|^</span>re<span class="fu">-.*</span>\<span class="fu">.</span>lhs<span class="fu">|</span>] <span class="st">&quot;examples/&quot;</span>
-        example_paths <span class="fu">@=?</span> fps
+        fps <span class="ot">&lt;-</span> findMatches_ findMethods [re<span class="fu">|^</span>re<span class="fu">-.*</span>\<span class="fu">.</span>lhs<span class="fu">|</span>] <span class="st">&quot;examples/&quot;</span>
+        example_paths <span class="fu">@=?</span> filter (not <span class="fu">.</span> matched <span class="fu">.</span> (<span class="fu">?=~</span> [re<span class="fu">|</span>master\<span class="fu">.</span>lhs<span class="fu">|</span>])) fps
     ]
 
 <span class="ot">example_paths ::</span> [<span class="dt">String</span>]
@@ -705,14 +705,9 @@ example_paths <span class="fu">=</span>
   , <span class="st">&quot;examples/re-prep.lhs&quot;</span>
   , <span class="st">&quot;examples/re-sort-imports.lhs&quot;</span>
   , <span class="st">&quot;examples/re-tests.lhs&quot;</span>
-  , <span class="st">&quot;examples/re-tutorial-master.lhs&quot;</span>
-  , <span class="st">&quot;examples/re-tutorial-options-master.lhs&quot;</span>
   , <span class="st">&quot;examples/re-tutorial-options.lhs&quot;</span>
-  , <span class="st">&quot;examples/re-tutorial-replacing-master.lhs&quot;</span>
   , <span class="st">&quot;examples/re-tutorial-replacing.lhs&quot;</span>
-  , <span class="st">&quot;examples/re-tutorial-testbench-master.lhs&quot;</span>
   , <span class="st">&quot;examples/re-tutorial-testbench.lhs&quot;</span>
-  , <span class="st">&quot;examples/re-tutorial-tools-master.lhs&quot;</span>
   , <span class="st">&quot;examples/re-tutorial-tools.lhs&quot;</span>
   , <span class="st">&quot;examples/re-tutorial.lhs&quot;</span>
   ]
@@ -843,8 +838,8 @@ misc_tests <span class="fu">=</span> testGroup <span class="st">&quot;Miscelaneo
     tdfa_re   <span class="fu">=</span> fromMaybe oops <span class="fu">$</span> TDFA.compileRegexWithOptions tdfa_opts <span class="st">&quot;.*&quot;</span>
     pcre_re   <span class="fu">=</span> fromMaybe oops <span class="fu">$</span> PCRE.compileRegexWithOptions pcre_opts <span class="st">&quot;.*&quot;</span>
 
-    tdfa_opts <span class="fu">=</span> makeREOptions<span class="ot"> no_macs_t ::</span> <span class="dt">REOptions_</span> <span class="dt">TDFA.RE</span> <span class="dt">TDFA_.CompOption</span> <span class="dt">TDFA_.ExecOption</span>
-    pcre_opts <span class="fu">=</span> makeREOptions<span class="ot"> no_macs_p ::</span> <span class="dt">REOptions_</span> <span class="dt">PCRE.RE</span> <span class="dt">PCRE_.CompOption</span> <span class="dt">PCRE_.ExecOption</span>
+    tdfa_opts <span class="fu">=</span> TDFA.makeREOptions<span class="ot"> no_macs_t ::</span> <span class="dt">REOptions_</span> <span class="dt">TDFA.RE</span> <span class="dt">TDFA_.CompOption</span> <span class="dt">TDFA_.ExecOption</span>
+    pcre_opts <span class="fu">=</span> PCRE.makeREOptions<span class="ot"> no_macs_p ::</span> <span class="dt">REOptions_</span> <span class="dt">PCRE.RE</span> <span class="dt">PCRE_.CompOption</span> <span class="dt">PCRE_.ExecOption</span>
 
     no_macs_t <span class="fu">=</span> HM.fromList []<span class="ot"> ::</span> <span class="dt">Macros</span> <span class="dt">TDFA.RE</span>
     no_macs_p <span class="fu">=</span> HM.fromList []<span class="ot"> ::</span> <span class="dt">Macros</span> <span class="dt">PCRE.RE</span>
