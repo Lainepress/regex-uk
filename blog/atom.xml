@@ -8,8 +8,17 @@
         <name>Chris Dornan</name>
         <email>chris@regex.uk</email>
     </author>
-    <updated>2017-03-29T00:00:00Z</updated>
+    <updated>2017-04-05T00:00:00Z</updated>
     <entry>
+    <title>regex-0.14.0.0</title>
+    <link href="http://blog.regex.uk/posts/2017-04-05-update.html" />
+    <id>http://blog.regex.uk/posts/2017-04-05-update.html</id>
+    <published>2017-04-05T00:00:00Z</published>
+    <updated>2017-04-05T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>A regex API with excessively complicated type classes — familiar?</p>
+<p>With the fix of <a href="https://github.com/iconnect/regex/issues/115">#114</a> in 0.14.0.0 it just remains to rewrite the tutorials and finish the Haddocks for a <a href="https://github.com/iconnect/regex/milestone/3">1.0.0.0 release</a> on Monday.</p>]]></summary>
+</entry>
+<entry>
     <title>regex-0.11.0.0</title>
     <link href="http://blog.regex.uk/posts/2017-03-29-update.html" />
     <id>http://blog.regex.uk/posts/2017-03-29-update.html</id>
