@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>regex – Text.RE.Types.Match</title>
+  <title>regex – Text.RE.ZeInternals/Types.Match</title>
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
 div.sourceCode { overflow-x: auto; }
@@ -59,19 +59,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class='bcdiv'>
   <ol class='breadcrumb'>
     <li><a href="." style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;" id="branding">[<span style='color:red;'>re</span>|${<span style='color:red;'>gex</span>}(.*)|<span></span>]</a></li>
-    <li><a title='source file' href='https://github.com/iconnect/regex/blob/master/Text/RE/Types/Match.lhs'>Text.RE.Types.Match</a></li>
+    <li><a title='source file' href='https://github.com/iconnect/regex/blob/master/Text/RE/ZeInternals/Types/Match.lhs'>Text.RE.ZeInternals/Types.Match</a></li>
 </ol>
 </div>
 <div class='litcontent'>
 <header>
-<h1 class="title">Text.RE.Types.Match</h1>
+<h1 class="title">Text.RE.ZeInternals/Types.Match</h1>
 </header>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span>
 <span class="ot">{-# LANGUAGE FlexibleInstances          #-}</span>
 <span class="ot">{-# LANGUAGE UndecidableInstances       #-}</span>
 <span class="ot">{-# LANGUAGE MultiParamTypeClasses      #-}</span>
 <span class="ot">{-# LANGUAGE DeriveDataTypeable         #-}</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Text.RE.Types.Match</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.Types.Match</span>
   ( <span class="dt">Match</span>(<span class="fu">..</span>)
   , noMatch
   , emptyMatchArray
@@ -92,9 +92,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Data.Array</span>
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
 <span class="kw">import           </span><span class="dt">Data.Typeable</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Capture</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
 <span class="kw">import           </span><span class="dt">Text.Regex.Base</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.Capture</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.CaptureID</span>
 
 <span class="kw">infixl</span> <span class="dv">9</span> <span class="fu">!$</span>, <span class="fu">!$$</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | the result of matching a RE to a text once, listing the text that</span>
@@ -191,17 +191,17 @@ capture cid mtch <span class="fu">=</span> fromMaybe oops <span class="fu">$</sp
 <span class="co">-- capture failed to capture anything (being in a failed alternate)</span>
 <span class="ot">captureMaybe ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a)
 captureMaybe cid mtch<span class="fu">@</span><span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">do</span>
+  i   <span class="ot">&lt;-</span> lookupCaptureID cid mtch
   cap <span class="ot">&lt;-</span> <span class="kw">case</span> bounds matchArray <span class="ot">`inRange`</span> <span class="dt">CaptureOrdinal</span> i <span class="kw">of</span>
     <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> <span class="fu">$</span> matchArray <span class="fu">!</span> <span class="dt">CaptureOrdinal</span> i
     <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
   <span class="kw">case</span> hasCaptured cap <span class="kw">of</span>
     <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> cap
     <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-  <span class="kw">where</span>
-    i <span class="fu">=</span> lookupCaptureID cid mtch
 
-<span class="ot">lookupCaptureID ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Int</span>
-lookupCaptureID cid <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span> findCaptureID cid captureNames</code></pre></div>
+<span class="ot">lookupCaptureID ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Int</span>
+lookupCaptureID cid <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span>
+    either (const <span class="dt">Nothing</span>) <span class="dt">Just</span> <span class="fu">$</span> findCaptureID cid captureNames</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | this instance hooks &#39;Match&#39; into regex-base: regex consumers need</span>
 <span class="co">-- not worry about any of this</span>
 <span class="kw">instance</span>

@@ -291,7 +291,7 @@ sortImports lbs <span class="fu">=</span>
 
     (hdr,bdy) <span class="fu">=</span> span (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches) lns
     lns       <span class="fu">=</span> grepFilter rex lbs
-    rex        <span class="fu">=</span> [re<span class="fu">|^</span><span class="kw">import </span>+(<span class="kw">qualified</span>)? +${mod}([^ ].*)$|]</code></pre></div>
+    rex       <span class="fu">=</span> [re<span class="fu">|^</span><span class="kw">import </span>+(<span class="kw">qualified</span>)? +${mod}([^ ].*)$|]</code></pre></div>
 <h2 id="read_file-and-write_file">read_file and write_file</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">read_file ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
 read_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.getContents

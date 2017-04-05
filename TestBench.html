@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>regex – Text.RE.TestBench</title>
+  <title>regex – Text.RE.ZeInternals.TestBench</title>
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
 div.sourceCode { overflow-x: auto; }
@@ -59,23 +59,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class='bcdiv'>
   <ol class='breadcrumb'>
     <li><a href="." style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;" id="branding">[<span style='color:red;'>re</span>|${<span style='color:red;'>gex</span>}(.*)|<span></span>]</a></li>
-    <li><a title='source file' href='https://github.com/iconnect/regex/blob/master/Text/RE/TestBench.lhs'>Text.RE.TestBench</a></li>
+    <li><a title='source file' href='https://github.com/iconnect/regex/blob/master/Text/RE/ZeInternals/TestBench.lhs'>Text.RE.ZeInternals.TestBench</a></li>
 </ol>
 </div>
 <div class='litcontent'>
 <header>
-<h1 class="title">Text.RE.TestBench</h1>
+<h1 class="title">Text.RE.ZeInternals.TestBench</h1>
 </header>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE NoImplicitPrelude          #-}</span>
 <span class="ot">{-# LANGUAGE RecordWildCards            #-}</span>
 <span class="ot">{-# LANGUAGE GeneralizedNewtypeDeriving #-}</span>
 <span class="ot">{-# LANGUAGE OverloadedStrings          #-}</span>
 <span class="ot">{-# LANGUAGE CPP                        #-}</span>
-<span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span>
+<span class="st">#if __GLASGOW_HASKELL__ &gt;= 800</span>
 <span class="ot">{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}</span>
-<span class="ot">#endif</span>
+<span class="st">#endif</span>
 
-<span class="kw">module</span> <span class="dt">Text.RE.TestBench</span>
+<span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.TestBench</span>
   ( <span class="dt">MacroID</span>(<span class="fu">..</span>)
   , <span class="dt">RegexType</span>
   , mkTDFA
@@ -95,41 +95,32 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   , runTests
   , runTests&#39;
   , formatMacroTable
-  , dumpMacroTable
   , formatMacroSummary
   , formatMacroSources
   , formatMacroSource
   , testMacroDescriptors
   , mdRegexSource
-  <span class="co">-- * Parsers</span>
-  , <span class="kw">module</span> <span class="dt">Text.RE.TestBench.Parsers</span>
-  <span class="co">-- * Text.RE</span>
-  , <span class="kw">module</span> <span class="dt">Text.RE</span>
   ) <span class="kw">where</span>
 
 <span class="kw">import           </span><span class="dt">Data.Array</span>
-<span class="kw">import           </span><span class="dt">Data.Char</span>
 <span class="kw">import qualified</span> <span class="dt">Data.HashMap.Lazy</span>              <span class="kw">as</span> <span class="dt">HML</span>
 <span class="kw">import qualified</span> <span class="dt">Data.List</span>                      <span class="kw">as</span> <span class="dt">L</span>
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
 <span class="kw">import           </span><span class="dt">Data.Ord</span>
 <span class="kw">import           </span><span class="dt">Data.String</span>
-<span class="kw">import           </span><span class="dt">Text.Printf</span>
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
-<span class="kw">import           </span><span class="dt">Text.RE</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TestBench.Parsers</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.Capture</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.REOptions</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.Match</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.Matches</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.Replace</span></code></pre></div>
+<span class="kw">import           </span><span class="dt">Text.Printf</span>
+<span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Replace</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Capture</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Match</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Matches</span></code></pre></div>
 <h2 id="types">Types</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">
 <span class="kw">type</span> <span class="dt">TestBenchMatcher</span> <span class="fu">=</span>
     <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span> <span class="ot">-&gt;</span> <span class="dt">Matches</span> <span class="dt">String</span>
 
-<span class="co">-- | what kind of back end will be compiling the RE, and its match</span>
-<span class="co">-- function</span>
+<span class="co">-- | what flavour of regex are we dealing with</span>
 <span class="kw">data</span> <span class="dt">RegexType</span>
   <span class="fu">=</span> <span class="dt">TDFA</span> <span class="dt">TestBenchMatcher</span>
   <span class="fu">|</span> <span class="dt">PCRE</span> <span class="dt">TestBenchMatcher</span>
@@ -158,8 +149,8 @@ presentRegexType (<span class="dt">PCRE</span> _) <span class="fu">=</span> <spa
 <span class="co">-- | do we need the captures in the RE or whould they be stripped out</span>
 <span class="co">-- where possible</span>
 <span class="kw">data</span> <span class="dt">WithCaptures</span>
-  <span class="fu">=</span> <span class="dt">InclCaptures</span>
-  <span class="fu">|</span> <span class="dt">ExclCaptures</span>
+  <span class="fu">=</span> <span class="dt">InclCaptures</span>      <span class="co">-- ^ include all captures</span>
+  <span class="fu">|</span> <span class="dt">ExclCaptures</span>      <span class="co">-- ^ remove captures where possible</span>
   <span class="kw">deriving</span> (<span class="dt">Eq</span>,<span class="dt">Ord</span>,<span class="dt">Show</span>)
 
 <span class="co">-- | each macro can reference others, the whole environment being</span>
@@ -170,18 +161,18 @@ presentRegexType (<span class="dt">PCRE</span> _) <span class="fu">=</span> <spa
 <span class="co">-- description</span>
 <span class="kw">data</span> <span class="dt">MacroDescriptor</span> <span class="fu">=</span>
   <span class="dt">MacroDescriptor</span>
-    {<span class="ot"> _md_source          ::</span> <span class="fu">!</span><span class="dt">RegexSource</span>         <span class="co">-- ^ the RE</span>
-    ,<span class="ot"> _md_samples         ::</span> <span class="fu">!</span>[<span class="dt">String</span>]            <span class="co">-- ^ some sample matches</span>
-    ,<span class="ot"> _md_counter_samples ::</span> <span class="fu">!</span>[<span class="dt">String</span>]            <span class="co">-- ^ some sample non-matches</span>
-    ,<span class="ot"> _md_test_results    ::</span> <span class="fu">!</span>[<span class="dt">TestResult</span>]        <span class="co">-- ^ validation test results</span>
-    ,<span class="ot"> _md_parser          ::</span> <span class="fu">!</span>(<span class="dt">Maybe</span> <span class="dt">FunctionID</span>)  <span class="co">-- ^ WA, the parser function</span>
-    ,<span class="ot"> _md_description     ::</span> <span class="fu">!</span><span class="dt">String</span>              <span class="co">-- ^ summary comment</span>
+    {<span class="ot"> macroSource         ::</span> <span class="fu">!</span><span class="dt">RegexSource</span>         <span class="co">-- ^ the RE</span>
+    ,<span class="ot"> macroSamples        ::</span> <span class="fu">!</span>[<span class="dt">String</span>]            <span class="co">-- ^ some sample matches</span>
+    ,<span class="ot"> macroCounterSamples ::</span> <span class="fu">!</span>[<span class="dt">String</span>]            <span class="co">-- ^ some sample non-matches</span>
+    ,<span class="ot"> macroTestResults    ::</span> <span class="fu">!</span>[<span class="dt">TestResult</span>]        <span class="co">-- ^ validation test results</span>
+    ,<span class="ot"> macroParser         ::</span> <span class="fu">!</span>(<span class="dt">Maybe</span> <span class="dt">FunctionID</span>)  <span class="co">-- ^ WA, the parser function</span>
+    ,<span class="ot"> macroDescription    ::</span> <span class="fu">!</span><span class="dt">String</span>              <span class="co">-- ^ summary comment</span>
     }
   <span class="kw">deriving</span> (<span class="dt">Show</span>)
 
 <span class="co">-- | list of failures on a validation run</span>
 <span class="kw">newtype</span> <span class="dt">TestResult</span> <span class="fu">=</span>
-  <span class="dt">TestResult</span> {<span class="ot"> _TestResult ::</span> <span class="dt">String</span> }
+  <span class="dt">TestResult</span> { _<span class="dt">TestResult</span><span class="ot"> ::</span> <span class="dt">String</span> }
   <span class="kw">deriving</span> (<span class="dt">IsString</span>,<span class="dt">Show</span>)
 
 <span class="co">-- | a RE that should work for POSIX and PCRE with open brackets (&#39;(&#39;)</span>
@@ -192,13 +183,13 @@ presentRegexType (<span class="dt">PCRE</span> _) <span class="fu">=</span> <spa
 <span class="co">--    (]:   used for captures and grouping</span>
 <span class="co">--    (     do not modify</span>
 <span class="kw">newtype</span> <span class="dt">RegexSource</span> <span class="fu">=</span>
-    <span class="dt">RegexSource</span> {<span class="ot"> _RegexSource ::</span> <span class="dt">String</span> }
+    <span class="dt">RegexSource</span> { _<span class="dt">RegexSource</span><span class="ot"> ::</span> <span class="dt">String</span> }
   <span class="kw">deriving</span> (<span class="dt">IsString</span>,<span class="dt">Show</span>)
 
 <span class="co">-- | name of the Haskell parser function for parsing the text matched</span>
 <span class="co">-- by a macro</span>
 <span class="kw">newtype</span> <span class="dt">FunctionID</span> <span class="fu">=</span>
-    <span class="dt">FunctionID</span> {<span class="ot"> _FunctionID ::</span> <span class="dt">String</span> }
+    <span class="dt">FunctionID</span> { _<span class="dt">FunctionID</span><span class="ot"> ::</span> <span class="dt">String</span> }
   <span class="kw">deriving</span> (<span class="dt">IsString</span>,<span class="dt">Show</span>)
 
 <span class="co">-- | we are only interested in the open parentheses used for</span>
@@ -206,14 +197,15 @@ presentRegexType (<span class="dt">PCRE</span> _) <span class="fu">=</span> <spa
 <span class="co">-- there is no initial &#39;(&#39; or &#39;(?:&#39;, just the suffic text</span>
 <span class="kw">data</span> <span class="dt">REToken</span> <span class="fu">=</span>
   <span class="dt">REToken</span>
-    {<span class="ot"> _ret_prefix    ::</span> <span class="dt">String</span>  <span class="co">-- ^ following text optional ( or (?:</span>
-    ,<span class="ot"> _ret_fixed     ::</span> <span class="dt">Bool</span>    <span class="co">-- ^ a &#39;(&#39; that is not safe to modify</span>
-    ,<span class="ot"> _ret_grouping  ::</span> <span class="dt">Bool</span>    <span class="co">-- ^ is this a grouping group</span>
-    ,<span class="ot"> _ret_capturing ::</span> <span class="dt">Bool</span>    <span class="co">-- ^ is this a capturing group</span>
+    { _<span class="ot">ret_prefix    ::</span> <span class="dt">String</span>  <span class="co">-- ^ following text optional ( or (?:</span>
+    , _<span class="ot">ret_fixed     ::</span> <span class="dt">Bool</span>    <span class="co">-- ^ a &#39;(&#39; that is not safe to modify</span>
+    , _<span class="ot">ret_grouping  ::</span> <span class="dt">Bool</span>    <span class="co">-- ^ is this a grouping group</span>
+    , _<span class="ot">ret_capturing ::</span> <span class="dt">Bool</span>    <span class="co">-- ^ is this a capturing group</span>
     }
   <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
 <h2 id="mkmacros">mkMacros</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">mkMacros ::</span> (<span class="dt">Monad</span> m,<span class="dt">Functor</span> m)
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | construct a macro table suitable for use with the RE compilers</span>
+<span class="ot">mkMacros ::</span> (<span class="dt">Monad</span> m,<span class="dt">Functor</span> m)
          <span class="ot">=&gt;</span> (<span class="dt">String</span><span class="ot">-&gt;</span>m r)
          <span class="ot">-&gt;</span> <span class="dt">RegexType</span>
          <span class="ot">-&gt;</span> <span class="dt">WithCaptures</span>
@@ -224,7 +216,8 @@ mkMacros prs rty wc env <span class="fu">=</span>
   <span class="kw">where</span>
     mk mid md <span class="fu">=</span> (,) mid <span class="fu">&lt;$&gt;</span> prs (mdRegexSource rty wc env md)</code></pre></div>
 <h2 id="testmacroenv-badmacros">testMacroEnv, badMacros</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">testMacroEnv ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">RegexType</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Bool</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | test that a MacroEnv is passing all of its built-in tests</span>
+<span class="ot">testMacroEnv ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">RegexType</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Bool</span>
 testMacroEnv lab rty m_env <span class="fu">=</span> <span class="kw">case</span> badMacros m_env <span class="kw">of</span>
   []    <span class="ot">-&gt;</span> return <span class="dt">True</span>
   fails <span class="ot">-&gt;</span> <span class="kw">do</span>
@@ -242,7 +235,7 @@ testMacroEnv lab rty m_env <span class="fu">=</span> <span class="kw">case</span
 badMacros m_env <span class="fu">=</span>
   [ mid
       <span class="fu">|</span> (mid,<span class="dt">MacroDescriptor</span>{<span class="fu">..</span>}) <span class="ot">&lt;-</span> HML.toList m_env
-      , not <span class="fu">$</span> null _md_test_results
+      , not <span class="fu">$</span> null macroTestResults
       ]
 
 <span class="ot">runTests ::</span> (<span class="dt">Eq</span> a,<span class="dt">Show</span> a)
@@ -266,11 +259,11 @@ runTests rty parser <span class="fu">=</span> runTests&#39; rty parser&#39;
           <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span>
           <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span>
 runTests&#39; rty parser vector env mid md<span class="fu">@</span><span class="dt">MacroDescriptor</span>{<span class="fu">..</span>} <span class="fu">=</span>
-    md { _md_test_results <span class="fu">=</span> test_results }
+    md { macroTestResults <span class="fu">=</span> test_results }
   <span class="kw">where</span>
     test_results <span class="fu">=</span> concat
       [ concat <span class="fu">$</span> map test     vector
-      , concat <span class="fu">$</span> map test_neg _md_counter_samples
+      , concat <span class="fu">$</span> map test_neg macroCounterSamples
       ]
 
     test (src,x) <span class="fu">=</span> test&#39;     mid rty parser x <span class="fu">$</span> match_ src env md
@@ -280,23 +273,16 @@ runTests&#39; rty parser vector env mid md<span class="fu">@</span><span class="
     match_ <span class="fu">=</span> <span class="kw">case</span> rty <span class="kw">of</span>
       <span class="dt">TDFA</span> tbmf <span class="ot">-&gt;</span> tbmf
       <span class="dt">PCRE</span> tbmf <span class="ot">-&gt;</span> tbmf</code></pre></div>
-<h2 id="dumpmacrotable-formatmacrotable-formatmacrosummary-formatmacrosources-formatmacrosource">dumpMacroTable, formatMacroTable, formatMacroSummary, formatMacroSources, formatMacroSource</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">dumpMacroTable ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">RegexType</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-dumpMacroTable lab rty m_env <span class="fu">=</span> <span class="kw">do</span>
-    writeFile fp_t <span class="fu">$</span> formatMacroTable   rty              m_env
-    writeFile fp_s <span class="fu">$</span> formatMacroSources rty <span class="dt">ExclCaptures</span> m_env
-  <span class="kw">where</span>
-    fp_t  <span class="fu">=</span> <span class="st">&quot;docs/&quot;</span> <span class="fu">++</span> rty_s <span class="fu">++</span> <span class="st">&quot;-&quot;</span> <span class="fu">++</span> lab <span class="fu">++</span> <span class="st">&quot;.txt&quot;</span>
-    fp_s  <span class="fu">=</span> <span class="st">&quot;docs/&quot;</span> <span class="fu">++</span> rty_s <span class="fu">++</span> <span class="st">&quot;-&quot;</span> <span class="fu">++</span> lab <span class="fu">++</span> <span class="st">&quot;-src.txt&quot;</span>
-
-    rty_s <span class="fu">=</span> map toLower <span class="fu">$</span> presentRegexType rty</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">formatMacroTable ::</span> <span class="dt">RegexType</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+<h2 id="formatmacrotable-formatmacrosummary-formatmacrosources-formatmacrosource">formatMacroTable, formatMacroSummary, formatMacroSources, formatMacroSource</h2>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | format a macros table as a markdown table</span>
+<span class="ot">formatMacroTable ::</span> <span class="dt">RegexType</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
 formatMacroTable rty env <span class="fu">=</span> unlines <span class="fu">$</span>
   format_table macro_table_hdr
     [ macro_table_row rty mid md
         <span class="fu">|</span> (mid,md) <span class="ot">&lt;-</span> L.sortBy (comparing fst) <span class="fu">$</span> HML.toList env
         ]</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">formatMacroSummary ::</span> <span class="dt">RegexType</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | generate a plain text summary of a macro</span>
+<span class="ot">formatMacroSummary ::</span> <span class="dt">RegexType</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
 formatMacroSummary rty env mid <span class="fu">=</span> maybe oops prep <span class="fu">$</span> HML.lookup mid env
   <span class="kw">where</span>
 <span class="ot">    prep ::</span> <span class="dt">MacroDescriptor</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
@@ -313,7 +299,8 @@ formatMacroSummary rty env mid <span class="fu">=</span> maybe oops prep <span c
           lns_ <span class="ot">-&gt;</span> (,) <span class="st">&quot;&quot;</span> lns_
 
     oops <span class="fu">=</span> error <span class="fu">$</span> getMacroID mid <span class="fu">++</span> <span class="st">&quot;: macro not defined in this environment&quot;</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">formatMacroSources ::</span> <span class="dt">RegexType</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | list the source REs for each macro in plain text</span>
+<span class="ot">formatMacroSources ::</span> <span class="dt">RegexType</span>
                    <span class="ot">-&gt;</span> <span class="dt">WithCaptures</span>
                    <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span>
                    <span class="ot">-&gt;</span> <span class="dt">String</span>
@@ -321,7 +308,8 @@ formatMacroSources rty wc env <span class="fu">=</span> unlines <span class="fu"
     [ printf <span class="st">&quot;%-20s : %s&quot;</span> (getMacroID mid) <span class="fu">$</span> formatMacroSource rty wc env mid
         <span class="fu">|</span> mid <span class="ot">&lt;-</span> L.sort <span class="fu">$</span> HML.keys env
         ]</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">formatMacroSource ::</span> <span class="dt">RegexType</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | list the source of a single macro in plain text</span>
+<span class="ot">formatMacroSource ::</span> <span class="dt">RegexType</span>
                   <span class="ot">-&gt;</span> <span class="dt">WithCaptures</span>
                   <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span>
                   <span class="ot">-&gt;</span> <span class="dt">MacroID</span>
@@ -332,7 +320,7 @@ formatMacroSource rty wc env mid <span class="fu">=</span>
     oops <span class="fu">=</span> error <span class="fu">$</span> <span class="st">&quot;formatMacroSource: not found: &quot;</span> <span class="fu">++</span> getMacroID mid</code></pre></div>
 <h2 id="testmacrodescriptors-regexsource">testMacroDescriptors, regexSource</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">testMacroDescriptors ::</span> [<span class="dt">MacroDescriptor</span>] <span class="ot">-&gt;</span> [<span class="dt">TestResult</span>]
-testMacroDescriptors <span class="fu">=</span> concat <span class="fu">.</span> map _md_test_results
+testMacroDescriptors <span class="fu">=</span> concat <span class="fu">.</span> map macroTestResults
 
 <span class="ot">regexSource ::</span> <span class="dt">RegexType</span> <span class="ot">-&gt;</span> <span class="dt">WithCaptures</span> <span class="ot">-&gt;</span> <span class="dt">RegexSource</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
 regexSource rty wc <span class="fu">=</span> format_tokens rty wc <span class="fu">.</span> scan_re</code></pre></div>
@@ -375,13 +363,13 @@ macro_table_row rty mid md <span class="fu">=</span>
 macro_attribute rty mid <span class="dt">MacroDescriptor</span>{<span class="fu">..</span>} c <span class="fu">=</span>
     <span class="kw">case</span> c <span class="kw">of</span>
       <span class="dt">C_name</span>          <span class="ot">-&gt;</span> [getMacroID mid]
-      <span class="dt">C_caps</span>          <span class="ot">-&gt;</span> [show <span class="fu">$</span> min_captures rty <span class="fu">$</span> scan_re _md_source]
-      <span class="dt">C_regex</span>         <span class="ot">-&gt;</span> [regexSource rty <span class="dt">ExclCaptures</span> _md_source]
-      <span class="dt">C_examples</span>      <span class="ot">-&gt;</span> _md_samples
-      <span class="dt">C_anti_examples</span> <span class="ot">-&gt;</span> _md_counter_samples
-      <span class="dt">C_fails</span>         <span class="ot">-&gt;</span> map _TestResult _md_test_results
-      <span class="dt">C_parser</span>        <span class="ot">-&gt;</span> [maybe <span class="st">&quot;-&quot;</span> _FunctionID _md_parser]
-      <span class="dt">C_comment</span>       <span class="ot">-&gt;</span> [_md_description]
+      <span class="dt">C_caps</span>          <span class="ot">-&gt;</span> [show <span class="fu">$</span> min_captures rty <span class="fu">$</span> scan_re macroSource]
+      <span class="dt">C_regex</span>         <span class="ot">-&gt;</span> [regexSource rty <span class="dt">ExclCaptures</span> macroSource]
+      <span class="dt">C_examples</span>      <span class="ot">-&gt;</span> macroSamples
+      <span class="dt">C_anti_examples</span> <span class="ot">-&gt;</span> macroCounterSamples
+      <span class="dt">C_fails</span>         <span class="ot">-&gt;</span> map _<span class="dt">TestResult</span> macroTestResults
+      <span class="dt">C_parser</span>        <span class="ot">-&gt;</span> [maybe <span class="st">&quot;-&quot;</span> _<span class="dt">FunctionID</span> macroParser]
+      <span class="dt">C_comment</span>       <span class="ot">-&gt;</span> [macroDescription]
 
 <span class="ot">format_table ::</span> <span class="dt">TableRow</span> <span class="ot">-&gt;</span> [<span class="dt">TableRow</span>] <span class="ot">-&gt;</span> [<span class="dt">String</span>]
 format_table hdr rows0 <span class="fu">=</span> concat
@@ -514,9 +502,9 @@ scan_re (<span class="dt">RegexSource</span> src0) <span class="fu">=</span> loo
               <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span>
               <span class="ot">-&gt;</span> <span class="dt">String</span>
 mdRegexSource rty wc env md <span class="fu">=</span>
-    expandMacros&#39; lu <span class="fu">$</span> regexSource rty wc <span class="fu">$</span> _md_source md
+    expandMacros&#39; lu <span class="fu">$</span> regexSource rty wc <span class="fu">$</span> macroSource md
   <span class="kw">where</span>
-    lu  <span class="fu">=</span> fmap (regexSource rty wc <span class="fu">.</span> _md_source) <span class="fu">.</span>
+    lu  <span class="fu">=</span> fmap (regexSource rty wc <span class="fu">.</span> macroSource) <span class="fu">.</span>
             flip HML.lookup env</code></pre></div>
 <h2 id="test-test_neg">test', test_neg'</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">test&#39; ::</span> (<span class="dt">Eq</span> a,<span class="dt">Show</span> a)

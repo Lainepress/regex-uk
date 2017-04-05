@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>regex – Text.RE.Internal.NamedCaptures</title>
+  <title>regex – Text.RE.ZeInternals.NamedCaptures</title>
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
 div.sourceCode { overflow-x: auto; }
@@ -59,24 +59,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class='bcdiv'>
   <ol class='breadcrumb'>
     <li><a href="." style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;" id="branding">[<span style='color:red;'>re</span>|${<span style='color:red;'>gex</span>}(.*)|<span></span>]</a></li>
-    <li><a title='source file' href='https://github.com/iconnect/regex/blob/master/Text/RE/Internal/NamedCaptures.lhs'>Text.RE.Internal.NamedCaptures</a></li>
+    <li><a title='source file' href='https://github.com/iconnect/regex/blob/master/Text/RE/ZeInternals/NamedCaptures.lhs'>Text.RE.ZeInternals.NamedCaptures</a></li>
 </ol>
 </div>
 <div class='litcontent'>
 <header>
-<h1 class="title">Text.RE.Internal.NamedCaptures</h1>
+<h1 class="title">Text.RE.ZeInternals.NamedCaptures</h1>
 </header>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE DeriveGeneric              #-}</span>
 <span class="ot">{-# LANGUAGE RecordWildCards            #-}</span>
 <span class="ot">{-# LANGUAGE CPP                        #-}</span>
-<span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span>
+<span class="st">#if __GLASGOW_HASKELL__ &gt;= 800</span>
 <span class="ot">{-# LANGUAGE TemplateHaskellQuotes      #-}</span>
-<span class="ot">#else</span>
+<span class="st">#else</span>
 <span class="ot">{-# LANGUAGE QuasiQuotes                #-}</span>
 <span class="ot">{-# LANGUAGE TemplateHaskell            #-}</span>
-<span class="ot">#endif</span>
+<span class="st">#endif</span>
 
-<span class="kw">module</span> <span class="dt">Text.RE.Internal.NamedCaptures</span>
+<span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.NamedCaptures</span>
   ( cp
   , extractNamedCaptures
   , idFormatTokenREOptions
@@ -94,13 +94,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">GHC.Generics</span>
 <span class="kw">import qualified</span> <span class="dt">Language.Haskell.TH</span>          <span class="kw">as</span> <span class="dt">TH</span>
 <span class="kw">import           </span><span class="dt">Language.Haskell.TH.Quote</span>
-<span class="kw">import           </span><span class="dt">Text.RE</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Internal.PreludeMacros</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Internal.QQ</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Tools.Lex</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.CaptureID</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Types.Match</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.PreludeMacros</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.QQ</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.TestBench</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Tools.Lex</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Match</span>
 <span class="kw">import           </span><span class="dt">Text.Regex.TDFA</span>
 
 
@@ -198,9 +197,9 @@ formatTokens <span class="fu">=</span> formatTokens&#39; defFormatTokenREOptions
 <span class="co">-- | options for the general Token formatter below</span>
 <span class="kw">data</span> <span class="dt">FormatTokenREOptions</span> <span class="fu">=</span>
   <span class="dt">FormatTokenREOptions</span>
-    {<span class="ot"> _fto_regex_type ::</span> <span class="dt">Maybe</span> <span class="dt">RegexType</span>    <span class="co">-- ^ Posix, PCRE or indeterminate REs?</span>
-    ,<span class="ot"> _fto_min_caps   ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ remove captures where possible</span>
-    ,<span class="ot"> _fto_incl_caps  ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ include the captures in the output</span>
+    { _<span class="ot">fto_regex_type ::</span> <span class="dt">Maybe</span> <span class="dt">RegexType</span>    <span class="co">-- ^ Posix, PCRE or indeterminate REs?</span>
+    , _<span class="ot">fto_min_caps   ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ remove captures where possible</span>
+    , _<span class="ot">fto_incl_caps  ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ include the captures in the output</span>
     }
   <span class="kw">deriving</span> (<span class="dt">Show</span>)
 
