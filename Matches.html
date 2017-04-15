@@ -83,8 +83,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Match</span>
 <span class="kw">import           </span><span class="dt">Text.Regex.Base</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | the result type to use when every match is needed, not just the</span>
-<span class="co">-- first match of the RE against the source</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | the result of matching a RE against a text (with @*=~@), retaining</span>
+<span class="co">-- the text that was matched against</span>
 <span class="kw">data</span> <span class="dt">Matches</span> a <span class="fu">=</span>
   <span class="dt">Matches</span>
     {<span class="ot"> matchesSource ::</span> <span class="fu">!</span>a          <span class="co">-- ^ the source text being matched</span>
@@ -105,7 +105,7 @@ anyMatches <span class="fu">=</span> not <span class="fu">.</span> null <span cl
 <span class="ot">countMatches ::</span> <span class="dt">Matches</span> a <span class="ot">-&gt;</span> <span class="dt">Int</span>
 countMatches <span class="fu">=</span> length <span class="fu">.</span> allMatches
 
-<span class="co">-- | list the Matches</span>
+<span class="co">-- | list the texts that Matched</span>
 <span class="ot">matches ::</span> <span class="dt">Matches</span> a <span class="ot">-&gt;</span> [a]
 matches <span class="fu">=</span> map capturedText <span class="fu">.</span> mainCaptures
 

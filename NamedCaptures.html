@@ -103,7 +103,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Text.Regex.TDFA</span>
 
 
-<span class="co">-- | quasi quoter for CaptureID ([cp|0|],[cp|y|], etc.)</span>
+<span class="co">-- | quasi quoter for CaptureID: @[cp|0|]@, @[cp|0|]@, etc.,</span>
+<span class="co">-- indexing captures by classic positional numbers, and @[cp|foo|]@,</span>
+<span class="co">-- etc., referencing a named capture @[re| ... ${foo}( ... ) ... |]@.</span>
 <span class="ot">cp ::</span> <span class="dt">QuasiQuoter</span>
 cp <span class="fu">=</span>
     (qq0 <span class="st">&quot;cp&quot;</span>)
@@ -163,7 +165,7 @@ analyseTokens tks0 <span class="fu">=</span> <span class="kw">case</span> count_
 <h2 id="scanning-regex-strings">Scanning Regex Strings</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | scan a RE string into a list of RE Token</span>
 <span class="ot">scan ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [<span class="dt">Token</span>]
-scan <span class="fu">=</span> alex&#39; match al oops
+scan <span class="fu">=</span> alex&#39; match al <span class="fu">$</span> oops <span class="st">&quot;top&quot;</span>
   <span class="kw">where</span>
 <span class="ot">    al ::</span> [(<span class="dt">Regex</span>,<span class="dt">Match</span> <span class="dt">String</span><span class="ot">-&gt;</span><span class="dt">Maybe</span> <span class="dt">Token</span>)]
     al <span class="fu">=</span>
@@ -179,11 +181,11 @@ scan <span class="fu">=</span> alex&#39; match al oops
     x_1     <span class="fu">=</span> captureText <span class="fu">$</span> <span class="dt">IsCaptureOrdinal</span> <span class="fu">$</span> <span class="dt">CaptureOrdinal</span> <span class="dv">1</span>
 
     s2c [c] <span class="fu">=</span> c
-    s2c _   <span class="fu">=</span> error <span class="st">&quot;scan:s2c:internal error&quot;</span>
+    s2c _   <span class="fu">=</span> oops <span class="st">&quot;s2c&quot;</span>
 
     mk s f  <span class="fu">=</span> (either error id <span class="fu">$</span> makeRegexM s,<span class="dt">Just</span> <span class="fu">.</span> f)
 
-    oops    <span class="fu">=</span> error <span class="st">&quot;reScanner&quot;</span></code></pre></div>
+    oops  m <span class="fu">=</span> error <span class="fu">$</span> <span class="st">&quot;NamedCaptures.scan: &quot;</span> <span class="fu">++</span> m</code></pre></div>
 <h2 id="parsing-captures">Parsing captures</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">parse_capture ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">TH.Q</span> <span class="dt">TH.Exp</span>
 parse_capture s <span class="fu">=</span> <span class="kw">case</span> all isDigit s <span class="kw">of</span>

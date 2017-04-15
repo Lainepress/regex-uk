@@ -102,7 +102,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">System.IO</span>
 <span class="kw">import           </span><span class="dt">TestKit</span>
 <span class="kw">import           </span><span class="dt">Text.Printf</span>
-<span class="kw">import           </span><span class="dt">Text.RE</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE</span>                             <span class="kw">as</span> <span class="dt">PCRE</span>
 <span class="kw">import           </span><span class="dt">Text.RE.PCRE.ByteString.Lazy</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.String</span>                      <span class="kw">as</span> <span class="dt">S</span>
 <span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
@@ -318,13 +318,13 @@ presentEvent <span class="dt">Event</span>{<span class="fu">..</span>} <span cla
 <span class="co">-- REOptions and Prelude</span>
 <span class="fu">--</span>
 
-<span class="ot">lpo ::</span> <span class="dt">REOptions</span>
-lpo <span class="fu">=</span> makeREOptions lp_prelude
+<span class="ot">lpo ::</span> <span class="dt">PCRE.REOptions</span>
+lpo <span class="fu">=</span> PCRE.makeREOptions lp_prelude
 
 <span class="ot">lp_prelude ::</span> <span class="dt">Macros</span> <span class="dt">RE</span>
 lp_prelude <span class="fu">=</span> runIdentity <span class="fu">$</span> mkMacros mk regexType <span class="dt">ExclCaptures</span> lp_env
   <span class="kw">where</span>
-    mk   <span class="fu">=</span> maybe oops <span class="dt">Identity</span> <span class="fu">.</span> compileRegexWithOptions noPreludeREOptions
+    mk   <span class="fu">=</span> maybe oops <span class="dt">Identity</span> <span class="fu">.</span> PCRE.compileRegexWithOptions PCRE.noPreludeREOptions
 
     oops <span class="fu">=</span> error <span class="st">&quot;lp_prelude&quot;</span>
 
@@ -341,7 +341,7 @@ lp_macro_sources <span class="fu">=</span> formatMacroSources regexType <span cl
 lp_macro_source <span class="fu">=</span> formatMacroSource regexType <span class="dt">ExclCaptures</span> lp_env
 
 <span class="ot">lp_env ::</span> <span class="dt">MacroEnv</span>
-lp_env <span class="fu">=</span> preludeEnv <span class="ot">`HML.union`</span> HML.fromList
+lp_env <span class="fu">=</span> PCRE.preludeEnv <span class="ot">`HML.union`</span> HML.fromList
     [ f <span class="st">&quot;user&quot;</span>        user_macro
     , f <span class="st">&quot;pid#tid:&quot;</span>    pid_tid_macro
     , f <span class="st">&quot;access&quot;</span>      access_macro
@@ -623,7 +623,10 @@ parse_pid_tid x <span class="fu">=</span> <span class="kw">case</span> allMatche
     [cs,cs&#39;] <span class="ot">-&gt;</span> (,) <span class="fu">&lt;$&gt;</span> p cs <span class="fu">&lt;*&gt;</span> p cs&#39;
     _        <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
   <span class="kw">where</span>
-    p cs <span class="fu">=</span> matchCapture cs <span class="fu">&gt;&gt;=</span> parseInteger <span class="fu">.</span> capturedText</code></pre></div>
+    p cs <span class="fu">=</span> matchCapture cs <span class="fu">&gt;&gt;=</span> parseInteger <span class="fu">.</span> capturedText
+
+<span class="ot">regexType ::</span> <span class="dt">RegexType</span>
+regexType <span class="fu">=</span> PCRE.regexType</code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

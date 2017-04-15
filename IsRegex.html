@@ -110,9 +110,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   makeRegex           <span class="fu">=</span> makeRegexWith         minBound
   makeSearchReplace   <span class="fu">=</span> makeSearchReplaceWith minBound
   makeEscaped         <span class="fu">=</span> makeEscapedWith       minBound
-  makeEscapedWith o f <span class="fu">=</span> makeRegexWith o <span class="fu">.</span> f <span class="fu">.</span> packR <span class="fu">.</span> escapeREString <span class="fu">.</span> unpackR
-
-<span class="co">-- | search and replace all matches in the argument text; e.g., this function</span>
+  makeEscapedWith o f <span class="fu">=</span> makeRegexWith o <span class="fu">.</span> f <span class="fu">.</span> packR <span class="fu">.</span> escapeREString <span class="fu">.</span> unpackR</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | search and replace all matches in the argument text; e.g., this function</span>
 <span class="co">-- will convert every YYYY-MM-DD format date in its argument text into a</span>
 <span class="co">-- DD\/MM\/YYYY date:</span>
 <span class="fu">--</span>

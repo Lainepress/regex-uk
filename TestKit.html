@@ -84,9 +84,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   , substVersion
   , substVersion_
   , readCurrentVersion
-  , <span class="dt">Test</span>
+  , <span class="dt">Test</span>(<span class="fu">..</span>)
   , runTheTests
   , checkThis
+  , checkThisWith
+  , convertMaybeTextList
+  , castInt
+  , packLBS
   , test_pp
   , include
   , cmp
@@ -195,13 +199,27 @@ runTheTests tests <span class="fu">=</span> <span class="kw">do</span>
       exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span>
 
 <span class="ot">checkThis ::</span> (<span class="dt">Show</span> a,<span class="dt">Eq</span> a) <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Test</span>
-checkThis lab ref val <span class="fu">=</span>
+checkThis <span class="fu">=</span> checkThisWith id
+
+<span class="ot">checkThisWith ::</span> (<span class="dt">Show</span> a,<span class="dt">Eq</span> a) <span class="ot">=&gt;</span> (b<span class="ot">-&gt;</span>a) <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Test</span>
+checkThisWith f lab ref0 val <span class="fu">=</span>
   <span class="dt">Test</span>
     { testLabel    <span class="fu">=</span> lab
     , testExpected <span class="fu">=</span> show ref
     , testResult   <span class="fu">=</span> show val
     , testPassed   <span class="fu">=</span> ref <span class="fu">==</span> val
     }
+  <span class="kw">where</span>
+    ref <span class="fu">=</span> f ref0
+
+<span class="ot">convertMaybeTextList ::</span> [<span class="dt">Maybe</span> <span class="dt">String</span>] <span class="ot">-&gt;</span> [<span class="dt">Maybe</span> <span class="dt">T.Text</span>]
+convertMaybeTextList <span class="fu">=</span> map <span class="fu">$</span> fmap T.pack
+
+<span class="ot">castInt ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>
+castInt <span class="fu">=</span> id
+
+<span class="ot">packLBS ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
+packLBS <span class="fu">=</span> LBS.pack
 
 <span class="ot">present_test ::</span> <span class="dt">Test</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
 present_test <span class="dt">Test</span>{<span class="fu">..</span>} <span class="fu">=</span> unlines
@@ -227,7 +245,13 @@ test_pp lab loop test_file gold_file <span class="fu">=</span> <span class="kw">
   <span class="kw">where</span>
     tmp_pth <span class="fu">=</span> <span class="st">&quot;tmp/mod.lhs&quot;</span></code></pre></div>
 <h2 id="simple-include-processor">simple include processor</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">include ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | this function looks for lines of the form</span>
+<span class="fu">--</span>
+<span class="co">--    `%include &lt;file&gt; [exclude &lt;RE&gt;]`</span>
+<span class="fu">--</span>
+<span class="co">-- and replaces them with the contents of the named file, optionally</span>
+<span class="co">-- excluding any lines that match the given RE.</span>
+<span class="ot">include ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
 include <span class="fu">=</span> sed&#39; <span class="fu">$</span> <span class="dt">Select</span>
     [ <span class="dt">Function</span> [re<span class="fu">|^%</span>include <span class="fu">$</span>{file}(<span class="fu">@</span>{<span class="fu">%</span>string})<span class="fu">$|</span>]                              <span class="dt">TOP</span> incl
     , <span class="dt">Function</span> [re<span class="fu">|^%</span>include <span class="fu">$</span>{file}(<span class="fu">@</span>{<span class="fu">%</span>string}) <span class="fu">*</span>exclude <span class="fu">*$</span>{rex}(<span class="fu">@</span>{<span class="fu">%</span>string})<span class="fu">$|</span>] <span class="dt">TOP</span> incl
@@ -237,6 +261,9 @@ include <span class="fu">=</span> sed&#39; <span class="fu">$</span> <span class
     incl _ mtch _ _ <span class="fu">=</span> include&#39; mtch
     nop  _ _    _ _ <span class="fu">=</span> return <span class="dt">Nothing</span>
 
+<span class="co">-- | processes the match from a &#39;%include&#39; line, analyses the match,</span>
+<span class="co">-- fetches the file, optionally excludes lines specified by an RE,</span>
+<span class="co">-- returning the text to include.</span>
 <span class="ot">include&#39; ::</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)
 include&#39; mtch <span class="fu">=</span> <span class="kw">do</span>
     ftr <span class="ot">&lt;-</span> <span class="kw">case</span> prs_s <span class="fu">&lt;$&gt;</span> mtch <span class="fu">!$$?</span> [cp<span class="fu">|</span>rex<span class="fu">|</span>] <span class="kw">of</span>
@@ -291,7 +318,7 @@ sortImports lbs <span class="fu">=</span>
 
     (hdr,bdy) <span class="fu">=</span> span (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches) lns
     lns       <span class="fu">=</span> grepFilter rex lbs
-    rex       <span class="fu">=</span> [re<span class="fu">|^</span><span class="kw">import </span>+(<span class="kw">qualified</span>)? +${mod}([^ ].*)$|]</code></pre></div>
+    rex       <span class="fu">=</span> [re<span class="fu">|^</span><span class="kw">import </span>+(<span class="kw">qualified</span> )? *${mod}([^ ].*)$|]</code></pre></div>
 <h2 id="read_file-and-write_file">read_file and write_file</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">read_file ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
 read_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.getContents

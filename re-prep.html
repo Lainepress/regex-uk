@@ -98,11 +98,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">System.IO</span>
 <span class="kw">import           </span><span class="dt">TestKit</span>
 <span class="kw">import           </span><span class="dt">Text.Heredoc</span>
-<span class="kw">import           </span><span class="dt">Text.RE</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA.ByteString.Lazy</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA.String</span>                      <span class="kw">as</span> <span class="dt">TS</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Tools.Grep</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">main ::</span> <span class="dt">IO</span> ()
@@ -132,6 +130,7 @@ main <span class="fu">=</span> <span class="kw">do</span>
         , prg <span class="st">&quot;--help&quot;</span>
         , prg <span class="st">&quot;[test]&quot;</span>
         , prg <span class="st">&quot;badges&quot;</span>
+        , prg <span class="st">&quot;blog-badge&quot;</span>
         , prg <span class="st">&quot;pages&quot;</span>
         , prg <span class="st">&quot;all&quot;</span>
         , prg <span class="st">&quot;doc (-|&lt;in-file&gt;) (-|&lt;out-file&gt;)&quot;</span>
@@ -208,7 +207,7 @@ genMode <span class="fu">=</span> <span class="dt">Gen</span> <span class="fu">&
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">prepare_tutorial ::</span> <span class="dt">MODE</span> <span class="ot">-&gt;</span> FilePath <span class="ot">-&gt;</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
 prepare_tutorial mode fp_in fp_out <span class="fu">=</span>
   LBS.readFile fp_in <span class="fu">&gt;&gt;=</span> prep_tutorial_pp mode <span class="fu">&gt;&gt;=</span> incld <span class="fu">&gt;&gt;=</span>
-    LBS.writeFile fp_out
+    LBS.writeFile fp_out <span class="fu">.</span> sortImports
   <span class="kw">where</span>
     incld <span class="fu">=</span> <span class="kw">case</span> mode <span class="kw">of</span>
       <span class="dt">Doc</span>   <span class="ot">-&gt;</span> include_code_pp
@@ -217,16 +216,20 @@ prepare_tutorial mode fp_in fp_out <span class="fu">=</span>
 prep_tutorial_pp mode <span class="fu">=</span>
   sed&#39; <span class="fu">$</span> <span class="dt">Select</span>
     [ <span class="dt">LineEdit</span> [re<span class="fu">|^%</span>main <span class="fu">$</span>{arg}(top<span class="fu">|</span>bottom)<span class="fu">$|</span>]                            <span class="fu">$</span> main_    mode
-    , <span class="dt">Function</span> [re<span class="fu">|^$</span>{fn}(evalme<span class="fu">@</span>{<span class="fu">%</span>id}) <span class="fu">=</span> checkThis <span class="fu">$</span>{arg}(<span class="fu">@</span>{<span class="fu">%</span>string}) \(<span class="fu">$</span>{ans}([<span class="fu">^</span>)]<span class="fu">+</span>)\) \<span class="fu">$</span> <span class="fu">*$</span>{exp}(<span class="fu">.*</span>)<span class="fu">$|</span>]
-                                                                       <span class="dt">TOP</span> <span class="fu">$</span> evalme   mode
-    , <span class="dt">Function</span> [re<span class="fu">|^.*$|</span>]                                              <span class="dt">TOP</span> <span class="fu">$</span> passthru
-    ]</code></pre></div>
+    , <span class="dt">LineEdit</span> [re<span class="fu">|^</span><span class="kw">import </span>*<span class="dt">TestKit</span>$|]                                     $ hide     mode
+    , <span class="dt">LineEdit</span> [re<span class="fu">|^</span>\<span class="co">{-# OPTIONS_GHC -fno-warn-missing-signatures *#-\}$|] $ hide     mode</span>
+<span class="co">    , Function [re|^${fn}(evalme@{%id}) += +(checkThis|checkThisWith +@{%id}) +${arg}(@{%string}) +\(${ans}([^)]+)\) +\$ +\(${exp}(.*)\)$|]</span>
+<span class="co">                                                                       TOP $ evalme   mode</span>
+<span class="co">    , Function [re|^${fn}(evalme@{%id}) += +(checkThis|checkThisWith +@{%id}) +${arg}(@{%string}) +\(${ans}([^)]+)\) +\$ +${exp}(.*)$|]</span>
+<span class="co">                                                                       TOP $ evalme   mode</span>
+<span class="co">    , Function [re|^.*$|]                                              TOP $ passthru</span>
+<span class="co">    ]</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">evalme ::</span> <span class="dt">MODE</span>
-         <span class="ot">-&gt;</span> <span class="dt">LineNo</span>
-         <span class="ot">-&gt;</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span>
-         <span class="ot">-&gt;</span> <span class="dt">RELocation</span>
-         <span class="ot">-&gt;</span> <span class="dt">Capture</span> <span class="dt">LBS.ByteString</span>
-         <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)
+       <span class="ot">-&gt;</span> <span class="dt">LineNo</span>
+       <span class="ot">-&gt;</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span>
+       <span class="ot">-&gt;</span> <span class="dt">RELocation</span>
+       <span class="ot">-&gt;</span> <span class="dt">Capture</span> <span class="dt">LBS.ByteString</span>
+       <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)
 evalme  <span class="dt">Doc</span>     <span class="fu">=</span> evalmeDoc
 evalme (<span class="dt">Gen</span> gs) <span class="fu">=</span> evalmeGen  gs
 
@@ -237,11 +240,12 @@ evalme (<span class="dt">Gen</span> gs) <span class="fu">=</span> evalmeGen  gs
 main_   <span class="dt">Doc</span>     <span class="fu">=</span> delete
 main_  (<span class="dt">Gen</span> gs) <span class="fu">=</span> mainGen    gs
 
-
-<span class="ot">delete ::</span> <span class="dt">LineNo</span>
-       <span class="ot">-&gt;</span> <span class="dt">Matches</span> <span class="dt">LBS.ByteString</span>
-       <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">LineEdit</span> <span class="dt">LBS.ByteString</span>)
-delete _ _ <span class="fu">=</span> return <span class="dt">Delete</span></code></pre></div>
+<span class="ot">hide ::</span> <span class="dt">MODE</span>
+     <span class="ot">-&gt;</span> <span class="dt">LineNo</span>
+     <span class="ot">-&gt;</span> <span class="dt">Matches</span> <span class="dt">LBS.ByteString</span>
+    <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">LineEdit</span> <span class="dt">LBS.ByteString</span>)
+hide  <span class="dt">Doc</span>    <span class="fu">=</span> delete
+hide (<span class="dt">Gen</span> _) <span class="fu">=</span> passthru_</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">evalmeDoc ::</span> <span class="dt">LineNo</span>
           <span class="ot">-&gt;</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span>
           <span class="ot">-&gt;</span> <span class="dt">RELocation</span>
@@ -260,13 +264,18 @@ evalmeDoc _ mtch _ _ <span class="fu">=</span> return <span class="fu">$</span> 
 evalmeGen gs _ mtch0 _ _ <span class="fu">=</span> <span class="dt">Just</span> <span class="fu">&lt;$&gt;</span>
     replaceCapturesM replaceMethods <span class="dt">ALL</span> f mtch0
   <span class="kw">where</span>
-    f mtch loc cap <span class="fu">=</span> <span class="kw">case</span> locationCapture loc <span class="kw">of</span>
-      <span class="dv">2</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
-          modifyIORef gs (ide<span class="fu">:</span>)
-          return <span class="fu">$</span> <span class="dt">Just</span> <span class="fu">$</span> LBS.pack <span class="fu">$</span> show ide
-        <span class="kw">where</span>
-          ide <span class="fu">=</span> LBS.unpack <span class="fu">$</span> captureText [cp<span class="fu">|</span>fn<span class="fu">|</span>] mtch
-      _ <span class="ot">-&gt;</span> return <span class="fu">$</span> <span class="dt">Just</span> <span class="fu">$</span> capturedText cap</code></pre></div>
+    f mtch loc _ <span class="fu">=</span>
+      <span class="kw">case</span> locationCapture loc <span class="fu">==</span> arg_i <span class="kw">of</span>
+        <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="kw">do</span>
+            modifyIORef gs (ide<span class="fu">:</span>)
+            return <span class="fu">$</span> <span class="dt">Just</span> <span class="fu">$</span> LBS.pack <span class="fu">$</span> show ide
+          <span class="kw">where</span>
+            ide <span class="fu">=</span> LBS.unpack <span class="fu">$</span> captureText [cp<span class="fu">|</span>fn<span class="fu">|</span>] mtch
+        <span class="dt">False</span> <span class="ot">-&gt;</span> return <span class="dt">Nothing</span>
+
+    arg_i <span class="fu">=</span> either oops id <span class="fu">$</span> findCaptureID [cp<span class="fu">|</span>arg<span class="fu">|</span>] <span class="fu">$</span> captureNames mtch0
+
+    oops  <span class="fu">=</span> error <span class="st">&quot;evalmeGen: confused captures!&quot;</span></code></pre></div>
 <p>How are we doing?</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">mainGen ::</span> <span class="dt">GenState</span>
         <span class="ot">-&gt;</span> <span class="dt">LineNo</span>
@@ -302,7 +311,7 @@ mainGen gs _ mtchs <span class="fu">=</span> <span class="kw">case</span> allMat
 begin_code <span class="fu">=</span> <span class="st">&quot;\\&quot;</span><span class="fu">&lt;&gt;</span><span class="st">&quot;begin{code}&quot;</span>
 end_code   <span class="fu">=</span> <span class="st">&quot;\\&quot;</span><span class="fu">&lt;&gt;</span><span class="st">&quot;end{code}&quot;</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">mk_list ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> [<span class="dt">LBS.ByteString</span>]
-mk_list []          <span class="fu">=</span> [<span class="st">&quot;[]&quot;</span>]
+mk_list []          <span class="fu">=</span> [<span class="st">&quot;  []&quot;</span>]
 mk_list (ide0<span class="fu">:</span>ides) <span class="fu">=</span> f <span class="st">&quot;[&quot;</span> ide0 <span class="fu">$</span> foldr (f <span class="st">&quot;,&quot;</span>) [<span class="st">&quot;  ]&quot;</span>] ides
   <span class="kw">where</span>
     f pfx ide t <span class="fu">=</span> (<span class="st">&quot;  &quot;</span><span class="fu">&lt;&gt;</span>pfx<span class="fu">&lt;&gt;</span><span class="st">&quot; &quot;</span><span class="fu">&lt;&gt;</span>LBS.pack ide) <span class="fu">:</span> t</code></pre></div>
@@ -325,13 +334,23 @@ inc_code _ mtch _ _ <span class="fu">=</span> fmap <span class="dt">Just</span> 
     re_s  <span class="fu">=</span> prs_s <span class="fu">$</span> captureText [cp<span class="fu">|</span>rex<span class="fu">|</span>]  mtch
 
     prs_s <span class="fu">=</span> maybe (error <span class="st">&quot;include_code&quot;</span>) T.unpack <span class="fu">.</span> parseString</code></pre></div>
-<h2 id="passthru-action">passthru action</h2>
+<h2 id="passthru-and-delete-actions">passthru and delete actions</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">passthru ::</span> <span class="dt">LineNo</span>
          <span class="ot">-&gt;</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span>
          <span class="ot">-&gt;</span> <span class="dt">RELocation</span>
          <span class="ot">-&gt;</span> <span class="dt">Capture</span> <span class="dt">LBS.ByteString</span>
          <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)
-passthru _ _ _ _ <span class="fu">=</span> return <span class="dt">Nothing</span></code></pre></div>
+passthru _ _ _ _ <span class="fu">=</span> return <span class="dt">Nothing</span>
+
+<span class="ot">passthru_ ::</span> <span class="dt">LineNo</span>
+          <span class="ot">-&gt;</span> <span class="dt">Matches</span> <span class="dt">LBS.ByteString</span>
+          <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">LineEdit</span> <span class="dt">LBS.ByteString</span>)
+passthru_ _ _ <span class="fu">=</span> return <span class="dt">NoEdit</span>
+
+<span class="ot">delete ::</span> <span class="dt">LineNo</span>
+       <span class="ot">-&gt;</span> <span class="dt">Matches</span> <span class="dt">LBS.ByteString</span>
+       <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">LineEdit</span> <span class="dt">LBS.ByteString</span>)
+delete _ _ <span class="fu">=</span> return <span class="dt">Delete</span></code></pre></div>
 <h2 id="extracting-a-literate-fragment-from-a-haskell-program-text">Extracting a Literate Fragment from a Haskell Program Text</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">extract ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">RE</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
 extract fp rex <span class="fu">=</span> extr <span class="fu">.</span> LBS.lines <span class="fu">&lt;$&gt;</span> LBS.readFile fp

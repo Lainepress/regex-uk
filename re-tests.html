@@ -107,7 +107,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Test.Tasty.SmallCheck</span>          <span class="kw">as</span> <span class="dt">SC</span>
 <span class="kw">import           </span><span class="dt">TestKit</span>
 <span class="kw">import           </span><span class="dt">Text.Heredoc</span>
-<span class="kw">import           </span><span class="dt">Text.RE</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE</span>                   <span class="kw">as</span> <span class="dt">PCRE</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.ByteString</span>        <span class="kw">as</span> <span class="dt">P_BS</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.ByteString.Lazy</span>   <span class="kw">as</span> <span class="dt">PLBS</span>
@@ -125,10 +124,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Tools.Find</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.AddCaptureNames</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.NamedCaptures</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.PreludeMacros</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
+<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals</span>
 <span class="kw">import qualified</span> <span class="dt">Text.Regex.PCRE</span>                <span class="kw">as</span> <span class="dt">PCRE_</span>
 <span class="kw">import qualified</span> <span class="dt">Text.Regex.TDFA</span>                <span class="kw">as</span> <span class="dt">TDFA_</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">main ::</span> <span class="dt">IO</span> ()
@@ -399,7 +395,9 @@ SearchReplace
 </h3>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">search_replace_tests ::</span> <span class="dt">TestTree</span>
 search_replace_tests <span class="fu">=</span> testGroup <span class="st">&quot;SearchReplace&quot;</span>
-    [ testCase <span class="st">&quot;TDFA.ed/String&quot;</span> <span class="fu">$</span> test  id         tdfa_eds
+    [ testCase <span class="st">&quot;?=~/ [ed_| ... |]&quot;</span> <span class="fu">$</span> <span class="st">&quot;baz bar foobar&quot;</span> <span class="fu">@=?</span> <span class="st">&quot;foo bar foobar&quot;</span> <span class="fu">T_ST.?=~/</span> [ed_<span class="fu">|</span>foo<span class="fu">///</span>baz<span class="fu">|</span>] ()
+    , testCase <span class="st">&quot;*=~/ [ed_| ... |]&quot;</span> <span class="fu">$</span> <span class="st">&quot;baz bar bazbar&quot;</span> <span class="fu">@=?</span> <span class="st">&quot;foo bar foobar&quot;</span> <span class="fu">T_ST.*=~/</span> [ed_<span class="fu">|</span>foo<span class="fu">///</span>baz<span class="fu">|</span>] <span class="dt">MultilineSensitive</span>
+    , testCase <span class="st">&quot;TDFA.ed/String&quot;</span> <span class="fu">$</span> test  id         tdfa_eds
     , testCase <span class="st">&quot;PCRE.ed/String&quot;</span> <span class="fu">$</span> test  id         pcre_eds
     , testCase <span class="st">&quot;TDFA.ed/B&quot;</span>      <span class="fu">$</span> test  B.pack     tdfa_eds
     , testCase <span class="st">&quot;PCRE.ed/B&quot;</span>      <span class="fu">$</span> test  B.pack     pcre_eds
@@ -724,7 +722,7 @@ findMethods <span class="fu">=</span>
 misc_tests <span class="fu">=</span> testGroup <span class="st">&quot;Miscelaneous Tests&quot;</span>
     [ testGroup <span class="st">&quot;CaptureID&quot;</span>
         [ testCase <span class="st">&quot;CaptureID lookup failure&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
-            ok <span class="ot">&lt;-</span> isValidError <span class="fu">$</span> unsafeFindCaptureID [cp<span class="fu">|</span>foo<span class="fu">|</span>] <span class="fu">$</span> reCaptureNames [re<span class="fu">|</span>foo<span class="fu">|</span>]
+            ok <span class="ot">&lt;-</span> isValidError <span class="fu">$</span> unsafe_find_capture_id [cp<span class="fu">|</span>foo<span class="fu">|</span>] <span class="fu">$</span> reCaptureNames [re<span class="fu">|</span>foo<span class="fu">|</span>]
             assertBool <span class="st">&quot;failed&quot;</span> ok
         ]
     , testGroup <span class="st">&quot;QQ&quot;</span>
@@ -898,6 +896,9 @@ isValidError x <span class="fu">=</span> catch (x <span class="ot">`seq`</span> 
   <span class="kw">where</span>
 <span class="ot">    hdl ::</span> <span class="dt">SomeException</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Bool</span>
     hdl se <span class="fu">=</span> return <span class="fu">$</span> (length <span class="fu">$</span> show se) <span class="ot">`seq`</span> <span class="dt">True</span>
+
+<span class="ot">unsafe_find_capture_id ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">CaptureNames</span> <span class="ot">-&gt;</span> <span class="dt">CaptureOrdinal</span>
+unsafe_find_capture_id cid <span class="fu">=</span> either error id <span class="fu">.</span> findCaptureID cid
 
 <span class="ot">un_either ::</span> <span class="dt">Either</span> <span class="dt">String</span> a <span class="ot">-&gt;</span> a
 un_either <span class="fu">=</span> either error id</code></pre></div>

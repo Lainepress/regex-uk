@@ -119,7 +119,8 @@ main <span class="fu">=</span> <span class="kw">do</span>
       putStr <span class="fu">$</span> unlines
         [ <span class="st">&quot;usage:&quot;</span>
         , <span class="st">&quot;  &quot;</span><span class="fu">++</span>prg<span class="fu">++</span><span class="st">&quot; [test]&quot;</span>
-        , <span class="st">&quot;  &quot;</span><span class="fu">++</span>prg<span class="fu">++</span><span class="st">&quot; &lt;directory&gt;&quot;</span>
+        , <span class="st">&quot;  &quot;</span><span class="fu">++</span>prg<span class="fu">++</span><span class="st">&quot; check  &lt;directory&gt;&quot;</span>
+        , <span class="st">&quot;  &quot;</span><span class="fu">++</span>prg<span class="fu">++</span><span class="st">&quot; update &lt;directory&gt;&quot;</span>
         ]</code></pre></div>
 <h2 id="the-find-script">The Find Script</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">sort_r ::</span> <span class="dt">Mode</span> <span class="ot">-&gt;</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
@@ -176,7 +177,7 @@ sortImports lbs <span class="fu">=</span>
 
     (hdr,bdy) <span class="fu">=</span> span (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches) lns
     lns       <span class="fu">=</span> grepFilter rex lbs
-    rex       <span class="fu">=</span> [re<span class="fu">|^</span><span class="kw">import </span>+(<span class="kw">qualified</span>)? +${mod}([^ ].*)$|]</code></pre></div>
+    rex       <span class="fu">=</span> [re<span class="fu">|^</span><span class="kw">import </span>+(<span class="kw">qualified</span> )? *${mod}([^ ].*)$|]</code></pre></div>
 </div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
