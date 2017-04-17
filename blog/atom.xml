@@ -8,8 +8,35 @@
         <name>Chris Dornan</name>
         <email>chris@regex.uk</email>
     </author>
-    <updated>2017-04-10T00:00:00Z</updated>
+    <updated>2017-04-17T00:00:00Z</updated>
     <entry>
+    <title>regex-1.0.0.0 Released</title>
+    <link href="http://blog.regex.uk/posts/2017-04-17-announce-1.0.0.0.html" />
+    <id>http://blog.regex.uk/posts/2017-04-17-announce-1.0.0.0.html</id>
+    <published>2017-04-17T00:00:00Z</published>
+    <updated>2017-04-17T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>regex-1.0.0.0, the first stable version is up on Hackage.</p>
+<ul>
+<li><p>The final tweaks have been made to the API, evacuating <code>Text.RE</code> (whose sole purpose is now to provide a map of the API) and the <code>ZeInternals.*</code> module tree has been hidden with all of the internal functions and types needed by the regex-with-pcre and regex-examples packages collected into <code>Text.RE.ZeInternals</code>.</p></li>
+<li><p>The first editions of the tutorials have been completed.</p></li>
+</ul>
+<p>The full details are in the <a href="https://hackage.haskell.org/package/regex-1.0.0.0/changelog">changelog</a>.</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>The regex package has been greatly improved since regex-0.5.0.0 when we requested comment from the community and all of these improvements have been in response to contributions and feedback. We would like to especially thank the following for their contributions to shaping this release.</p>
+<ul>
+<li>Adam Bergmark</li>
+<li>Alfredo Di Napoli</li>
+<li>Artyom Kazak</li>
+<li>Edward Z. Yang</li>
+<li>Evan Laforge</li>
+<li>Herbert Valerio Riedel</li>
+<li>Michael Lamparski</li>
+<li>Serge Le Huitouze</li>
+<li>Simon Michael</li>
+<li>Tom Knight</li>
+</ul>]]></summary>
+</entry>
+<entry>
     <title>regex-1.0.0.0 in preparation</title>
     <link href="http://blog.regex.uk/posts/2017-04-10-update.html" />
     <id>http://blog.regex.uk/posts/2017-04-10-update.html</id>

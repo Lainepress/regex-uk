@@ -7,8 +7,35 @@
         <description><![CDATA[Writing Haskell and the regex package.]]></description>
         <atom:link href="http://blog.regex.uk/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 10 Apr 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 17 Apr 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>regex-1.0.0.0 Released</title>
+    <link>http://blog.regex.uk/posts/2017-04-17-announce-1.0.0.0.html</link>
+    <description><![CDATA[<p>regex-1.0.0.0, the first stable version is up on Hackage.</p>
+<ul>
+<li><p>The final tweaks have been made to the API, evacuating <code>Text.RE</code> (whose sole purpose is now to provide a map of the API) and the <code>ZeInternals.*</code> module tree has been hidden with all of the internal functions and types needed by the regex-with-pcre and regex-examples packages collected into <code>Text.RE.ZeInternals</code>.</p></li>
+<li><p>The first editions of the tutorials have been completed.</p></li>
+</ul>
+<p>The full details are in the <a href="https://hackage.haskell.org/package/regex-1.0.0.0/changelog">changelog</a>.</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>The regex package has been greatly improved since regex-0.5.0.0 when we requested comment from the community and all of these improvements have been in response to contributions and feedback. We would like to especially thank the following for their contributions to shaping this release.</p>
+<ul>
+<li>Adam Bergmark</li>
+<li>Alfredo Di Napoli</li>
+<li>Artyom Kazak</li>
+<li>Edward Z. Yang</li>
+<li>Evan Laforge</li>
+<li>Herbert Valerio Riedel</li>
+<li>Michael Lamparski</li>
+<li>Serge Le Huitouze</li>
+<li>Simon Michael</li>
+<li>Tom Knight</li>
+</ul>]]></description>
+    <pubDate>Mon, 17 Apr 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.regex.uk/posts/2017-04-17-announce-1.0.0.0.html</guid>
+    <dc:creator>Chris Dornan</dc:creator>
+</item>
+<item>
     <title>regex-1.0.0.0 in preparation</title>
     <link>http://blog.regex.uk/posts/2017-04-10-update.html</link>
     <description><![CDATA[<p>regex-1.0.0.0 is nearly ready with the main tutorial completed and the specialist tutorials in their first drafts. We want to get this one right the release date for regex-1.0.0.0 has been put back from today (Monday) to Friday (2017-04-14).</p>
