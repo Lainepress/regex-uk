@@ -7,8 +7,21 @@
         <description><![CDATA[Writing Haskell and the regex package.]]></description>
         <atom:link href="http://blog.regex.uk/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 17 Apr 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 18 Apr 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Iterative Package Development</title>
+    <link>http://blog.regex.uk/posts/2017-04-18-iterative-development.html</link>
+    <description><![CDATA[<p>Here is the thing. Between the release of regex-0.1.0.0 on 2017-02-18 and the release of regex-1.0.0 on 2017-04-15 we released 22 revisions of the package, excluding regex-0.1.0.0 itself, each of these revisions being driven by community input.</p>
+<p>And I have no doubt that regex-1.0.0.0 has a somewhat better API than regex-0.1.0.0.</p>
+<p>You could take the view (and I suspect that you do) that regex-0.1.0.0 was a shoddy release and that I should have taken longer to get the API right, and avoid the confusion and loss of confidence by making all of those releases, and there is a part of me that agrees with you.</p>
+<p>But is this right? I mean I know that some people can get it right first time but I am clearly not one of those developers. When it comes to finding the right design for a modestly complicated API like regex it takes a while and a number of attempts.</p>
+<p>(One small digression. Do I believe that regex should try to do less? No! I have reviewed the scope of the package many times and for sure I could have saved my self a lot of work by trying to do less, but I am convinced that it would be at the expense of the utility of the package. I might of course be still missing some tricks to making the API still better.)</p>
+<p>So, is iterative development to be encouraged or discouraged for package developers? Should we announce that a package is WIP and go to the community for input and use an iterative development model to bring it in?</p>]]></description>
+    <pubDate>Tue, 18 Apr 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.regex.uk/posts/2017-04-18-iterative-development.html</guid>
+    <dc:creator>Chris Dornan</dc:creator>
+</item>
+<item>
     <title>regex-1.0.0.0 Released</title>
     <link>http://blog.regex.uk/posts/2017-04-17-announce-1.0.0.0.html</link>
     <description><![CDATA[<p>regex-1.0.0.0, the first stable version is up on Hackage.</p>
