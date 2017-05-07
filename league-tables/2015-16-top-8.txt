@@ -1,0 +1,12 @@
+# Premier League 2015-16 Top 8  [2017-05-07]
+
+Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
+---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
+1  |West Ham United      |14     |7      |4      |3      |24     |18     |6      |25     
+2  |Manchester United    |14     |6      |4      |4      |16     |17     |-1     |22     
+3  |Southampton FC       |14     |6      |3      |5      |22     |19     |3      |21     
+4  |Leicester City       |14     |5      |6      |3      |19     |17     |2      |21     
+5  |Tottenham Hotspur    |14     |5      |5      |4      |21     |13     |8      |20     
+6  |Arsenal FC           |14     |4      |7      |3      |25     |24     |1      |19     
+7  |Liverpool FC         |14     |3      |5      |6      |16     |20     |-4     |14     
+8  |Manchester City      |14     |1      |4      |9      |15     |30     |-15    |7      
