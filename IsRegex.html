@@ -70,9 +70,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="ot">{-# LANGUAGE MultiParamTypeClasses      #-}</span>
 <span class="ot">{-# LANGUAGE AllowAmbiguousTypes        #-}</span>
 <span class="ot">{-# LANGUAGE CPP                        #-}</span>
-<span class="st">#if __GLASGOW_HASKELL__ &gt;= 800</span>
+<span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span>
 <span class="ot">{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}</span>
-<span class="st">#endif</span>
+<span class="ot">#endif</span>
 
 <span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.Types.IsRegex</span>
   ( <span class="dt">IsRegex</span>(<span class="fu">..</span>)
@@ -114,18 +114,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | search and replace all matches in the argument text; e.g., this function</span>
 <span class="co">-- will convert every YYYY-MM-DD format date in its argument text into a</span>
 <span class="co">-- DD\/MM\/YYYY date:</span>
-<span class="fu">--</span>
+<span class="co">--</span>
 <span class="co">--   @searchReplaceAll [ed|${y}([0-9]{4})-0*${m}([0-9]{2})-0*${d}([0-9]{2})\/\/\/${d}\/${m}\/${y}|]@</span>
-<span class="fu">--</span>
+<span class="co">--</span>
 <span class="ot">searchReplaceAll ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> re s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s
 searchReplaceAll <span class="dt">SearchReplace</span>{<span class="fu">..</span>} <span class="fu">=</span> replaceAll getTemplate <span class="fu">.</span> matchMany getSearch
 
 <span class="co">-- | search and replace the first occurrence only (if any) in the input text</span>
 <span class="co">-- e.g., to prefix the first string of four hex digits in the imput text,</span>
 <span class="co">-- if any, with @0x@:</span>
-<span class="fu">--</span>
+<span class="co">--</span>
 <span class="co">--  @searchReplaceFirst [ed|[0-9A-Fa-f]{4}\/\/\/0x$0|]@</span>
-<span class="fu">--</span>
+<span class="co">--</span>
 <span class="ot">searchReplaceFirst ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> re s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s
 searchReplaceFirst <span class="dt">SearchReplace</span>{<span class="fu">..</span>} <span class="fu">=</span> replace    getTemplate <span class="fu">.</span> matchOnce getSearch</code></pre></div>
 </div>    <script>

@@ -70,9 +70,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="ot">{-# LANGUAGE RecordWildCards            #-}</span>
 <span class="ot">{-# LANGUAGE DeriveFunctor              #-}</span>
 <span class="ot">{-# LANGUAGE CPP                        #-}</span>
-<span class="st">#if __GLASGOW_HASKELL__ &gt;= 800</span>
+<span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span>
 <span class="ot">{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}</span>
-<span class="st">#endif</span>
+<span class="ot">#endif</span>
 
 <span class="kw">module</span> <span class="dt">Text.RE.Tools.Edit</span>
   (
@@ -195,7 +195,7 @@ pipe_edit_scripts lno edits s0 <span class="fu">=</span>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- $tutorial</span>
 <span class="co">-- The Edit toolkit looks for REs that match a text and runs the</span>
 <span class="co">-- associated actions.</span>
-<span class="fu">--</span>
+<span class="co">--</span>
 <span class="co">-- See the Regex Tools tutorial at http://re-tutorial-tools.regex.uk</span></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

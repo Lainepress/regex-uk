@@ -81,7 +81,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Text.Regex.PCRE</span></code></pre></div>
 <h2 id="compiling-res-with-the-complete-reoptions">Compiling REs with the Complete REOptions</h2>
 Each <code>regex-tools</code> back end — TDFA and PCRE — has it own complile-time options and execution-time options, called in each case <code>CompOption</code> and <code>ExecOption</code>. The SimpleREOptions selected with the RE parser, e.g.,
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [reBlockInsensitive<span class="fu">|</span>[<span class="dv">0</span><span class="fu">-</span>9a<span class="fu">-</span>f]{<span class="dv">2</span>}<span class="fu">$|</span>]
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [reBlockInsensitive|[0-9a-f]{2}$|]
 <span class="dv">1</span></code></pre></div>
 configures the RE back end accordingly so that you don't have to, but you may need full access to your chosen back end's options, in which case you will need to know about the <code>REOptions</code> type, defined by each of the back ends in terms of the <code>REOptions_</code> type of <code>Text.RE.REOptions</code> as follows.
 <div class="inlinecodeblock">
@@ -140,7 +140,7 @@ check <span class="fu">=</span> either error id</code></pre></div>
                                 -&gt; m (SearchReplace RE s)</code></pre>
 <h2 id="specifying-reoptions-with-re_-and-ed_">Specifying REOptions with <code>re_</code> and <code>ed_</code></h2>
 If you just need to specify some non-standard options with a static RE, you can use the <code>re_</code> quasi quoter, which yields a function takes an option type and returns the RE compiled with the given options:
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [re_<span class="fu">|</span>[<span class="dv">0</span><span class="fu">-</span>9a<span class="fu">-</span>f]{<span class="dv">2</span>}<span class="fu">$|</span>] <span class="dt">BlockInsensitive</span>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [re_|[0-9a-f]{2}$|] <span class="dt">BlockInsensitive</span>
 <span class="dv">1</span></code></pre></div>
 <p>Any option <code>o</code> such that <code>IsOption o RE CompOption ExecOption</code> (i.e., any option type accepted by <code>compileRegex</code> above) can be used with <code>[re_</code> ... <code>|]</code>.</p>
 <p>The <code>[ed_</code> ... <code>///</code> ... <code>|]</code> for compiling <code>SearchReplace</code> templates works analagously, yielding a function that takes an option type and returns the <code>SearchReplace</code> template comoiled with those RE options.</p>
@@ -181,10 +181,10 @@ myOptions <span class="fu">=</span>
 <span class="ot">biOptions ::</span> <span class="dt">PCRE.REOptions</span>
 biOptions <span class="fu">=</span> unpackSimpleREOptions <span class="dt">BlockInsensitive</span></code></pre></div>
 <p>Now we can test <code>myOptions</code> with the <code>[re_| ... |]</code> quasi quoter as follows.</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;0a\nbbxFe&amp;A5 &quot;</span> <span class="fu">?=~</span> [re_<span class="fu">|^</span>([<span class="dv">0</span><span class="fu">-</span>9a<span class="fu">-</span>f]{<span class="dv">2</span>}<span class="fu">.</span>){<span class="dv">4</span>}<span class="fu">$|</span>] myOptions
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;0a\nbbxFe&amp;A5 &quot;</span> <span class="fu">?=~</span> [re_|^([0-9a-f]{2}.){4}$|] myOptions
 <span class="dt">True</span></code></pre></div>
 <p>That test matched, but if we provide just <code>BlockInsensitive</code> options set up in <code>biOptions</code> above,</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;0a\nbbxFe&amp;A5 &quot;</span> <span class="fu">?=~</span> [re_<span class="fu">|^</span>([<span class="dv">0</span><span class="fu">-</span>9a<span class="fu">-</span>f]{<span class="dv">2</span>}<span class="fu">.</span>){<span class="dv">4</span>}<span class="fu">$|</span>] biOptions
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;0a\nbbxFe&amp;A5 &quot;</span> <span class="fu">?=~</span> [re_|^([0-9a-f]{2}.){4}$|] biOptions
 <span class="dt">False</span></code></pre></div>
 <p>the match fails.</p>
 </div>    <script>

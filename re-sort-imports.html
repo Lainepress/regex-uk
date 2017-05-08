@@ -124,7 +124,7 @@ main <span class="fu">=</span> <span class="kw">do</span>
         ]</code></pre></div>
 <h2 id="the-find-script">The Find Script</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">sort_r ::</span> <span class="dt">Mode</span> <span class="ot">-&gt;</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-sort_r md root <span class="fu">=</span> findMatches_ fm [re<span class="fu">|</span>\<span class="fu">.</span>l<span class="fu">?</span>hs<span class="fu">|</span>] root <span class="fu">&gt;&gt;=</span> sort_these md root
+sort_r md root <span class="fu">=</span> findMatches_ fm [re|\.l?hs|] root <span class="fu">&gt;&gt;=</span> sort_these md root
   <span class="kw">where</span>
     fm <span class="fu">=</span> <span class="dt">FindMethods</span>
       { doesDirectoryExistDM <span class="fu">=</span> doesDirectoryExist
@@ -172,12 +172,12 @@ sortImports lbs <span class="fu">=</span>
         (<span class="dt">Just</span> x ,<span class="dt">Just</span>  y) <span class="ot">-&gt;</span> compare x y
 
     extr <span class="dt">Line</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">case</span> allMatches getLineMatches <span class="kw">of</span>
-      mtch<span class="fu">:</span>_  <span class="ot">-&gt;</span> mtch <span class="fu">!$$?</span> [cp<span class="fu">|</span>mod<span class="fu">|</span>]
+      mtch<span class="fu">:</span>_  <span class="ot">-&gt;</span> mtch <span class="fu">!$$?</span> [cp|mod|]
       _       <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
 
     (hdr,bdy) <span class="fu">=</span> span (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches) lns
     lns       <span class="fu">=</span> grepFilter rex lbs
-    rex       <span class="fu">=</span> [re<span class="fu">|^</span><span class="kw">import </span>+(<span class="kw">qualified</span> )? *${mod}([^ ].*)$|]</code></pre></div>
+    rex       <span class="fu">=</span> [re|^import +(qualified|         ) ${mod}([^ ].*)$|]</code></pre></div>
 </div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

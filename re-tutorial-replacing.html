@@ -82,14 +82,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 A function to convert ISO format dates into a UK-format date could be written thus:
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">uk_dates ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
 uk_dates src <span class="fu">=</span>
-  replaceAll <span class="st">&quot;${d}/${m}/${y}&quot;</span> <span class="fu">$</span> src <span class="fu">*=~</span> [re<span class="fu">|$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">-$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">-$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">|</span>]</code></pre></div>
+  replaceAll <span class="st">&quot;${d}/${m}/${y}&quot;</span> <span class="fu">$</span> src <span class="fu">*=~</span> [re|${y}([0-9]{4})-${m}([0-9]{2})-${d}([0-9]{2})|]</code></pre></div>
 with
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> uk_dates <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span>
 <span class="st">&quot;09/01/2016 2015-12-5 05/10/2015&quot;</span></code></pre></div>
 The same function written with numbered captures:
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">uk_dates&#39; ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
 uk_dates&#39; src <span class="fu">=</span>
-  replaceAll <span class="st">&quot;$3/$2/$1&quot;</span> <span class="fu">$</span> src <span class="fu">*=~</span> [re<span class="fu">|$</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">-$</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">-$</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">|</span>]</code></pre></div>
+  replaceAll <span class="st">&quot;$3/$2/$1&quot;</span> <span class="fu">$</span> src <span class="fu">*=~</span> [re|$([0-9]{4})-$([0-9]{2})-$([0-9]{2})|]</code></pre></div>
 with
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> uk_dates&#39; <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span>
 <span class="st">&quot;09/01/2016 2015-12-5 05/10/2015&quot;</span></code></pre></div>
@@ -157,7 +157,7 @@ The type of <code>?=~</code> in this module (imported from <code>Text.RE.TDFA.St
 Sometimes you will need to process each string captured by an RE with a function. <code>replaceAllCaptures</code> takes a <code>REContext</code>, a substitution function and a <code>Matches</code> and applies the function to each captured substring according to the <code>REContext</code>, as we can see in the following example function to clean up all of the mis-formatted dates in the argument string,
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">fixup_dates ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
 fixup_dates src <span class="fu">=</span>
-    replaceAllCaptures <span class="dt">SUB</span> phi <span class="fu">$</span> src <span class="fu">*=~</span> [re<span class="fu">|</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]<span class="fu">+</span>)<span class="fu">-</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]<span class="fu">+</span>)<span class="fu">-</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]<span class="fu">+</span>)<span class="fu">|</span>]
+    replaceAllCaptures <span class="dt">SUB</span> phi <span class="fu">$</span> src <span class="fu">*=~</span> [re|([0-9]+)-([0-9]+)-([0-9]+)|]
   <span class="kw">where</span>
     phi _ loc cap <span class="fu">=</span> <span class="dt">Just</span> <span class="fu">$</span> <span class="kw">case</span> locationCapture loc <span class="kw">of</span>
         <span class="dv">1</span> <span class="ot">-&gt;</span> fmt <span class="dv">4</span> <span class="fu">$</span> read s
@@ -219,7 +219,7 @@ which will fix up our running example
 The above fixup function could be extended to enclose whole date in square brackets by specifing an <code>ALL</code> context and a <code>0</code> case for the substitution function.
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">fixup_and_reformat_dates ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
 fixup_and_reformat_dates src <span class="fu">=</span>
-    replaceAllCaptures <span class="dt">ALL</span> f <span class="fu">$</span> src <span class="fu">*=~</span> [re<span class="fu">|</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]<span class="fu">+</span>)<span class="fu">-</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]<span class="fu">+</span>)<span class="fu">-</span>([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]<span class="fu">+</span>)<span class="fu">|</span>]
+    replaceAllCaptures <span class="dt">ALL</span> f <span class="fu">$</span> src <span class="fu">*=~</span> [re|([0-9]+)-([0-9]+)-([0-9]+)|]
   <span class="kw">where</span>
     f _ loc cap <span class="fu">=</span> <span class="dt">Just</span> <span class="fu">$</span> <span class="kw">case</span> locationCapture loc <span class="kw">of</span>
         <span class="dv">0</span> <span class="ot">-&gt;</span> <span class="st">&quot;[&quot;</span><span class="fu">++</span>txt<span class="fu">++</span><span class="st">&quot;]&quot;</span>

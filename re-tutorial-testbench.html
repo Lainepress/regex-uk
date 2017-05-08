@@ -80,7 +80,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2 id="macros-and-parsers">Macros and Parsers</h2>
 <p>regex supports macros in regular expressions. There are a bunch of standard macros and you can define your own.</p>
 RE macros are enclosed in <code>@{</code> ... '}'. By convention the macros in the standard environment start with a '%'. <code>@{%date}</code> will match an ISO 8601 date, this
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> [re<span class="fu">|@</span>{<span class="fu">%</span>date}<span class="fu">|</span>]
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> [re|@{%date}|]
 <span class="dv">2</span></code></pre></div>
 <p>picking out the two dates.</p>
 <p>See the tables listing the standard macros in the tables folder of the distribution.</p>
@@ -140,10 +140,10 @@ my_macros <span class="fu">=</span> runIdentity <span class="fu">$</span> mkMacr
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">myOptions ::</span> <span class="dt">TDFA.REOptions</span>
 myOptions <span class="fu">=</span> TDFA.makeREOptions my_macros</code></pre></div>
 <p>Now we can try out the <code>@{epsilon}</code> macro, using it to match nothing!</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;///&quot;</span> <span class="fu">?=~</span> [re_<span class="fu">|^//@</span>{epsilon}<span class="fu">/$|</span>] myOptions
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;///&quot;</span> <span class="fu">?=~</span> [re_|^//@{epsilon}/$|] myOptions
 <span class="dt">True</span></code></pre></div>
 <p>Why would we we want to match nothing? To break up three '/' in the RE part of a <code>[ed_| ... /// ... |]</code> <code>SearchReplace</code> template.</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> <span class="st">&quot;a &lt;///&gt; replacement example&quot;</span> <span class="fu">*=~/</span> [ed_<span class="fu">|&lt;//@</span>{epsilon}<span class="fu">/&gt;///&lt;</span>three slashes<span class="fu">&gt;|</span>] myOptions
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> <span class="st">&quot;a &lt;///&gt; replacement example&quot;</span> <span class="fu">*=~/</span> [ed_|&lt;//@{epsilon}/&gt;///&lt;three slashes&gt;|] myOptions
 <span class="st">&quot;a &lt;three slashes&gt; replacement example&quot;</span></code></pre></div>
 <p>For a more extensive example of macro environments see the <a href="re-nginx-log-processor"><code>re-nginx-log-processor</code></a></p>
 </div>    <script>
