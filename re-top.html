@@ -119,14 +119,16 @@ main <span class="fu">=</span> parseCLI <span class="fu">&gt;&gt;=</span> mapM_ 
     ,<span class="ot"> jobOutput ::</span> FilePath     <span class="co">-- ^ where is the output</span>
     }
   <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
--- | a match result, data in the usual order: -- <home-team> <home-score>-<away-score> <away-team>
+<p>A match result lists the data in the usual order:</p>
+<pre><code>&lt;home-team&gt; &lt;home-score&gt; &lt;away-score&gt; &lt;away-team&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Game</span> <span class="fu">=</span> <span class="dt">Game</span> <span class="dt">Team</span> <span class="dt">Int</span> <span class="dt">Int</span> <span class="dt">Team</span>
   <span class="kw">deriving</span> (<span class="dt">Eq</span>,<span class="dt">Ord</span>,<span class="dt">Read</span>,<span class="dt">Show</span>)</code></pre></div>
--- | a league table is a list of teams and their results; the ordering -- on everything is arranged so that the list can be sorted with the -- default Ord ordering to arrange the tableaccording to PL conventions
+<p>A league table is a list of teams and their results with the ordering on everything is arranged so that the list can be sorted with the default Ord ordering to arrange the table according to PL conventions.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">Table</span> <span class="fu">=</span> <span class="dt">Table</span> {<span class="ot"> getTable ::</span> [(<span class="dt">Results</span>,<span class="dt">Team</span>)] }
   <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
+<p>Teams are just Text containing the names used by the openfootball data.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Team</span> <span class="fu">=</span> <span class="dt">T.Text</span></code></pre></div>
-<p>Results contain everything we need to generate a league table</p>
+<p>Results contain everything we need to generate a league table.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Results</span> <span class="fu">=</span>
   <span class="dt">Results</span>
     {<span class="ot"> resultsGamesPlayed  ::</span> <span class="dt">Int</span>
