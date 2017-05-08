@@ -73,13 +73,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="ot">{-# LANGUAGE RecordWildCards              #-}</span>
 <span class="ot">{-# LANGUAGE OverloadedStrings            #-}</span>
 <span class="ot">{-# LANGUAGE QuasiQuotes                  #-}</span>
-<span class="ot">{-# LANGUAGE CPP                          #-}</span>
-<span class="ot">{-# OPTIONS_GHC -fno-warn-unused-imports  #-}</span>
 
 <span class="kw">module</span> <span class="dt">Main</span>(main) <span class="kw">where</span>
 
 <span class="kw">import qualified</span> <span class="dt">Control.Monad</span>         <span class="kw">as</span> <span class="dt">M</span>
-<span class="kw">import           </span><span class="dt">Data.Default</span>
 <span class="kw">import           </span><span class="dt">Data.Functor.Identity</span>
 <span class="kw">import qualified</span> <span class="dt">Data.HashMap.Lazy</span>     <span class="kw">as</span> <span class="dt">HML</span>
 <span class="kw">import qualified</span> <span class="dt">Data.List</span>             <span class="kw">as</span> <span class="dt">L</span>
@@ -89,7 +86,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Data.Sort</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Text</span>             <span class="kw">as</span> <span class="dt">T</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Text.IO</span>          <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text.Lazy</span>        <span class="kw">as</span> <span class="dt">LT</span>
 <span class="kw">import           </span><span class="dt">Data.Time</span>
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
 <span class="kw">import qualified</span> <span class="dt">Shelly</span>                <span class="kw">as</span> <span class="dt">SH</span>
@@ -98,8 +94,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">System.Exit</span>
 <span class="kw">import           </span><span class="dt">System.FilePath</span>
 <span class="kw">import           </span><span class="dt">System.IO</span>
-<span class="kw">import           </span><span class="dt">Text.Blaze.Html.Renderer.Text</span>
-<span class="kw">import qualified</span> <span class="dt">Text.Blaze.Html5</span>     <span class="kw">as</span> <span class="dt">H</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Summa</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA</span>         <span class="kw">as</span> <span class="dt">TDFA</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA.Text</span>
@@ -111,30 +105,25 @@ main <span class="fu">=</span> parseCLI <span class="fu">&gt;&gt;=</span> mapM_ 
 <p>A Job contains everything we need to generate a league table, and what to do with it.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Job</span> <span class="fu">=</span>
   <span class="dt">Job</span>
-    {<span class="ot"> jobTitle  ::</span> <span class="dt">T.Text</span>       <span class="co">-- ^ title for the table</span>
-    ,<span class="ot"> jobSize   ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>    <span class="co">-- ^ is it the full table or a top-n table</span>
-    ,<span class="ot"> jobInputs ::</span> [FilePath]   <span class="co">-- ^ the files containing the game data</span>
-    ,<span class="ot"> jobIsTest ::</span> <span class="dt">Bool</span>         <span class="co">-- ^ are we testing against the output or writing it</span>
-    ,<span class="ot"> jobIsHtml ::</span> <span class="dt">Bool</span>         <span class="co">-- ^ are we generating HTML from markdown</span>
-    ,<span class="ot"> jobOutput ::</span> FilePath     <span class="co">-- ^ where is the output</span>
+    {<span class="ot"> jobTitle  ::</span> <span class="dt">T.Text</span>     <span class="co">-- ^ title for the table</span>
+    ,<span class="ot"> jobSize   ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>  <span class="co">-- ^ a full table or a top-n table</span>
+    ,<span class="ot"> jobInputs ::</span> [FilePath] <span class="co">-- ^ the files containing the game data</span>
+    ,<span class="ot"> jobIsTest ::</span> <span class="dt">Bool</span>       <span class="co">-- ^ are we testing o/p or writing it</span>
+    ,<span class="ot"> jobIsHtml ::</span> <span class="dt">Bool</span>       <span class="co">-- ^ are we generating HTML from markdown</span>
+    ,<span class="ot"> jobOutput ::</span> FilePath   <span class="co">-- ^ where is the output</span>
     }
-  <span class="kw">deriving</span> (<span class="dt">Show</span>)
-
-<span class="co">-- | a match result, data in the usual order:</span>
-<span class="co">--      &lt;home-team&gt; &lt;home-score&gt;-&lt;away-score&gt; &lt;away-team&gt;</span>
-<span class="kw">data</span> <span class="dt">Game</span> <span class="fu">=</span> <span class="dt">Game</span> <span class="dt">Team</span> <span class="dt">Int</span> <span class="dt">Int</span> <span class="dt">Team</span>
-  <span class="kw">deriving</span> (<span class="dt">Eq</span>,<span class="dt">Ord</span>,<span class="dt">Read</span>,<span class="dt">Show</span>)
-
-<span class="co">-- | a league table is a list of teams and their results; the ordering</span>
-<span class="co">-- on everything is arranged so that the list can be sorted with the</span>
-<span class="co">-- default Ord ordering to arrange the tableaccording to PL conventions</span>
-<span class="kw">newtype</span> <span class="dt">Table</span> <span class="fu">=</span> <span class="dt">Table</span> {<span class="ot"> getTable ::</span> [(<span class="dt">Results</span>,<span class="dt">Team</span>)] }
-  <span class="kw">deriving</span> (<span class="dt">Show</span>)
-
-<span class="kw">type</span> <span class="dt">Team</span> <span class="fu">=</span> <span class="dt">T.Text</span>
-
-<span class="co">-- | Results contain everything we need to generate a league table</span>
-<span class="kw">data</span> <span class="dt">Results</span> <span class="fu">=</span>
+  <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
+<p>A match result lists the data in the usual order:</p>
+<pre><code>&lt;home-team&gt; &lt;home-score&gt; &lt;away-score&gt; &lt;away-team&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Game</span> <span class="fu">=</span> <span class="dt">Game</span> <span class="dt">Team</span> <span class="dt">Int</span> <span class="dt">Int</span> <span class="dt">Team</span>
+  <span class="kw">deriving</span> (<span class="dt">Eq</span>,<span class="dt">Ord</span>,<span class="dt">Read</span>,<span class="dt">Show</span>)</code></pre></div>
+<p>A league table is a list of teams and their results with the ordering on everything is arranged so that the list can be sorted with the default <code>Ord</code> ordering to arrange the table according to PL conventions.</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">Table</span> <span class="fu">=</span> <span class="dt">Table</span> {<span class="ot"> getTable ::</span> [(<span class="dt">Results</span>,<span class="dt">Team</span>)] }
+  <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
+<p>Teams are just Text containing the names used by the openfootball data.</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Team</span> <span class="fu">=</span> <span class="dt">T.Text</span></code></pre></div>
+<p>Results contain everything we need to generate a league table.</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Results</span> <span class="fu">=</span>
   <span class="dt">Results</span>
     {<span class="ot"> resultsGamesPlayed  ::</span> <span class="dt">Int</span>
     ,<span class="ot"> resultsGamesWon     ::</span> <span class="dt">Int</span>
@@ -142,16 +131,14 @@ main <span class="fu">=</span> parseCLI <span class="fu">&gt;&gt;=</span> mapM_ 
     ,<span class="ot"> resultsGoalsAgainst ::</span> <span class="dt">Int</span>
     ,<span class="ot"> resultsPointsScored ::</span> <span class="dt">Int</span>
     }
-  <span class="kw">deriving</span> (<span class="dt">Show</span>)
-
-<span class="co">-- | these vectors have expected zeros and sums</span>
-<span class="kw">instance</span> <span class="dt">Monoid</span> <span class="dt">Results</span> <span class="kw">where</span>
+  <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
+<p>These vectors have expected zeros and sums.</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Monoid</span> <span class="dt">Results</span> <span class="kw">where</span>
   mempty  <span class="fu">=</span> <span class="dt">Results</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>
   mappend (<span class="dt">Results</span> gp1 gw1 gf1 ga1 ps1) (<span class="dt">Results</span> gp2 gw2 gf2 ga2 ps2) <span class="fu">=</span>
-      <span class="dt">Results</span> (gp1<span class="fu">+</span>gp2) (gw1<span class="fu">+</span>gw2) (gf1<span class="fu">+</span>gf2) (ga1<span class="fu">+</span>ga2) (ps1<span class="fu">+</span>ps2)
-
-<span class="co">-- | CL results are ordered by (points,goal-difference,goals-scored)</span>
-<span class="kw">instance</span> <span class="dt">Ord</span> <span class="dt">Results</span> <span class="kw">where</span>
+      <span class="dt">Results</span> (gp1<span class="fu">+</span>gp2) (gw1<span class="fu">+</span>gw2) (gf1<span class="fu">+</span>gf2) (ga1<span class="fu">+</span>ga2) (ps1<span class="fu">+</span>ps2)</code></pre></div>
+<p>PL results are ordered by (points,goal-difference,goals-scored).</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Ord</span> <span class="dt">Results</span> <span class="kw">where</span>
   compare <span class="fu">=</span> comparing <span class="fu">$</span> \<span class="dt">Results</span>{<span class="fu">..</span>} <span class="ot">-&gt;</span>
       ( resultsPointsScored
       , resultsGoalsFor <span class="fu">-</span> resultsGoalsAgainst
@@ -227,7 +214,7 @@ sortResults <span class="fu">=</span>
 <p>Parse openfootball data into Game data, eliminating duplicate results. (For <code>g1</code> and <code>g2</code> to be recognised as a duplicate, it must be true that <code>g1==g2</code>.)</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">input ::</span> <span class="dt">Job</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> [<span class="dt">Game</span>]
 input <span class="dt">Job</span>{<span class="fu">..</span>} <span class="fu">=</span>
-    groupSort const <span class="fu">.</span> parseGames <span class="fu">.</span> T.concat <span class="fu">&lt;$&gt;</span> mapM T.readFile jobInputs</code></pre></div>
+  groupSort const <span class="fu">.</span> parseGames <span class="fu">.</span> T.concat <span class="fu">&lt;$&gt;</span> mapM T.readFile jobInputs</code></pre></div>
 <h2 id="parsegames">parseGames</h2>
 <p>The Game parser has three variants that should all be equivalent.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">parseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]
@@ -238,9 +225,17 @@ parseGames <span class="fu">=</span> <span class="kw">case</span> <span class="d
 
 <span class="kw">data</span> <span class="dt">ParseGames</span> <span class="fu">=</span> <span class="dt">SimpleParseGames</span> <span class="fu">|</span> <span class="dt">FunParseGames</span> <span class="fu">|</span> <span class="dt">PrimParseGames</span></code></pre></div>
 <h3>
-<p>simpleParseGames&lt;/2&gt;</p>
+simpleParseGames
+</h3>
+<p>Here we apply the <code>gameEdit</code> <code>SearchReplace</code> editor to:</p>
+<ol type="1">
+<li><p>recognise the lines that contain the match results data and</p></li>
+<li><p>transform the lines into Haskell <code>Game</code> format which can be parsed by <code>readText</code>.</p></li>
+</ol>
+<p>The <code>edit</code> function is a simple specialisation of the <code>regex</code> <code>sed'</code> function (defined below) that deletes every line in the file that edits every line in the file according to the given <code>SearchReplace</code>, deleting all other lies.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">simpleParseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]
 simpleParseGames <span class="fu">=</span> map readText <span class="fu">.</span> T.lines <span class="fu">.</span> edit gameEdit</code></pre></div>
+<p>The <code>[ed|</code> ... <code>///</code> ... <code>|]</code> <code>SearchReplace</code> editors for recognizing line containing matchresults and converting them to Haskell-format <code>Game</code> data come in two variants that should be equivalent.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">gameEdit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span>
 gameEdit <span class="fu">=</span> <span class="kw">case</span> <span class="dt">MacrosGameEdit</span> <span class="kw">of</span>
   <span class="dt">SimpleGameEdit</span> <span class="ot">-&gt;</span> simpleGameEdit
@@ -248,12 +243,14 @@ gameEdit <span class="fu">=</span> <span class="kw">case</span> <span class="dt"
 
 <span class="kw">data</span> <span class="dt">GameEdit</span> <span class="fu">=</span> <span class="dt">SimpleGameEdit</span> <span class="fu">|</span> <span class="dt">MacrosGameEdit</span></code></pre></div>
 <h4>
-<p>simpleGameEdit&lt;/2&gt;</p>
+simpleGameEdit
+</h4>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">simpleGameEdit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span>
 simpleGameEdit <span class="fu">=</span>
   [ed|^ *${ht}([A-Za-z][a-zA-Z ]*[A-Za-z]) +${hs}([0-9]+)-${as}([0-9]+) +(\([^)]+\) *)?${at}([A-Za-z][a-zA-Z ]*[A-Za-z]) *(@.*)?$///Game &quot;${ht}&quot; ${hs} ${as} &quot;${at}&quot;|]</code></pre></div>
 <h4>
-<p>simpleGameEdit&lt;/2&gt;</p>
+simpleGameEdit
+</h4>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">macrosGameEdit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span>
 macrosGameEdit <span class="fu">=</span>
   [ed_|^ *${ht}(@{team}) +${hs}([0-9]+)-${as}([0-9]+) +(\([0-9]+-[0-9]+\) *)?${at}(@{team}) *(@.*)?$///Game &quot;${ht}&quot; ${hs} ${as} &quot;${at}&quot;|] macs</code></pre></div>
@@ -299,7 +296,9 @@ listMacros <span class="fu">=</span> <span class="kw">do</span>
     ok <span class="ot">&lt;-</span> testMacroEnv <span class="st">&quot;macros&quot;</span> TDFA.regexType env
     M.when (not ok) <span class="fu">$</span> exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></code></pre></div>
 <h3>
-<p>funParseGames&lt;/2&gt;</p>
+funParseGames
+</h3>
+<p>Here we use the <code>regex</code> <code>grepFilter</code> to extract all of the lines that match our <code>rex</code> RE for detecting match-result data and assemble the <code>Game</code> data directly by extracting the <code>ht</code>, <code>hs</code>, <code>as</code> and <code>at</code> fields from the matched result.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">funParseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]
 funParseGames txt <span class="fu">=</span>
     [ <span class="dt">Game</span> (           mtch <span class="fu">!$$</span> [cp|ht|])
@@ -309,6 +308,7 @@ funParseGames txt <span class="fu">=</span>
         <span class="fu">|</span> <span class="dt">Line</span>{<span class="fu">..</span>} <span class="ot">&lt;-</span> grepFilter rex txt
         , [mtch]   <span class="ot">&lt;-</span> [allMatches getLineMatches]
         ]</code></pre></div>
+<p>The RE for merely recognising lines that contain match results in the input data come in two variants. We either extract the RE from the above <code>SearchReplace</code> template or rebuild the <code>[re|</code> ... <code>]</code>. (They should of course be equivalent.)</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">rex ::</span> <span class="dt">RE</span>
 rex <span class="fu">=</span> <span class="kw">case</span> <span class="dt">Direct</span> <span class="kw">of</span>
   <span class="dt">Direct</span>  <span class="ot">-&gt;</span>
@@ -318,7 +318,9 @@ rex <span class="fu">=</span> <span class="kw">case</span> <span class="dt">Dire
 
 <span class="kw">data</span> <span class="dt">REX</span> <span class="fu">=</span> <span class="dt">Direct</span> <span class="fu">|</span> <span class="dt">Recycle</span></code></pre></div>
 <h3>
-<p>primParseGames&lt;/2&gt;</p>
+primParseGames
+</h3>
+<p>This variant of <code>funParseGames</code> uses <code>T.lines</code> and <code>?=~</code> instead of <code>grepFilter</code>.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">primParseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]
 primParseGames txt <span class="fu">=</span>
     [ <span class="dt">Game</span> (           mtch <span class="fu">!$$</span> [cp|ht|])
@@ -406,7 +408,7 @@ column_header col <span class="fu">=</span> <span class="kw">case</span> col <sp
   <span class="dt">Club</span>      <span class="ot">-&gt;</span> <span class="st">&quot;Club                 &quot;</span>
   _         <span class="ot">-&gt;</span> T.justifyLeft <span class="dv">7</span> <span class="ch">&#39; &#39;</span> <span class="fu">$</span> showText col</code></pre></div>
 <h2 id="parsecli">parseCLI</h2>
-<p>The command line parser generates a list of jobs for execution.</p>
+<p>The command line parser generates a list of league-table generating/testing jobs for execution by the above <code>job</code> action. Non-league-table-generating CLI commands like <code>macros</code> for listing our RE table macros just do their thing and return an empty list of jobs.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">parseCLI ::</span> <span class="dt">IO</span> [<span class="dt">Job</span>]
 parseCLI <span class="fu">=</span> <span class="kw">do</span>
   args <span class="ot">&lt;-</span> getArgs
@@ -600,36 +602,41 @@ pandoc title txt <span class="fu">=</span> <span class="kw">do</span>
     out_file <span class="fu">=</span> <span class="st">&quot;tmp/pandoc-out.html&quot;</span></code></pre></div>
 <h2 id="helpers">Helpers</h2>
 <p>The general helpers.</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | apply a SearchReplace edit to a line of text,</span>
-<span class="ot">edit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
+<h3>
+edit
+</h3>
+<p>The <code>edit</code> function is a simple specialisation of the <code>regex</code> <code>sed'</code> function (defined below) that deletes every line in the file that edits every line in the file according to the given <code>SearchReplace</code> template, deleting all other lines. (It should probably be added to regex.)</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">edit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
 edit sr txt <span class="fu">=</span> runIdentity <span class="fu">$</span> flip sed&#39; txt <span class="fu">$</span>
     <span class="dt">Select</span>
       [ <span class="dt">Template</span> sr
       , <span class="dt">LineEdit</span> [re|.*|] <span class="fu">$</span> \_ _ <span class="ot">-&gt;</span> return <span class="dt">Delete</span>
-      ]
-
-<span class="co">-- | Construct a Macros table for compiling REs from a MacroEnv.</span>
-<span class="ot">makeMacros ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">Macros</span> <span class="dt">RE</span>
+      ]</code></pre></div>
+<h3>
+makeMacros and makeEnv
+</h3>
+<p>Construct a Macros table for compiling REs from a MacroEnv. (Something similar should probably be added to regex.)</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">makeMacros ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">Macros</span> <span class="dt">RE</span>
 makeMacros ev <span class="fu">=</span> runIdentity <span class="fu">$</span>
     mkMacros mk TDFA.regexType <span class="dt">ExclCaptures</span> ev
   <span class="kw">where</span>
     mk   <span class="fu">=</span> maybe oops <span class="dt">Identity</span> <span class="fu">.</span>
                 TDFA.compileRegexWithOptions TDFA.noPreludeREOptions
 
-    oops <span class="fu">=</span> error <span class="st">&quot;makeMacros: unexpected RE compilation error&quot;</span>
-
-<span class="co">-- | Construct a a MacroEnv from an association list of MacroId and</span>
-<span class="co">-- MacroDescriptior constructor functions and the base MacroEnv</span>
-<span class="co">-- (the macros that can be used inside the macros).</span>
-<span class="ot">makeEnv ::</span> [(<span class="dt">MacroID</span>,<span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span>)]
+    oops <span class="fu">=</span> error <span class="st">&quot;makeMacros: unexpected RE compilation error&quot;</span></code></pre></div>
+<p>Construct a a <code>MacroEnv</code> from an association list of <code>MacroId</code> and <code>MacroDescriptior</code> constructor functions and the base <code>MacroEnv</code> (the macros that can be used inside the macros). (Something similar should probably be added to regex.)</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">makeEnv ::</span> [(<span class="dt">MacroID</span>,<span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span>)]
         <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span>
         <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span>
 makeEnv al ev0 <span class="fu">=</span> ev
   <span class="kw">where</span>
     ev <span class="fu">=</span> ev0 <span class="ot">`HML.union`</span> HML.fromList
-                  [ (mid, mk ev mid) <span class="fu">|</span> (mid,mk) <span class="ot">&lt;-</span> al ]
-
-<span class="ot">showText ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
+                  [ (mid, mk ev mid) <span class="fu">|</span> (mid,mk) <span class="ot">&lt;-</span> al ]</code></pre></div>
+<h3>
+showText and readText
+</h3>
+<p>Variants of the standard functions that operate over <code>Text</code>.</p>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">showText ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
 showText <span class="fu">=</span> T.pack <span class="fu">.</span> show
 
 <span class="ot">readText ::</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> a
