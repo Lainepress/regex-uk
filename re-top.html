@@ -105,12 +105,12 @@ main <span class="fu">=</span> parseCLI <span class="fu">&gt;&gt;=</span> mapM_ 
 <p>A Job contains everything we need to generate a league table, and what to do with it.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Job</span> <span class="fu">=</span>
   <span class="dt">Job</span>
-    {<span class="ot"> jobTitle  ::</span> <span class="dt">T.Text</span>       <span class="co">-- ^ title for the table</span>
-    ,<span class="ot"> jobSize   ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>    <span class="co">-- ^ is it the full table or a top-n table</span>
-    ,<span class="ot"> jobInputs ::</span> [FilePath]   <span class="co">-- ^ the files containing the game data</span>
-    ,<span class="ot"> jobIsTest ::</span> <span class="dt">Bool</span>         <span class="co">-- ^ are we testing against the output or writing it</span>
-    ,<span class="ot"> jobIsHtml ::</span> <span class="dt">Bool</span>         <span class="co">-- ^ are we generating HTML from markdown</span>
-    ,<span class="ot"> jobOutput ::</span> FilePath     <span class="co">-- ^ where is the output</span>
+    {<span class="ot"> jobTitle  ::</span> <span class="dt">T.Text</span>     <span class="co">-- ^ title for the table</span>
+    ,<span class="ot"> jobSize   ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>  <span class="co">-- ^ a full table or a top-n table</span>
+    ,<span class="ot"> jobInputs ::</span> [FilePath] <span class="co">-- ^ the files containing the game data</span>
+    ,<span class="ot"> jobIsTest ::</span> <span class="dt">Bool</span>       <span class="co">-- ^ are we testing o/p or writing it</span>
+    ,<span class="ot"> jobIsHtml ::</span> <span class="dt">Bool</span>       <span class="co">-- ^ are we generating HTML from markdown</span>
+    ,<span class="ot"> jobOutput ::</span> FilePath   <span class="co">-- ^ where is the output</span>
     }
   <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
 <p>A match result lists the data in the usual order:</p>
@@ -214,7 +214,7 @@ sortResults <span class="fu">=</span>
 <p>Parse openfootball data into Game data, eliminating duplicate results. (For <code>g1</code> and <code>g2</code> to be recognised as a duplicate, it must be true that <code>g1==g2</code>.)</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">input ::</span> <span class="dt">Job</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> [<span class="dt">Game</span>]
 input <span class="dt">Job</span>{<span class="fu">..</span>} <span class="fu">=</span>
-    groupSort const <span class="fu">.</span> parseGames <span class="fu">.</span> T.concat <span class="fu">&lt;$&gt;</span> mapM T.readFile jobInputs</code></pre></div>
+  groupSort const <span class="fu">.</span> parseGames <span class="fu">.</span> T.concat <span class="fu">&lt;$&gt;</span> mapM T.readFile jobInputs</code></pre></div>
 <h2 id="parsegames">parseGames</h2>
 <p>The Game parser has three variants that should all be equivalent.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">parseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]
