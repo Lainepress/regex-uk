@@ -1,17 +1,17 @@
-# Premier League 2016-17  [2017-05-08]
+# Premier League 2016-17  [2017-05-10]
 
 Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
-1  |Chelsea FC           |34     |26     |3      |5      |72     |29     |43     |81     
+1  |Chelsea FC           |35     |27     |3      |5      |75     |29     |46     |84     
 2  |Tottenham Hotspur    |35     |23     |8      |4      |71     |23     |48     |77     
 3  |Liverpool FC         |36     |20     |10     |6      |71     |42     |29     |70     
 4  |Manchester City      |35     |20     |9      |6      |70     |37     |33     |69     
-5  |Manchester United    |35     |17     |14     |4      |51     |27     |24     |65     
-6  |Arsenal FC           |34     |19     |6      |9      |66     |42     |24     |63     
+5  |Arsenal FC           |35     |20     |6      |9      |68     |42     |26     |66     
+6  |Manchester United    |35     |17     |14     |4      |51     |27     |24     |65     
 7  |Everton FC           |36     |16     |10     |10     |60     |41     |19     |58     
 8  |West Bromwich Albion |35     |12     |9      |14     |41     |45     |-4     |45     
 9  |Leicester City       |35     |12     |7      |16     |45     |54     |-9     |43     
-10 |Southampton FC       |34     |11     |9      |14     |39     |44     |-5     |42     
+10 |Southampton FC       |35     |11     |9      |15     |39     |46     |-7     |42     
 11 |AFC Bournemouth      |36     |11     |9      |16     |52     |65     |-13    |42     
 12 |West Ham United      |36     |11     |9      |16     |45     |59     |-14    |42     
 13 |Stoke City           |36     |10     |11     |15     |39     |52     |-13    |41     
@@ -20,5 +20,5 @@ Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD    
 16 |Crystal Palace       |36     |11     |5      |20     |46     |61     |-15    |38     
 17 |Swansea City         |36     |10     |5      |21     |41     |69     |-28    |35     
 18 |Hull City            |36     |9      |7      |20     |36     |69     |-33    |34     
-19 |Middlesbrough FC     |35     |5      |13     |17     |26     |45     |-19    |28     
+19 |Middlesbrough FC     |36     |5      |13     |18     |26     |48     |-22    |28     
 20 |Sunderland AFC       |35     |6      |6      |23     |28     |60     |-32    |24     
