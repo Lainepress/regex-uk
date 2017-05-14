@@ -2,13 +2,13 @@
 
 Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
-1  |Chelsea FC           |18     |13     |1      |4      |36     |17     |19     |40     
-2  |Liverpool FC         |18     |9      |7      |2      |30     |23     |7      |34     
-3  |Tottenham Hotspur    |17     |7      |6      |4      |27     |16     |11     |27     
-4  |Manchester City      |17     |7      |5      |5      |29     |21     |8      |26     
-5  |Manchester United    |17     |5      |9      |3      |17     |15     |2      |24     
-6  |Everton FC           |17     |6      |5      |6      |26     |25     |1      |23     
-7  |Arsenal FC           |17     |6      |4      |7      |32     |28     |4      |22     
-8  |AFC Bournemouth      |18     |4      |4      |10     |22     |42     |-20    |16     
-9  |West Ham United      |18     |3      |4      |11     |21     |38     |-17    |13     
-10 |West Bromwich Albion |17     |3      |3      |11     |14     |29     |-15    |12     
+1  |Chelsea FC           |18     |13     |1      |4      |38     |15     |23     |40     
+2  |Liverpool FC         |18     |10     |6      |2      |33     |21     |12     |36     
+3  |Manchester United    |17     |6      |8      |3      |21     |15     |6      |26     
+4  |Tottenham Hotspur    |16     |6      |7      |3      |25     |14     |11     |25     
+5  |Everton FC           |17     |7      |4      |6      |30     |27     |3      |25     
+6  |Manchester City      |17     |6      |5      |6      |26     |25     |1      |23     
+7  |Arsenal FC           |17     |5      |5      |7      |25     |27     |-2     |20     
+8  |AFC Bournemouth      |17     |4      |4      |9      |20     |39     |-19    |16     
+9  |West Bromwich Albion |17     |3      |2      |12     |10     |27     |-17    |11     
+10 |Leicester City       |16     |3      |2      |11     |15     |33     |-18    |11     

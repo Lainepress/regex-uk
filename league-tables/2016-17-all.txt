@@ -4,16 +4,16 @@ Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD    
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
 1  |Chelsea FC           |36     |28     |3      |5      |76     |29     |47     |87     
 2  |Tottenham Hotspur    |35     |23     |8      |4      |71     |23     |48     |77     
-3  |Manchester City      |36     |21     |9      |6      |72     |38     |34     |72     
-4  |Liverpool FC         |37     |20     |10     |7      |71     |46     |25     |70     
+3  |Liverpool FC         |37     |21     |10     |6      |75     |42     |33     |73     
+4  |Manchester City      |36     |21     |9      |6      |72     |38     |34     |72     
 5  |Arsenal FC           |36     |21     |6      |9      |72     |43     |29     |69     
 6  |Manchester United    |35     |17     |14     |4      |51     |27     |24     |65     
 7  |Everton FC           |37     |17     |10     |10     |61     |41     |20     |61     
 8  |West Bromwich Albion |36     |12     |9      |15     |41     |46     |-5     |45     
-9  |West Ham United      |37     |12     |9      |16     |49     |59     |-10    |45     
-10 |AFC Bournemouth      |37     |12     |9      |16     |54     |66     |-12    |45     
-11 |Leicester City       |36     |12     |7      |17     |46     |56     |-10    |43     
-12 |Southampton FC       |35     |11     |9      |15     |39     |46     |-7     |42     
+9  |AFC Bournemouth      |37     |12     |9      |16     |54     |66     |-12    |45     
+10 |Leicester City       |36     |12     |7      |17     |46     |56     |-10    |43     
+11 |Southampton FC       |35     |11     |9      |15     |39     |46     |-7     |42     
+12 |West Ham United      |37     |11     |9      |17     |45     |63     |-18    |42     
 13 |Crystal Palace       |37     |12     |5      |20     |50     |61     |-11    |41     
 14 |Stoke City           |37     |10     |11     |16     |40     |56     |-16    |41     
 15 |Burnley FC           |37     |11     |7      |19     |38     |53     |-15    |40     
