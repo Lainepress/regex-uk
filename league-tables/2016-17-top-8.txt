@@ -1,12 +1,12 @@
-# Premier League 2016-17 Top 8  [2017-05-10]
+# Premier League 2016-17 Top 8  [2017-05-14]
 
 Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
 1  |Liverpool FC         |14     |9      |5      |0      |23     |11     |12     |32     
-2  |Chelsea FC           |13     |8      |1      |4      |25     |14     |11     |25     
+2  |Chelsea FC           |14     |9      |1      |4      |26     |14     |12     |28     
 3  |Tottenham Hotspur    |13     |5      |5      |3      |20     |13     |7      |20     
 4  |Manchester United    |13     |3      |7      |3      |10     |12     |-2     |16     
 5  |Everton FC           |13     |4      |4      |5      |18     |21     |-3     |16     
 6  |Manchester City      |13     |3      |5      |5      |16     |20     |-4     |14     
 7  |Arsenal FC           |13     |3      |3      |7      |18     |23     |-5     |12     
-8  |West Bromwich Albion |12     |1      |2      |9      |6      |22     |-16    |5      
+8  |West Bromwich Albion |13     |1      |2      |10     |6      |23     |-17    |5      
