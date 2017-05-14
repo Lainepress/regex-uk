@@ -4,8 +4,8 @@ Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD    
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
 1  |Liverpool FC         |12     |7      |5      |0      |20     |10     |10     |26     
 2  |Chelsea FC           |12     |7      |1      |4      |24     |14     |10     |22     
-3  |Tottenham Hotspur    |11     |4      |4      |3      |15     |12     |3      |16     
-4  |Manchester United    |11     |2      |6      |3      |8      |12     |-4     |12     
+3  |Tottenham Hotspur    |12     |5      |4      |3      |17     |13     |4      |19     
+4  |Manchester United    |12     |2      |6      |4      |9      |14     |-5     |12     
 5  |Manchester City      |12     |2      |5      |5      |12     |20     |-8     |11     
 6  |Everton FC           |11     |2      |4      |5      |13     |20     |-7     |10     
 7  |Arsenal FC           |11     |2      |3      |6      |16     |20     |-4     |9      
