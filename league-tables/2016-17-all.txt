@@ -2,7 +2,7 @@
 
 Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
-1  |Chelsea FC           |37     |29     |3      |5      |80     |31     |49     |90     
+1  |Chelsea FC           |37     |29     |3      |5      |80     |32     |48     |90     
 2  |Tottenham Hotspur    |36     |24     |8      |4      |73     |24     |49     |80     
 3  |Manchester City      |37     |22     |9      |6      |75     |39     |36     |75     
 4  |Liverpool FC         |37     |21     |10     |6      |75     |42     |33     |73     
@@ -17,7 +17,7 @@ Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD    
 13 |Crystal Palace       |37     |12     |5      |20     |50     |61     |-11    |41     
 14 |Stoke City           |37     |10     |11     |16     |40     |56     |-16    |41     
 15 |Burnley FC           |37     |11     |7      |19     |38     |53     |-15    |40     
-16 |Watford FC           |37     |11     |7      |19     |39     |63     |-24    |40     
+16 |Watford FC           |37     |11     |7      |19     |40     |63     |-23    |40     
 17 |Swansea City         |37     |11     |5      |21     |43     |69     |-26    |38     
 18 |Hull City            |37     |9      |7      |21     |36     |73     |-37    |34     
 19 |Middlesbrough FC     |37     |5      |13     |19     |27     |50     |-23    |28     
