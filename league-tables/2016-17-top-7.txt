@@ -1,4 +1,4 @@
-# Premier League 2016-17 Top 7  [2017-05-14]
+# Premier League 2016-17 Top 7  [2017-05-17]
 
 Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------

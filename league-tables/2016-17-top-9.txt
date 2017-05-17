@@ -1,13 +1,13 @@
-# Premier League 2016-17 Top 9  [2017-05-14]
+# Premier League 2016-17 Top 9  [2017-05-17]
 
 Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
-1  |Chelsea FC           |16     |11     |1      |4      |32     |15     |17     |34     
-2  |Liverpool FC         |16     |9      |6      |1      |28     |17     |11     |33     
-3  |Tottenham Hotspur    |16     |7      |6      |3      |26     |14     |12     |27     
-4  |Manchester City      |15     |5      |5      |5      |22     |20     |2      |20     
-5  |Manchester United    |16     |4      |8      |4      |15     |16     |-1     |20     
-6  |Everton FC           |15     |5      |4      |6      |24     |25     |-1     |19     
-7  |Arsenal FC           |15     |4      |4      |7      |24     |27     |-3     |16     
-8  |AFC Bournemouth      |16     |3      |4      |9      |19     |39     |-20    |13     
-9  |West Bromwich Albion |15     |2      |2      |11     |8      |25     |-17    |8      
+1  |Chelsea FC           |16     |11     |1      |4      |32     |16     |16     |34     
+2  |Liverpool FC         |16     |9      |7      |0      |23     |11     |12     |34     
+3  |Tottenham Hotspur    |16     |8      |5      |3      |28     |16     |12     |29     
+4  |Manchester City      |16     |5      |6      |5      |23     |22     |1      |21     
+5  |Everton FC           |15     |5      |4      |6      |21     |22     |-1     |19     
+6  |Manchester United    |15     |4      |7      |4      |13     |14     |-1     |19     
+7  |Arsenal FC           |15     |5      |3      |7      |22     |24     |-2     |18     
+8  |Southampton FC       |15     |2      |3      |10     |9      |27     |-18    |9      
+9  |West Bromwich Albion |16     |2      |2      |12     |9      |28     |-19    |8      
