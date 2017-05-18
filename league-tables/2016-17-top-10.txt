@@ -1,4 +1,4 @@
-# Premier League 2016-17 Top 10  [2017-05-17]
+# Premier League 2016-17 Top 10  [2017-05-18]
 
 Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
@@ -6,9 +6,9 @@ Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD    
 2  |Liverpool FC         |18     |9      |8      |1      |28     |17     |11     |35     
 3  |Tottenham Hotspur    |18     |9      |6      |3      |32     |16     |16     |33     
 4  |Manchester City      |18     |7      |6      |5      |29     |22     |7      |27     
-5  |Manchester United    |17     |5      |8      |4      |17     |16     |1      |23     
+5  |Manchester United    |18     |5      |9      |4      |17     |16     |1      |24     
 6  |Everton FC           |17     |6      |4      |7      |27     |26     |1      |22     
 7  |Arsenal FC           |17     |6      |4      |7      |28     |28     |0      |22     
-8  |AFC Bournemouth      |18     |3      |5      |10     |20     |42     |-22    |14     
-9  |Southampton FC       |17     |3      |4      |10     |12     |28     |-16    |13     
+8  |Southampton FC       |18     |3      |5      |10     |12     |28     |-16    |14     
+9  |AFC Bournemouth      |18     |3      |5      |10     |20     |42     |-22    |14     
 10 |West Bromwich Albion |18     |3      |2      |13     |11     |30     |-19    |11     
