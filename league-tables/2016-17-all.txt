@@ -3,7 +3,7 @@
 Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD     |Points 
 ---|---------------------|-------|-------|-------|-------|-------|-------|-------|-------
 1  |Chelsea FC           |37     |29     |3      |5      |80     |32     |48     |90     
-2  |Tottenham Hotspur    |36     |24     |8      |4      |73     |24     |49     |80     
+2  |Tottenham Hotspur    |37     |25     |8      |4      |79     |25     |54     |83     
 3  |Manchester City      |37     |22     |9      |6      |75     |39     |36     |75     
 4  |Liverpool FC         |37     |21     |10     |6      |75     |42     |33     |73     
 5  |Arsenal FC           |37     |22     |6      |9      |74     |43     |31     |72     
@@ -12,7 +12,7 @@ Pos|Club                 |Played |Won    |Drawn  |Lost   |GF     |GA     |GD    
 8  |Southampton FC       |37     |12     |10     |15     |41     |47     |-6     |46     
 9  |West Bromwich Albion |37     |12     |9      |16     |42     |49     |-7     |45     
 10 |AFC Bournemouth      |37     |12     |9      |16     |54     |66     |-12    |45     
-11 |Leicester City       |36     |12     |7      |17     |46     |56     |-10    |43     
+11 |Leicester City       |37     |12     |7      |18     |47     |62     |-15    |43     
 12 |West Ham United      |37     |11     |9      |17     |45     |63     |-18    |42     
 13 |Crystal Palace       |37     |12     |5      |20     |50     |61     |-11    |41     
 14 |Stoke City           |37     |10     |11     |16     |40     |56     |-16    |41     
