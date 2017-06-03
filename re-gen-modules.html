@@ -78,6 +78,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">module</span> <span class="dt">Main</span> (main) <span class="kw">where</span>
 
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span>
+<span class="kw">import           </span><span class="dt">Data.Monoid</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span>
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
 <span class="kw">import           </span><span class="dt">System.Directory</span>
@@ -166,10 +167,12 @@ tdfa_api_edits <span class="fu">=</span>
 
 <span class="ot">pcre_api_edits ::</span> [(<span class="dt">ModPath</span>,<span class="dt">SedScript</span>)]
 pcre_api_edits <span class="fu">=</span>
-  [ pcre_api_edit <span class="st">&quot;PCRE.ByteString&quot;</span>       <span class="st">&quot;B.ByteString&quot;</span>    <span class="st">&quot;import qualified Data.ByteString               as B&quot;</span>
-  , pcre_api_edit <span class="st">&quot;PCRE.ByteString.Lazy&quot;</span>  <span class="st">&quot;LBS.ByteString&quot;</span>  <span class="st">&quot;import qualified Data.ByteString.Lazy          as LBS&quot;</span>
-  , pcre_api_edit <span class="st">&quot;PCRE.Sequence&quot;</span>         <span class="st">&quot;(S.Seq Char)&quot;</span>    <span class="st">&quot;import qualified Data.Sequence                 as S&quot;</span>
-  , pcre_api_edit <span class="st">&quot;PCRE.String&quot;</span>           <span class="st">&quot;String&quot;</span>          <span class="st">&quot;&quot;</span>
+  [ pcre_api_edit <span class="st">&quot;PCRE.ByteString&quot;</span>       <span class="st">&quot;B.ByteString&quot;</span>    <span class="st">&quot;import qualified Data.ByteString               as B&quot;</span>   <span class="dt">False</span>
+  , pcre_api_edit <span class="st">&quot;PCRE.ByteString.Lazy&quot;</span>  <span class="st">&quot;LBS.ByteString&quot;</span>  <span class="st">&quot;import qualified Data.ByteString.Lazy          as LBS&quot;</span> <span class="dt">False</span>
+  , pcre_api_edit <span class="st">&quot;PCRE.Sequence&quot;</span>         <span class="st">&quot;(S.Seq Char)&quot;</span>    <span class="st">&quot;import qualified Data.Sequence                 as S&quot;</span>   <span class="dt">False</span>
+  , pcre_api_edit <span class="st">&quot;PCRE.String&quot;</span>           <span class="st">&quot;String&quot;</span>          <span class="st">&quot;&quot;</span>                                                      <span class="dt">False</span>
+  , pcre_api_edit <span class="st">&quot;PCRE.Text&quot;</span>             <span class="st">&quot;T.Text&quot;</span>          <span class="st">&quot;import qualified Data.Text                     as T&quot;</span>   <span class="dt">True</span>
+  , pcre_api_edit <span class="st">&quot;PCRE.Text.Lazy&quot;</span>        <span class="st">&quot;TL.Text&quot;</span>         <span class="st">&quot;import qualified Data.Text.Lazy                as TL&quot;</span>  <span class="dt">True</span>
   ]
 
 <span class="ot">tdfa_api_edit ::</span> <span class="dt">ModPath</span>
@@ -188,25 +191,33 @@ tdfa_api_edit mp bs_lbs import_lbs <span class="fu">=</span>
 <span class="ot">pcre_api_edit ::</span> <span class="dt">ModPath</span>
               <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
               <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
+              <span class="ot">-&gt;</span> <span class="dt">Bool</span>
               <span class="ot">-&gt;</span> (<span class="dt">ModPath</span>,<span class="dt">SedScript</span>)
-pcre_api_edit mp bs_lbs import_lbs <span class="fu">=</span>
-    (,) fmp <span class="fu">$</span> <span class="dt">Pipe</span>
+pcre_api_edit mp bs_lbs import_lbs is_orp <span class="fu">=</span>
+    (,) fmp <span class="fu">$</span> <span class="dt">Pipe</span> <span class="fu">$</span>
         [ <span class="dt">Template</span> <span class="fu">$</span> <span class="dt">SearchReplace</span> tdfa_re     <span class="st">&quot;PCRE&quot;</span>
         , <span class="dt">Template</span> <span class="fu">$</span> <span class="dt">SearchReplace</span> module_re <span class="fu">$</span> LBS.pack mp
         , <span class="dt">Template</span> <span class="fu">$</span> <span class="dt">SearchReplace</span> import_re   import_lbs
         , <span class="dt">Template</span> <span class="fu">$</span> <span class="dt">SearchReplace</span> bs_re       bs_lbs
-        ]
+        ] <span class="fu">++</span>
+        [ <span class="dt">Template</span> <span class="fu">$</span> <span class="dt">SearchReplace</span> orp_re    <span class="fu">$</span> orphan_import mp
+          <span class="fu">|</span> is_orp
+          ]
   <span class="kw">where</span>
     fmp <span class="fu">=</span> <span class="st">&quot;Text.RE.&quot;</span> <span class="fu">++</span> mp
 
 <span class="ot">source_api_mp ::</span> <span class="dt">ModPath</span>
 source_api_mp <span class="fu">=</span> <span class="st">&quot;Text.RE.TDFA.ByteString.Lazy&quot;</span>
 
-tdfa_re, module_re, import_re,<span class="ot"> bs_re ::</span> <span class="dt">RE</span>
+<span class="ot">orphan_import ::</span> <span class="dt">ModPath</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
+orphan_import mp <span class="fu">=</span> <span class="st">&quot;import           Text.Regex.&quot;</span> <span class="fu">&lt;&gt;</span> LBS.pack mp <span class="fu">&lt;&gt;</span> <span class="st">&quot;()&quot;</span>
+
+tdfa_re, module_re, import_re, bs_re,<span class="ot"> orp_re ::</span> <span class="dt">RE</span>
 tdfa_re   <span class="fu">=</span> [re|TDFA|]
 module_re <span class="fu">=</span> [re|TDFA.ByteString.Lazy|]
 import_re <span class="fu">=</span> [re|import qualified Data.ByteString.Lazy.Char8 *as LBS|]
 bs_re     <span class="fu">=</span> [re|LBS.ByteString|]
+orp_re    <span class="fu">=</span> [re|^-- NB regex-base instance imports.*$|]
 
 
 <span class="co">------------------------------------------------------------------------</span>
@@ -267,6 +278,16 @@ pcre_ed_edits <span class="fu">=</span>
       , <span class="dt">Template</span> [ed|import qualified Data.ByteString.Lazy.Char8    as LBS///|]
       , <span class="dt">Template</span> [ed|LBS.ByteString///String|]
       , <span class="dt">Template</span> [ed|Text.RE.ZeInternals.TDFA///Text.RE.ZeInternals.PCRE|]
+      ]
+  , (,) <span class="st">&quot;Text.RE.ZeInternals.SearchReplace.PCRE.Text&quot;</span> <span class="fu">$</span> pipe
+      [ <span class="dt">Template</span> [ed|SearchReplace.TDFA.ByteString.Lazy///SearchReplace.PCRE.Text|]
+      , <span class="dt">Template</span> [ed|Data.ByteString.Lazy.Char8    as LBS///Data.Text                     as T|]
+      , <span class="dt">Template</span> [ed|LBS.ByteString///T.Text|]
+      ]
+  , (,) <span class="st">&quot;Text.RE.ZeInternals.SearchReplace.PCRE.Text.Lazy&quot;</span> <span class="fu">$</span> pipe
+      [ <span class="dt">Template</span> [ed|SearchReplace.TDFA.ByteString.Lazy///SearchReplace.PCRE.Text.Lazy|]
+      , <span class="dt">Template</span> [ed|Data.ByteString.Lazy.Char8    as LBS///Data.Text.Lazy                as TL|]
+      , <span class="dt">Template</span> [ed|LBS.ByteString///TL.Text|]
       ]
   ]
   <span class="kw">where</span>

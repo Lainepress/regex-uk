@@ -83,7 +83,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
 <span class="kw">import           </span><span class="dt">Data.Monoid</span>
 <span class="kw">import           </span><span class="dt">Data.Ord</span>
-<span class="kw">import           </span><span class="dt">Data.Sort</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Text</span>             <span class="kw">as</span> <span class="dt">T</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Text.IO</span>          <span class="kw">as</span> <span class="dt">T</span>
 <span class="kw">import           </span><span class="dt">Data.Time</span>
@@ -94,6 +93,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">System.Exit</span>
 <span class="kw">import           </span><span class="dt">System.FilePath</span>
 <span class="kw">import           </span><span class="dt">System.IO</span>
+<span class="kw">import           </span><span class="dt">TestKit</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Summa</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA</span>         <span class="kw">as</span> <span class="dt">TDFA</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA.Text</span>
@@ -135,8 +135,13 @@ main <span class="fu">=</span> parseCLI <span class="fu">&gt;&gt;=</span> mapM_ 
 <p>These vectors have expected zeros and sums.</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Monoid</span> <span class="dt">Results</span> <span class="kw">where</span>
   mempty  <span class="fu">=</span> <span class="dt">Results</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>
-  mappend (<span class="dt">Results</span> gp1 gw1 gf1 ga1 ps1) (<span class="dt">Results</span> gp2 gw2 gf2 ga2 ps2) <span class="fu">=</span>
-      <span class="dt">Results</span> (gp1<span class="fu">+</span>gp2) (gw1<span class="fu">+</span>gw2) (gf1<span class="fu">+</span>gf2) (ga1<span class="fu">+</span>ga2) (ps1<span class="fu">+</span>ps2)</code></pre></div>
+  mappend (<span class="dt">Results</span> gp1 gw1 gf1 ga1 ps1)
+          (<span class="dt">Results</span> gp2 gw2 gf2 ga2 ps2) <span class="fu">=</span>
+      <span class="dt">Results</span> (gp1<span class="fu">+</span>gp2)
+              (gw1<span class="fu">+</span>gw2)
+              (gf1<span class="fu">+</span>gf2)
+              (ga1<span class="fu">+</span>ga2)
+              (ps1<span class="fu">+</span>ps2)</code></pre></div>
 <p>PL results are ordered by (points,goal-difference,goals-scored).</p>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Ord</span> <span class="dt">Results</span> <span class="kw">where</span>
   compare <span class="fu">=</span> comparing <span class="fu">$</span> \<span class="dt">Results</span>{<span class="fu">..</span>} <span class="ot">-&gt;</span>
@@ -205,7 +210,7 @@ wins gd <span class="fu">=</span> <span class="kw">case</span> gd<span class="fu
 sortResults <span class="fu">=</span>
     <span class="dt">Table</span>
       <span class="fu">.</span> L.sortBy (flip <span class="fu">$</span> comparing fst)
-      <span class="fu">.</span> groupSortWith (comparing snd) grp
+      <span class="fu">.</span> groupSortBy (comparing snd) grp
   <span class="kw">where</span>
     grp (r,t) ps <span class="fu">=</span> (r&#39;,t)
       <span class="kw">where</span>

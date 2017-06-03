@@ -112,6 +112,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.ByteString.Lazy</span>   <span class="kw">as</span> <span class="dt">PLBS</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.Sequence</span>          <span class="kw">as</span> <span class="dt">P_SQ</span>
 <span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.String</span>            <span class="kw">as</span> <span class="dt">P_ST</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.Text</span>              <span class="kw">as</span> <span class="dt">P_TX</span>
+<span class="kw">import qualified</span> <span class="dt">Text.RE.PCRE.Text.Lazy</span>         <span class="kw">as</span> <span class="dt">PLTX</span>
 <span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
 <span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
 <span class="kw">import           </span><span class="dt">Text.RE.TDFA</span>                   <span class="kw">as</span> <span class="dt">TDFA</span>
@@ -416,7 +418,9 @@ search_replace_tests <span class="fu">=</span> testGroup <span class="st">&quot;
     , testg <span class="st">&quot;TDFA.op/LBS&quot;</span>    (<span class="fu">TLBS.?=~/</span>) (<span class="fu">TLBS.*=~/</span>) tdfa_sr
     , testg <span class="st">&quot;PCRE.op/LBS&quot;</span>    (<span class="fu">PLBS.?=~/</span>) (<span class="fu">PLBS.*=~/</span>) pcre_sr
     , testg <span class="st">&quot;TDFA.op/T&quot;</span>      (<span class="fu">T_TX.?=~/</span>) (<span class="fu">T_TX.*=~/</span>) tdfa_sr
+    , testg <span class="st">&quot;PCRE.op/T&quot;</span>      (<span class="fu">P_TX.?=~/</span>) (<span class="fu">P_TX.*=~/</span>) pcre_sr
     , testg <span class="st">&quot;TDFA.op/LT&quot;</span>     (<span class="fu">TLTX.?=~/</span>) (<span class="fu">TLTX.*=~/</span>) tdfa_sr
+    , testg <span class="st">&quot;PCRE.op/LT&quot;</span>     (<span class="fu">PLTX.?=~/</span>) (<span class="fu">PLTX.*=~/</span>) pcre_sr
     , testG <span class="st">&quot;TDFA.op/S&quot;</span>      (<span class="fu">T_SQ.?=~/</span>) (<span class="fu">T_SQ.*=~/</span>) tdfa_sr
     , testG <span class="st">&quot;PCRE.op/S&quot;</span>      (<span class="fu">P_SQ.?=~/</span>) (<span class="fu">P_SQ.*=~/</span>) pcre_sr
     ]
@@ -510,6 +514,8 @@ many_tests <span class="fu">=</span> testGroup <span class="st">&quot;Many Tests
     , testCase <span class="st">&quot;PCRE ByteString.Lazy&quot;</span> <span class="fu">$</span> test (<span class="fu">PLBS.*=~</span>) (<span class="fu">PLBS.?=~</span>) (<span class="fu">PLBS.=~</span>) (<span class="fu">PLBS.=~~</span>) matchOnce matchMany makeSearchReplace LBS.pack    re_pcre
     , testCase <span class="st">&quot;PCRE Sequence&quot;</span>        <span class="fu">$</span> test (<span class="fu">P_SQ.*=~</span>) (<span class="fu">P_SQ.?=~</span>) (<span class="fu">P_SQ.=~</span>) (<span class="fu">P_SQ.=~~</span>) matchOnce matchMany makeSearchReplace S.fromList  re_pcre
     , testCase <span class="st">&quot;PCRE String&quot;</span>          <span class="fu">$</span> test (<span class="fu">P_ST.*=~</span>) (<span class="fu">P_ST.?=~</span>) (<span class="fu">P_ST.=~</span>) (<span class="fu">P_ST.=~~</span>) matchOnce matchMany makeSearchReplace id          re_pcre
+    , testCase <span class="st">&quot;PCRE Text&quot;</span>            <span class="fu">$</span> test (<span class="fu">P_TX.*=~</span>) (<span class="fu">P_TX.?=~</span>) (<span class="fu">P_TX.=~</span>) (<span class="fu">P_TX.=~~</span>) matchOnce matchMany makeSearchReplace T.pack      re_pcre
+    , testCase <span class="st">&quot;PCRE Text.Lazy&quot;</span>       <span class="fu">$</span> test (<span class="fu">PLTX.*=~</span>) (<span class="fu">PLTX.?=~</span>) (<span class="fu">PLTX.=~</span>) (<span class="fu">PLTX.=~~</span>) matchOnce matchMany makeSearchReplace <span class="dt">LT</span><span class="fu">.</span>pack     re_pcre
     , testCase <span class="st">&quot;TDFA a&quot;</span>               <span class="fu">$</span> test (<span class="fu">TDFA.*=~</span>) (<span class="fu">TDFA.?=~</span>) (<span class="fu">TDFA.=~</span>) (<span class="fu">TDFA.=~~</span>) matchOnce matchMany makeSearchReplace id          re_tdfa
     , testCase <span class="st">&quot;TDFA ByteString&quot;</span>      <span class="fu">$</span> test (<span class="fu">T_BS.*=~</span>) (<span class="fu">T_BS.?=~</span>) (<span class="fu">T_BS.=~</span>) (<span class="fu">T_BS.=~~</span>) matchOnce matchMany makeSearchReplace B.pack      re_tdfa
     , testCase <span class="st">&quot;TDFA ByteString.Lazy&quot;</span> <span class="fu">$</span> test (<span class="fu">TLBS.*=~</span>) (<span class="fu">TLBS.?=~</span>) (<span class="fu">TLBS.=~</span>) (<span class="fu">TLBS.=~~</span>) matchOnce matchMany makeSearchReplace LBS.pack    re_tdfa

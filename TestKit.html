@@ -96,6 +96,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   , cmp
   , dumpMacroTable
   , sortImports
+  , groupSort
+  , groupSortBy
   , read_file
   , write_file
   ) <span class="kw">where</span>
@@ -319,6 +321,30 @@ sortImports lbs <span class="fu">=</span>
     (hdr,bdy) <span class="fu">=</span> span (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches) lns
     lns       <span class="fu">=</span> grepFilter rex lbs
     rex       <span class="fu">=</span> [re|^import +(qualified|         ) ${mod}([^ ].*)$|]</code></pre></div>
+<h2 id="groupsort-and-groupsortby">groupSort and groupSortBy</h2>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | Sort a list of elements with a stable sort, grouping together the</span>
+<span class="co">-- equal elements with the argument grouping function</span>
+<span class="ot">groupSort ::</span> (<span class="dt">Ord</span> a) <span class="ot">=&gt;</span> (a<span class="ot">-&gt;</span>[a]<span class="ot">-&gt;</span>b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]
+groupSort <span class="fu">=</span> groupSortBy compare
+
+<span class="co">-- | Sort a list of elements with a stable sort, grouping together the</span>
+<span class="co">-- equal elements with the argument grouping function.</span>
+<span class="ot">groupSortBy ::</span> (a<span class="ot">-&gt;</span>a<span class="ot">-&gt;</span><span class="dt">Ordering</span>)
+            <span class="ot">-&gt;</span> (a<span class="ot">-&gt;</span>[a]<span class="ot">-&gt;</span>b)
+            <span class="ot">-&gt;</span> [a]
+            <span class="ot">-&gt;</span> [b]
+groupSortBy comp grp <span class="fu">=</span> aggregate <span class="fu">.</span> L.sortBy comp
+  <span class="kw">where</span>
+    aggregate []    <span class="fu">=</span> []
+    aggregate (h<span class="fu">:</span>t) <span class="fu">=</span> seq g <span class="fu">$</span> g <span class="fu">:</span> aggregate rst
+      <span class="kw">where</span>
+        g         <span class="fu">=</span> grp h eqs
+        (eqs,rst) <span class="fu">=</span> span is_le t
+
+        is_le x   <span class="fu">=</span> <span class="kw">case</span> comp x h <span class="kw">of</span>
+          <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="dt">True</span>
+          <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">True</span>
+          <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="dt">False</span></code></pre></div>
 <h2 id="read_file-and-write_file">read_file and write_file</h2>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">read_file ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
 read_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.getContents
