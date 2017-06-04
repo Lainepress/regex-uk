@@ -87,6 +87,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Data.Array</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span>          <span class="kw">as</span> <span class="dt">B</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>     <span class="kw">as</span> <span class="dt">LBS</span>
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.UTF8</span>      <span class="kw">as</span> <span class="dt">LBS</span>
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString.UTF8</span>           <span class="kw">as</span> <span class="dt">B</span>
 <span class="kw">import           </span><span class="dt">Data.Char</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Foldable</span>                  <span class="kw">as</span> <span class="dt">F</span>
 <span class="kw">import qualified</span> <span class="dt">Data.HashMap.Strict</span>            <span class="kw">as</span> <span class="dt">HM</span>
@@ -101,6 +103,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import           </span><span class="dt">Prelude.Compat</span>
 <span class="kw">import           </span><span class="dt">System.Directory</span>
 <span class="kw">import           </span><span class="dt">System.FilePath</span>
+<span class="kw">import qualified</span> <span class="dt">System.Info</span>                    <span class="kw">as</span> <span class="dt">SI</span>
 <span class="kw">import           </span><span class="dt">Test.SmallCheck.Series</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty</span>
 <span class="kw">import           </span><span class="dt">Test.Tasty.HUnit</span>
@@ -130,21 +133,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">import qualified</span> <span class="dt">Text.Regex.PCRE</span>                <span class="kw">as</span> <span class="dt">PCRE_</span>
 <span class="kw">import qualified</span> <span class="dt">Text.Regex.TDFA</span>                <span class="kw">as</span> <span class="dt">TDFA_</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">main ::</span> <span class="dt">IO</span> ()
-main <span class="fu">=</span> defaultMain <span class="fu">$</span>
-  testGroup <span class="st">&quot;Tests&quot;</span>
-    [ prelude_tests
-    , compiling_tests
-    , core_tests
-    , replace_methods_tests
-    , search_replace_tests
-    , options_tests
-    , named_capture_tests
-    , many_tests
-    , escape_tests
-    , add_capture_names_tests
-    , find_tests
-    , misc_tests
-    ]</code></pre></div>
+main <span class="fu">=</span> <span class="kw">do</span>
+  print SI.os
+  defaultMain <span class="fu">$</span>
+    testGroup <span class="st">&quot;Tests&quot;</span>
+      [ prelude_tests
+      , compiling_tests
+      , core_tests
+      , replace_methods_tests
+      , search_replace_tests
+      , options_tests
+      , named_capture_tests
+      , many_tests
+      , escape_tests
+      , add_capture_names_tests
+      , find_tests
+      , misc_tests
+      ]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | check that our self-testing macro environments are good</span>
 <span class="ot">prelude_tests ::</span> <span class="dt">TestTree</span>
 prelude_tests <span class="fu">=</span> testGroup <span class="st">&quot;Prelude&quot;</span>
@@ -396,7 +401,7 @@ replace_methods_tests <span class="fu">=</span> testGroup <span class="st">&quot
 SearchReplace
 </h3>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">search_replace_tests ::</span> <span class="dt">TestTree</span>
-search_replace_tests <span class="fu">=</span> testGroup <span class="st">&quot;SearchReplace&quot;</span>
+search_replace_tests <span class="fu">=</span> testGroup <span class="st">&quot;SearchReplace&quot;</span> <span class="fu">$</span>
     [ testCase <span class="st">&quot;?=~/ [ed_| ... |]&quot;</span> <span class="fu">$</span> <span class="st">&quot;baz bar foobar&quot;</span> <span class="fu">@=?</span> <span class="st">&quot;foo bar foobar&quot;</span> <span class="fu">T_ST.?=~/</span> [ed_|foo///baz|] ()
     , testCase <span class="st">&quot;*=~/ [ed_| ... |]&quot;</span> <span class="fu">$</span> <span class="st">&quot;baz bar bazbar&quot;</span> <span class="fu">@=?</span> <span class="st">&quot;foo bar foobar&quot;</span> <span class="fu">T_ST.*=~/</span> [ed_|foo///baz|] <span class="dt">MultilineSensitive</span>
     , testCase <span class="st">&quot;TDFA.ed/String&quot;</span> <span class="fu">$</span> test  id         tdfa_eds
@@ -411,20 +416,40 @@ search_replace_tests <span class="fu">=</span> testGroup <span class="st">&quot;
     , testCase <span class="st">&quot;TDFA.ed/LT&quot;</span>     <span class="fu">$</span> test  <span class="dt">LT</span><span class="fu">.</span>pack    tdfa_eds
     , testCase <span class="st">&quot;TDFA.ed/T(d)&quot;</span>   <span class="fu">$</span> test  T.pack     tdfa_eds&#39;
     , testCase <span class="st">&quot;PCRE.ed/LBS(d)&quot;</span> <span class="fu">$</span> test  LBS.pack   pcre_eds&#39;
-    , testg <span class="st">&quot;TDFA.op/String&quot;</span> (<span class="fu">T_ST.?=~/</span>) (<span class="fu">T_ST.*=~/</span>) tdfa_sr
-    , testg <span class="st">&quot;PCRE.op/String&quot;</span> (<span class="fu">P_ST.?=~/</span>) (<span class="fu">P_ST.*=~/</span>) pcre_sr
-    , testg <span class="st">&quot;TDFA.op/B&quot;</span>      (<span class="fu">T_BS.?=~/</span>) (<span class="fu">T_BS.*=~/</span>) tdfa_sr
-    , testg <span class="st">&quot;PCRE.op/B&quot;</span>      (<span class="fu">P_BS.?=~/</span>) (<span class="fu">P_BS.*=~/</span>) pcre_sr
-    , testg <span class="st">&quot;TDFA.op/LBS&quot;</span>    (<span class="fu">TLBS.?=~/</span>) (<span class="fu">TLBS.*=~/</span>) tdfa_sr
-    , testg <span class="st">&quot;PCRE.op/LBS&quot;</span>    (<span class="fu">PLBS.?=~/</span>) (<span class="fu">PLBS.*=~/</span>) pcre_sr
-    , testg <span class="st">&quot;TDFA.op/T&quot;</span>      (<span class="fu">T_TX.?=~/</span>) (<span class="fu">T_TX.*=~/</span>) tdfa_sr
-    , testg <span class="st">&quot;PCRE.op/T&quot;</span>      (<span class="fu">P_TX.?=~/</span>) (<span class="fu">P_TX.*=~/</span>) pcre_sr
-    , testg <span class="st">&quot;TDFA.op/LT&quot;</span>     (<span class="fu">TLTX.?=~/</span>) (<span class="fu">TLTX.*=~/</span>) tdfa_sr
-    , testg <span class="st">&quot;PCRE.op/LT&quot;</span>     (<span class="fu">PLTX.?=~/</span>) (<span class="fu">PLTX.*=~/</span>) pcre_sr
-    , testG <span class="st">&quot;TDFA.op/S&quot;</span>      (<span class="fu">T_SQ.?=~/</span>) (<span class="fu">T_SQ.*=~/</span>) tdfa_sr
-    , testG <span class="st">&quot;PCRE.op/S&quot;</span>      (<span class="fu">P_SQ.?=~/</span>) (<span class="fu">P_SQ.*=~/</span>) pcre_sr
+    , testg <span class="st">&quot;TDFA.op&quot;</span>        (<span class="fu">T_ST.?=~/</span>) (<span class="fu">T_ST.*=~/</span>) tdfa_sr
+    , testg <span class="st">&quot;PCRE.op&quot;</span>        (<span class="fu">P_ST.?=~/</span>) (<span class="fu">P_ST.*=~/</span>) pcre_sr
+    , testg <span class="st">&quot;TDFA.op/String&quot;</span> (<span class="fu">T_ST.?=~/</span>) (<span class="fu">T_ST.*=~/</span>) tdfa_sr_str
+    , testg <span class="st">&quot;PCRE.op/String&quot;</span> (<span class="fu">P_ST.?=~/</span>) (<span class="fu">P_ST.*=~/</span>) pcre_sr_str
+    , testg <span class="st">&quot;TDFA.op/B&quot;</span>      (<span class="fu">T_BS.?=~/</span>) (<span class="fu">T_BS.*=~/</span>) tdfa_sr_b
+    , testg <span class="st">&quot;PCRE.op/B&quot;</span>      (<span class="fu">P_BS.?=~/</span>) (<span class="fu">P_BS.*=~/</span>) pcre_sr_b
+    , testg <span class="st">&quot;TDFA.op/LBS&quot;</span>    (<span class="fu">TLBS.?=~/</span>) (<span class="fu">TLBS.*=~/</span>) tdfa_sr_lbs
+    , testg <span class="st">&quot;PCRE.op/LBS&quot;</span>    (<span class="fu">PLBS.?=~/</span>) (<span class="fu">PLBS.*=~/</span>) pcre_sr_lbs
+    , testg <span class="st">&quot;TDFA.op/T&quot;</span>      (<span class="fu">T_TX.?=~/</span>) (<span class="fu">T_TX.*=~/</span>) tdfa_sr_t
+    , testg <span class="st">&quot;PCRE.op/T&quot;</span>      (<span class="fu">P_TX.?=~/</span>) (<span class="fu">P_TX.*=~/</span>) pcre_sr_t
+    , testg <span class="st">&quot;TDFA.op/LT&quot;</span>     (<span class="fu">TLTX.?=~/</span>) (<span class="fu">TLTX.*=~/</span>) tdfa_sr_lt
+    , testg <span class="st">&quot;PCRE.op/LT&quot;</span>     (<span class="fu">PLTX.?=~/</span>) (<span class="fu">PLTX.*=~/</span>) pcre_sr_lt
+    , testG <span class="st">&quot;TDFA.op/S&quot;</span>      (<span class="fu">T_SQ.?=~/</span>) (<span class="fu">T_SQ.*=~/</span>) tdfa_sr_s
+    , testG <span class="st">&quot;PCRE.op/S&quot;</span>      (<span class="fu">P_SQ.?=~/</span>) (<span class="fu">P_SQ.*=~/</span>) pcre_sr_s
+    , testu <span class="st">&quot;TDFA.U/String&quot;</span> id              (<span class="fu">T_ST.*=~/</span>) [T_ST.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">T_ST.*=~</span>) [T_ST.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    , testu <span class="st">&quot;TDFA.U/B&quot;</span>      B.fromString    (<span class="fu">T_BS.*=~/</span>) [T_BS.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">T_BS.*=~</span>) [T_BS.re<span class="fu">|</span>burble<span class="fu">|</span>]
+    , testu <span class="st">&quot;TDFA.U/LBS&quot;</span>    LBS.fromString  (<span class="fu">TLBS.*=~/</span>) [TLBS.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">TLBS.*=~</span>) [TLBS.re<span class="fu">|</span>burble<span class="fu">|</span>]
+    , testu <span class="st">&quot;TDFA.U/T&quot;</span>      T.pack          (<span class="fu">T_TX.*=~/</span>) [T_TX.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">T_TX.*=~</span>) [T_TX.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    , testu <span class="st">&quot;TDFA.U/LT&quot;</span>     <span class="dt">LT</span><span class="fu">.</span>pack         (<span class="fu">TLTX.*=~/</span>) [TLTX.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">TLTX.*=~</span>) [TLTX.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    , testu <span class="st">&quot;TDFA.U/S&quot;</span>      S.fromList      (<span class="fu">T_SQ.*=~/</span>) [T_SQ.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">T_SQ.*=~</span>) [T_SQ.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    ] <span class="fu">++</span> not_win32_for_now
+    [ testu <span class="st">&quot;PCRE.U/String&quot;</span> id              (<span class="fu">P_ST.*=~/</span>) [P_ST.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">P_ST.*=~</span>) [P_ST.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    , testu <span class="st">&quot;PCRE.U/B&quot;</span>      B.fromString    (<span class="fu">P_BS.*=~/</span>) [P_BS.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">P_BS.*=~</span>) [P_BS.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    , testu <span class="st">&quot;PCRE.U/LBS&quot;</span>    LBS.fromString  (<span class="fu">PLBS.*=~/</span>) [PLBS.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">PLBS.*=~</span>) [PLBS.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    , testu <span class="st">&quot;PCRE.U/T&quot;</span>      T.pack          (<span class="fu">P_TX.*=~/</span>) [P_TX.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">P_TX.*=~</span>) [P_TX.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    , testu <span class="st">&quot;PCRE.U/LT&quot;</span>     <span class="dt">LT</span><span class="fu">.</span>pack         (<span class="fu">PLTX.*=~/</span>) [PLTX.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">PLTX.*=~</span>) [PLTX.re<span class="fu">|</span>λ<span class="fu">-|</span>]
+    , testu <span class="st">&quot;PCRE.U/S&quot;</span>      S.fromList      (<span class="fu">P_SQ.*=~/</span>) [P_SQ.ed<span class="fu">|</span>scientist<span class="fu">///</span>boffin<span class="fu">|</span>] (<span class="fu">P_SQ.*=~</span>) [P_SQ.re<span class="fu">|</span>burble<span class="fu">|</span>]
     ]
   <span class="kw">where</span>
+<span class="ot">    not_win32_for_now ::</span> [a] <span class="ot">-&gt;</span> [a]
+    not_win32_for_now <span class="fu">=</span> <span class="kw">case</span> SI.os <span class="fu">==</span> <span class="st">&quot;mingw32&quot;</span> <span class="kw">of</span>
+      <span class="dt">True</span>  <span class="ot">-&gt;</span> const []
+      <span class="dt">False</span> <span class="ot">-&gt;</span> id
+
 <span class="ot">    test ::</span> <span class="dt">IsRegex</span> re a <span class="ot">=&gt;</span> (<span class="dt">String</span><span class="ot">-&gt;</span>a) <span class="ot">-&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> re a <span class="ot">-&gt;</span> <span class="dt">Assertion</span>
     test inj eds <span class="fu">=</span>  inj rsm <span class="fu">@=?</span> runIdentity (sed&#39; eds <span class="fu">$</span> inj inp)
 
@@ -438,39 +463,84 @@ search_replace_tests <span class="fu">=</span> testGroup <span class="st">&quot;
       , testCase <span class="st">&quot;*=~/&quot;</span> <span class="fu">$</span> S.fromList rsm <span class="fu">@=?</span> S.fromList inp <span class="ot">`opm`</span> sr
       ]
 
+    testu lab inj op sr qop rex <span class="fu">=</span> testGroup lab
+      [ testCase <span class="st">&quot;*=~/&quot;</span> <span class="fu">$</span> inj unr <span class="fu">@=?</span> inj uni <span class="ot">`op`</span> sr
+      , testCase <span class="st">&quot;*=~&quot;</span>  <span class="fu">$</span> <span class="dv">1</span>       <span class="fu">@=?</span> countMatches (inj uni <span class="ot">`qop`</span> rex)
+      ]
+
     inp, rs1,<span class="ot"> rsm ::</span> <span class="dt">IsString</span> a <span class="ot">=&gt;</span> a
     inp <span class="fu">=</span> <span class="st">&quot;16/03/2017 01/01/2000\n&quot;</span>
     rs1 <span class="fu">=</span> <span class="st">&quot;2017-03-16 01/01/2000\n&quot;</span>
     rsm <span class="fu">=</span> <span class="st">&quot;2017-03-16 2000-01-01\n&quot;</span>
 
-<span class="ot">    tdfa_eds ::</span> <span class="dt">IsRegex</span> <span class="dt">TDFA.RE</span> a <span class="ot">=&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> <span class="dt">TDFA.RE</span> a
-    tdfa_eds <span class="fu">=</span> <span class="dt">Select</span> [<span class="dt">Template</span> tdfa_sr]
+    uni,<span class="ot"> unr ::</span> <span class="dt">String</span>
+    uni <span class="fu">=</span> <span class="st">&quot;\x2070E-\8364-\955-scientist-burble&quot;</span>
+    unr <span class="fu">=</span> <span class="st">&quot;\x2070E-\8364-\955-boffin-burble&quot;</span>
 
-<span class="ot">    pcre_eds ::</span> <span class="dt">IsRegex</span> <span class="dt">PCRE.RE</span> a <span class="ot">=&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> <span class="dt">PCRE.RE</span> a
-    pcre_eds <span class="fu">=</span> <span class="dt">Select</span> [<span class="dt">Template</span> pcre_sr]
+<span class="ot">    tdfa_eds    ::</span> <span class="dt">IsRegex</span> <span class="dt">TDFA.RE</span> a <span class="ot">=&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> <span class="dt">TDFA.RE</span> a
+    tdfa_eds    <span class="fu">=</span> <span class="dt">Select</span> [<span class="dt">Template</span> tdfa_sr]
 
-<span class="ot">    tdfa_sr  ::</span> <span class="dt">IsRegex</span> <span class="dt">TDFA.RE</span> a <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> a
-    tdfa_sr  <span class="fu">=</span> [TDFA.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+<span class="ot">    pcre_eds    ::</span> <span class="dt">IsRegex</span> <span class="dt">PCRE.RE</span> a <span class="ot">=&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> <span class="dt">PCRE.RE</span> a
+    pcre_eds    <span class="fu">=</span> <span class="dt">Select</span> [<span class="dt">Template</span> pcre_sr]
 
-<span class="ot">    pcre_sr  ::</span> <span class="dt">IsRegex</span> <span class="dt">PCRE.RE</span> a <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> a
-    pcre_sr  <span class="fu">=</span> [PCRE.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+<span class="ot">    tdfa_sr     ::</span> <span class="dt">IsRegex</span> <span class="dt">TDFA.RE</span> a <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> a
+    tdfa_sr     <span class="fu">=</span> [TDFA.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
 
-<span class="ot">    tdfa_eds&#39; ::</span> <span class="dt">IsRegex</span> <span class="dt">TDFA.RE</span> a <span class="ot">=&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> <span class="dt">TDFA.RE</span> a
-    tdfa_eds&#39; <span class="fu">=</span> <span class="dt">Select</span> [<span class="dt">Template</span> <span class="fu">$</span> tdfa_csr <span class="st">&quot;${d}([0-9]{2})/${m}([0-9]{2})/${y}([0-9]{4})&quot;</span> <span class="st">&quot;${y}-${m}-${d}&quot;</span>]
+<span class="ot">    pcre_sr     ::</span> <span class="dt">IsRegex</span> <span class="dt">PCRE.RE</span> a <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> a
+    pcre_sr     <span class="fu">=</span> [PCRE.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
 
-<span class="ot">    pcre_eds&#39; ::</span> <span class="dt">IsRegex</span> <span class="dt">PCRE.RE</span> a <span class="ot">=&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> <span class="dt">PCRE.RE</span> a
-    pcre_eds&#39; <span class="fu">=</span> <span class="dt">Select</span> [<span class="dt">Template</span> <span class="fu">$</span> pcre_csr <span class="st">&quot;${d}([0-9]{2})/${m}([0-9]{2})/${y}([0-9]{4})&quot;</span> <span class="st">&quot;${y}-${m}-${d}&quot;</span>]
+<span class="ot">    tdfa_sr_str ::</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> <span class="dt">String</span>
+    tdfa_sr_str <span class="fu">=</span> [T_ST.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
 
-<span class="ot">    tdfa_csr ::</span> <span class="dt">IsRegex</span> <span class="dt">TDFA.RE</span> s
-             <span class="ot">=&gt;</span> <span class="dt">String</span>
-             <span class="ot">-&gt;</span> <span class="dt">String</span>
-             <span class="ot">-&gt;</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> s
+<span class="ot">    pcre_sr_str ::</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> <span class="dt">String</span>
+    pcre_sr_str <span class="fu">=</span> [P_ST.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    tdfa_sr_b   ::</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> <span class="dt">B.ByteString</span>
+    tdfa_sr_b   <span class="fu">=</span> [T_BS.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    pcre_sr_b   ::</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> <span class="dt">B.ByteString</span>
+    pcre_sr_b   <span class="fu">=</span> [P_BS.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    tdfa_sr_lbs ::</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> <span class="dt">LBS.ByteString</span>
+    tdfa_sr_lbs <span class="fu">=</span> [TLBS.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    pcre_sr_lbs ::</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> <span class="dt">LBS.ByteString</span>
+    pcre_sr_lbs <span class="fu">=</span> [PLBS.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    tdfa_sr_t   ::</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> <span class="dt">T.Text</span>
+    tdfa_sr_t   <span class="fu">=</span> [T_TX.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    pcre_sr_t   ::</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> <span class="dt">T.Text</span>
+    pcre_sr_t   <span class="fu">=</span> [P_TX.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    tdfa_sr_lt  ::</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> <span class="dt">LT</span><span class="fu">.</span><span class="dt">Text</span>
+    tdfa_sr_lt  <span class="fu">=</span> [TLTX.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    pcre_sr_lt  ::</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> <span class="dt">LT</span><span class="fu">.</span><span class="dt">Text</span>
+    pcre_sr_lt  <span class="fu">=</span> [PLTX.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    tdfa_sr_s   ::</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> (<span class="dt">S.Seq</span> <span class="dt">Char</span>)
+    tdfa_sr_s   <span class="fu">=</span> [T_SQ.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    pcre_sr_s   ::</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> (<span class="dt">S.Seq</span> <span class="dt">Char</span>)
+    pcre_sr_s   <span class="fu">=</span> [P_SQ.ed<span class="fu">|$</span>{d}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{m}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">2</span>})<span class="fu">/$</span>{y}([<span class="dv">0</span><span class="fu">-</span><span class="dv">9</span>]{<span class="dv">4</span>})<span class="fu">///$</span>{y}<span class="fu">-$</span>{m}<span class="fu">-$</span>{d}<span class="fu">|</span>]
+
+<span class="ot">    tdfa_eds&#39;   ::</span> <span class="dt">IsRegex</span> <span class="dt">TDFA.RE</span> a <span class="ot">=&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> <span class="dt">TDFA.RE</span> a
+    tdfa_eds&#39;   <span class="fu">=</span> <span class="dt">Select</span> [<span class="dt">Template</span> <span class="fu">$</span> tdfa_csr <span class="st">&quot;${d}([0-9]{2})/${m}([0-9]{2})/${y}([0-9]{4})&quot;</span> <span class="st">&quot;${y}-${m}-${d}&quot;</span>]
+
+<span class="ot">    pcre_eds&#39;   ::</span> <span class="dt">IsRegex</span> <span class="dt">PCRE.RE</span> a <span class="ot">=&gt;</span> <span class="dt">Edits</span> <span class="dt">Identity</span> <span class="dt">PCRE.RE</span> a
+    pcre_eds&#39;   <span class="fu">=</span> <span class="dt">Select</span> [<span class="dt">Template</span> <span class="fu">$</span> pcre_csr <span class="st">&quot;${d}([0-9]{2})/${m}([0-9]{2})/${y}([0-9]{4})&quot;</span> <span class="st">&quot;${y}-${m}-${d}&quot;</span>]
+
+<span class="ot">    tdfa_csr    ::</span> <span class="dt">IsRegex</span> <span class="dt">TDFA.RE</span> s
+                <span class="ot">=&gt;</span> <span class="dt">String</span>
+                <span class="ot">-&gt;</span> <span class="dt">String</span>
+                <span class="ot">-&gt;</span> <span class="dt">SearchReplace</span> <span class="dt">TDFA.RE</span> s
     tdfa_csr re_s <span class="fu">=</span> either error id <span class="fu">.</span> TDFA.compileSearchReplace re_s
 
-<span class="ot">    pcre_csr ::</span> <span class="dt">IsRegex</span> <span class="dt">PCRE.RE</span> s
-             <span class="ot">=&gt;</span> <span class="dt">String</span>
-             <span class="ot">-&gt;</span> <span class="dt">String</span>
-             <span class="ot">-&gt;</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> s
+<span class="ot">    pcre_csr    ::</span> <span class="dt">IsRegex</span> <span class="dt">PCRE.RE</span> s
+                <span class="ot">=&gt;</span> <span class="dt">String</span>
+                <span class="ot">-&gt;</span> <span class="dt">String</span>
+                <span class="ot">-&gt;</span> <span class="dt">SearchReplace</span> <span class="dt">PCRE.RE</span> s
     pcre_csr re_s <span class="fu">=</span> either error id <span class="fu">.</span> PCRE.compileSearchReplace re_s</code></pre></div>
 <h3>
 Testing The REOptions

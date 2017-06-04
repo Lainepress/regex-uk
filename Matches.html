@@ -119,12 +119,13 @@ mainCaptures ac <span class="fu">=</span> [ capture c0 cs <span class="fu">|</sp
 <span class="kw">instance</span>
     ( <span class="dt">RegexContext</span> regex source [<span class="dt">MatchText</span> source]
     , <span class="dt">RegexLike</span>    regex source
+    , <span class="dt">RegexFix</span>     regex source
     ) <span class="ot">=&gt;</span>
   <span class="dt">RegexContext</span> regex source (<span class="dt">Matches</span> source) <span class="kw">where</span>
-    match  r s <span class="fu">=</span> <span class="dt">Matches</span> s <span class="fu">$</span> map (convertMatchText s) <span class="fu">$</span> match r s
+    match  r s <span class="fu">=</span> <span class="dt">Matches</span> s <span class="fu">$</span> map (convertMatchText r s) <span class="fu">$</span> match r s
     matchM r s <span class="fu">=</span> <span class="kw">do</span>
       y <span class="ot">&lt;-</span> matchM r s
-      return <span class="fu">$</span> <span class="dt">Matches</span> s <span class="fu">$</span> map (convertMatchText s) y</code></pre></div>
+      return <span class="fu">$</span> <span class="dt">Matches</span> s <span class="fu">$</span> map (convertMatchText r s) y</code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

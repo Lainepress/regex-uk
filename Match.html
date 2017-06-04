@@ -87,14 +87,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   , capture
   , (<span class="fu">!$?</span>)
   , captureMaybe
+  , <span class="dt">RegexFix</span>(<span class="fu">..</span>)
   , convertMatchText
   ) <span class="kw">where</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Data.Array</span>
+<span class="kw">import           </span><span class="dt">Data.Bits</span>
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString</span>                <span class="kw">as</span> <span class="dt">BW</span>
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span>          <span class="kw">as</span> <span class="dt">B</span>
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>     <span class="kw">as</span> <span class="dt">LBS</span>
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString.UTF8</span>           <span class="kw">as</span> <span class="dt">B</span>
 <span class="kw">import           </span><span class="dt">Data.Maybe</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Sequence</span>                  <span class="kw">as</span> <span class="dt">S</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Text</span>                      <span class="kw">as</span> <span class="dt">T</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span>             <span class="kw">as</span> <span class="dt">T</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Text.Lazy</span>                 <span class="kw">as</span> <span class="dt">LT</span>
 <span class="kw">import           </span><span class="dt">Data.Typeable</span>
+<span class="kw">import           </span><span class="dt">Data.Word</span>
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Capture</span>
 <span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
 <span class="kw">import           </span><span class="dt">Text.Regex.Base</span>
+<span class="kw">import qualified</span> <span class="dt">Text.Regex.PCRE</span>                <span class="kw">as</span> <span class="dt">PCRE</span>
+<span class="kw">import qualified</span> <span class="dt">Text.Regex.TDFA</span>                <span class="kw">as</span> <span class="dt">TDFA</span>
 
 <span class="kw">infixl</span> <span class="dv">9</span> <span class="fu">!$</span>, <span class="fu">!$$</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | the result of matching a RE to a text once (with @?=~@), retaining</span>
@@ -205,15 +218,20 @@ lookupCaptureID cid <span class="dt">Match</span>{<span class="fu">..</span>} <s
 <span class="kw">instance</span>
     ( <span class="dt">RegexContext</span> regex source (<span class="dt">AllTextSubmatches</span> (<span class="dt">Array</span> <span class="dt">Int</span>) (source,(<span class="dt">Int</span>,<span class="dt">Int</span>)))
     , <span class="dt">RegexLike</span>    regex source
+    , <span class="dt">RegexFix</span>     regex source
     ) <span class="ot">=&gt;</span>
   <span class="dt">RegexContext</span> regex source (<span class="dt">Match</span> source) <span class="kw">where</span>
-    match  r s <span class="fu">=</span> convertMatchText s <span class="fu">$</span> getAllTextSubmatches <span class="fu">$</span> match r s
+    match  r s <span class="fu">=</span> convertMatchText r s <span class="fu">$</span> getAllTextSubmatches <span class="fu">$</span> match r s
     matchM r s <span class="fu">=</span> <span class="kw">do</span>
       y <span class="ot">&lt;-</span> matchM r s
-      return <span class="fu">$</span> convertMatchText s <span class="fu">$</span> getAllTextSubmatches y</code></pre></div>
+      return <span class="fu">$</span> convertMatchText r s <span class="fu">$</span> getAllTextSubmatches y</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | convert a regex-base native MatchText into a regex Match type</span>
-<span class="ot">convertMatchText ::</span> source <span class="ot">-&gt;</span> <span class="dt">MatchText</span> source <span class="ot">-&gt;</span> <span class="dt">Match</span> source
-convertMatchText hay arr <span class="fu">=</span>
+<span class="ot">convertMatchText ::</span> <span class="dt">RegexFix</span> regex source
+                 <span class="ot">=&gt;</span> regex
+                 <span class="ot">-&gt;</span> source
+                 <span class="ot">-&gt;</span> <span class="dt">MatchText</span> source
+                 <span class="ot">-&gt;</span> <span class="dt">Match</span> source
+convertMatchText re hay arr <span class="fu">=</span>
     <span class="dt">Match</span>
       { matchSource  <span class="fu">=</span> hay
       , captureNames <span class="fu">=</span> noCaptureNames
@@ -224,13 +242,77 @@ convertMatchText hay arr <span class="fu">=</span>
   <span class="kw">where</span>
     (lo,hi) <span class="fu">=</span> bounds arr
 
-    f (ndl,(off,len)) <span class="fu">=</span>
+    f (ndl,(off_,len_)) <span class="fu">=</span>
       <span class="dt">Capture</span>
         { captureSource <span class="fu">=</span> hay
         , capturedText  <span class="fu">=</span> ndl
         , captureOffset <span class="fu">=</span> off
         , captureLength <span class="fu">=</span> len
-        }</code></pre></div>
+        }
+      <span class="kw">where</span>
+        <span class="dt">CharRange</span> off len <span class="fu">=</span> utf8_correct re hay off_ len_</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">CharRange</span> <span class="fu">=</span> <span class="dt">CharRange</span> <span class="fu">!</span><span class="dt">Int</span> <span class="fu">!</span><span class="dt">Int</span>
+  <span class="kw">deriving</span> (<span class="dt">Show</span>)
+
+<span class="kw">class</span> <span class="dt">RegexFix</span> regex source <span class="kw">where</span>
+<span class="ot">  utf8_correct ::</span> regex <span class="ot">-&gt;</span> source <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span>
+  utf8_correct _ _ <span class="fu">=</span> <span class="dt">CharRange</span>
+
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> [<span class="dt">Char</span>]         <span class="kw">where</span>
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">B.ByteString</span>   <span class="kw">where</span>
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">LBS.ByteString</span> <span class="kw">where</span>
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">T.Text</span>         <span class="kw">where</span>
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">LT</span><span class="fu">.</span><span class="dt">Text</span>        <span class="kw">where</span>
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> (<span class="dt">S.Seq</span> <span class="dt">Char</span>)   <span class="kw">where</span>
+
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> [<span class="dt">Char</span>]         <span class="kw">where</span>
+  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> B.fromString
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">B.ByteString</span>   <span class="kw">where</span>
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">LBS.ByteString</span> <span class="kw">where</span>
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">T.Text</span>         <span class="kw">where</span>
+  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> T.encodeUtf8
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">LT</span><span class="fu">.</span><span class="dt">Text</span>        <span class="kw">where</span>
+  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> T.encodeUtf8 <span class="fu">.</span> <span class="dt">LT</span><span class="fu">.</span>toStrict
+<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> (<span class="dt">S.Seq</span> <span class="dt">Char</span>)   <span class="kw">where</span>
+
+<span class="co">-- convert a byte offset+length in a UTF-8-encoded ByteString</span>
+<span class="co">-- into a character offset+length</span>
+<span class="ot">utf8_correct_bs ::</span> <span class="dt">B.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span>
+utf8_correct_bs bs ix0 ln0 <span class="fu">=</span> <span class="kw">case</span> ix0<span class="fu">+</span>ln0 <span class="fu">&gt;</span> BW.length bs <span class="kw">of</span>
+    <span class="dt">True</span>  <span class="ot">-&gt;</span> error <span class="st">&quot;utf8_correct_bs: index+length out of range&quot;</span>
+    <span class="dt">False</span> <span class="ot">-&gt;</span> skip <span class="dv">0</span> <span class="dv">0</span>     <span class="co">-- BW.index calls below should not fail</span>
+  <span class="kw">where</span>
+    skip ix di <span class="fu">=</span> <span class="kw">case</span> compare ix ix0 <span class="kw">of</span>
+      <span class="dt">GT</span> <span class="ot">-&gt;</span> error <span class="st">&quot;utf8_correct_bs: UTF-8 decoding error&quot;</span>
+      <span class="dt">EQ</span> <span class="ot">-&gt;</span> count ix di <span class="dv">0</span> ln0
+      <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="kw">case</span> u8_width <span class="fu">$</span> BW.index bs ix <span class="kw">of</span>
+        <span class="dt">Single</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">1</span>)   di
+        <span class="dt">Double</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">2</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">1</span>
+        <span class="dt">Triple</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">3</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">2</span>
+        <span class="dt">Quadruple</span> <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">4</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">3</span>
+
+    count ix di dl c <span class="fu">=</span> <span class="kw">case</span> compare c <span class="dv">0</span> <span class="kw">of</span>
+      <span class="dt">LT</span> <span class="ot">-&gt;</span> error <span class="st">&quot;utf8_correct_bs: length ends inside character&quot;</span>
+      <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span> (ix0<span class="fu">-</span>di) (ln0<span class="fu">-</span>dl)
+      <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="kw">case</span> u8_width <span class="fu">$</span> BW.index bs ix <span class="kw">of</span>
+        <span class="dt">Single</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">1</span>) di  dl    <span class="fu">$</span> c<span class="fu">-</span><span class="dv">1</span>
+        <span class="dt">Double</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">2</span>) di (dl<span class="fu">+</span><span class="dv">1</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">2</span>
+        <span class="dt">Triple</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">3</span>) di (dl<span class="fu">+</span><span class="dv">2</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">3</span>
+        <span class="dt">Quadruple</span> <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">4</span>) di (dl<span class="fu">+</span><span class="dv">3</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">4</span>
+
+<span class="kw">data</span> <span class="dt">UTF8Size</span> <span class="fu">=</span> <span class="dt">Single</span> <span class="fu">|</span> <span class="dt">Double</span> <span class="fu">|</span> <span class="dt">Triple</span> <span class="fu">|</span> <span class="dt">Quadruple</span>
+  <span class="kw">deriving</span> (<span class="dt">Show</span>)
+
+<span class="ot">u8_width ::</span> <span class="dt">Word8</span> <span class="ot">-&gt;</span> <span class="dt">UTF8Size</span>
+u8_width w8 <span class="fu">=</span> <span class="kw">case</span>   w8 <span class="fu">.&amp;.</span> <span class="bn">0x80</span> <span class="fu">==</span> <span class="bn">0x00</span> <span class="kw">of</span>
+  <span class="dt">True</span>  <span class="ot">-&gt;</span>       <span class="dt">Single</span>
+  <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>      w8 <span class="fu">.&amp;.</span> <span class="bn">0xE0</span> <span class="fu">==</span> <span class="bn">0xC0</span> <span class="kw">of</span>
+    <span class="dt">True</span>  <span class="ot">-&gt;</span>     <span class="dt">Double</span>
+    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>    w8 <span class="fu">.&amp;.</span> <span class="bn">0xF0</span> <span class="fu">==</span> <span class="bn">0xE0</span> <span class="kw">of</span>
+      <span class="dt">True</span>  <span class="ot">-&gt;</span>   <span class="dt">Triple</span>
+      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>  w8 <span class="fu">.&amp;.</span> <span class="bn">0xF8</span> <span class="fu">==</span> <span class="bn">0xF0</span> <span class="kw">of</span>
+        <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Quadruple</span>
+        <span class="dt">False</span> <span class="ot">-&gt;</span> error <span class="st">&quot;u8_width: UTF-8 decoding error&quot;</span></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
