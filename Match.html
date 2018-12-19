@@ -1,50 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>regex – Text.RE.ZeInternals/Types.Match</title>
-  <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <link rel="stylesheet" href="lib/lhs-styles.css">
-  <link rel="stylesheet" href="lib/bs.css">
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lib/lhs-styles.css" />
+  <link rel="stylesheet" href="lib/bs.css" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -66,253 +97,254 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">Text.RE.ZeInternals/Types.Match</h1>
 </header>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span>
-<span class="ot">{-# LANGUAGE FlexibleInstances          #-}</span>
-<span class="ot">{-# LANGUAGE UndecidableInstances       #-}</span>
-<span class="ot">{-# LANGUAGE MultiParamTypeClasses      #-}</span>
-<span class="ot">{-# LANGUAGE DeriveDataTypeable         #-}</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.Types.Match</span>
-  ( <span class="dt">Match</span>(<span class="fu">..</span>)
-  , noMatch
-  , emptyMatchArray
-  , matched
-  , matchedText
-  , matchCapture
-  , matchCaptures
-  , (<span class="fu">!$$</span>)
-  , captureText
-  , (<span class="fu">!$$?</span>)
-  , captureTextMaybe
-  , (<span class="fu">!$</span>)
-  , capture
-  , (<span class="fu">!$?</span>)
-  , captureMaybe
-  , <span class="dt">RegexFix</span>(<span class="fu">..</span>)
-  , convertMatchText
-  ) <span class="kw">where</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Data.Array</span>
-<span class="kw">import           </span><span class="dt">Data.Bits</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString</span>                <span class="kw">as</span> <span class="dt">BW</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span>          <span class="kw">as</span> <span class="dt">B</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>     <span class="kw">as</span> <span class="dt">LBS</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.UTF8</span>           <span class="kw">as</span> <span class="dt">B</span>
-<span class="kw">import           </span><span class="dt">Data.Maybe</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Sequence</span>                  <span class="kw">as</span> <span class="dt">S</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text</span>                      <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span>             <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text.Lazy</span>                 <span class="kw">as</span> <span class="dt">LT</span>
-<span class="kw">import           </span><span class="dt">Data.Typeable</span>
-<span class="kw">import           </span><span class="dt">Data.Word</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.Capture</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.CaptureID</span>
-<span class="kw">import           </span><span class="dt">Text.Regex.Base</span>
-<span class="kw">import qualified</span> <span class="dt">Text.Regex.PCRE</span>                <span class="kw">as</span> <span class="dt">PCRE</span>
-<span class="kw">import qualified</span> <span class="dt">Text.Regex.TDFA</span>                <span class="kw">as</span> <span class="dt">TDFA</span>
-
-<span class="kw">infixl</span> <span class="dv">9</span> <span class="fu">!$</span>, <span class="fu">!$$</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | the result of matching a RE to a text once (with @?=~@), retaining</span>
-<span class="co">-- the text that was matched against</span>
-<span class="kw">data</span> <span class="dt">Match</span> a <span class="fu">=</span>
-  <span class="dt">Match</span>
-    {<span class="ot"> matchSource  ::</span> <span class="fu">!</span>a                <span class="co">-- ^ the whole source text</span>
-    ,<span class="ot"> captureNames ::</span> <span class="fu">!</span><span class="dt">CaptureNames</span>     <span class="co">-- ^ the RE&#39;s capture names</span>
-    ,<span class="ot"> matchArray   ::</span> <span class="fu">!</span>(<span class="dt">Array</span> <span class="dt">CaptureOrdinal</span> (<span class="dt">Capture</span> a))
-                                        <span class="co">-- ^ 0..n-1 captures,</span>
-                                        <span class="co">-- starting with the</span>
-                                        <span class="co">-- text matched by the</span>
-                                        <span class="co">-- whole RE</span>
-    }
-  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>,<span class="dt">Typeable</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | Construct a Match that does not match anything.</span>
-<span class="ot">noMatch ::</span> a <span class="ot">-&gt;</span> <span class="dt">Match</span> a
-noMatch t <span class="fu">=</span> <span class="dt">Match</span> t noCaptureNames emptyMatchArray
-
-<span class="co">-- | an empty array of Capture</span>
-<span class="ot">emptyMatchArray ::</span> <span class="dt">Array</span> <span class="dt">CaptureOrdinal</span> (<span class="dt">Capture</span> a)
-emptyMatchArray <span class="fu">=</span> listArray (<span class="dt">CaptureOrdinal</span> <span class="dv">0</span>,<span class="dt">CaptureOrdinal</span> <span class="fu">$</span> <span class="fu">-</span><span class="dv">1</span>) []</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Match</span> <span class="kw">where</span>
-  fmap f <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span>
-    <span class="dt">Match</span>
-      { matchSource  <span class="fu">=</span> f matchSource
-      , captureNames <span class="fu">=</span> captureNames
-      , matchArray   <span class="fu">=</span> fmap (fmap f) matchArray
-      }</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | tests whether the RE matched the source text at all</span>
-<span class="ot">matched ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Bool</span>
-matched <span class="fu">=</span> isJust <span class="fu">.</span> matchCapture
-
-<span class="co">-- | yields the text matched by the RE, Nothing if no match</span>
-<span class="ot">matchedText ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a
-matchedText <span class="fu">=</span> fmap capturedText <span class="fu">.</span> matchCapture
-
-<span class="co">-- | the top-level capture if the source text matched the RE,</span>
-<span class="co">-- Nothing otherwise</span>
-<span class="ot">matchCapture ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a)
-matchCapture <span class="fu">=</span> fmap fst <span class="fu">.</span> matchCaptures
-
-<span class="co">-- | the main top-level capture (capture \&#39;0&#39;&#39;) and the sub captures</span>
-<span class="co">-- if the text matched the RE, @Nothing@ otherwise</span>
-<span class="ot">matchCaptures ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a,[<span class="dt">Capture</span> a])
-matchCaptures <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">case</span> rangeSize (bounds matchArray) <span class="fu">==</span> <span class="dv">0</span> <span class="kw">of</span>
-  <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-  <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Just</span> (matchArray<span class="fu">!</span><span class="dv">0</span>,drop <span class="dv">1</span> <span class="fu">$</span> elems matchArray)
-
-<span class="co">-- | an alternative for captureText</span>
-<span class="ot">(!$$) ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> a
-(<span class="fu">!$$</span>) <span class="fu">=</span> flip captureText
-
-<span class="co">-- | look up the text of the nth capture, 0 being the match of the whole</span>
-<span class="co">-- RE against the source text, 1, the first bracketed sub-expression to</span>
-<span class="co">-- be matched and so on</span>
-<span class="ot">captureText ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> a
-captureText cid mtch <span class="fu">=</span> capturedText <span class="fu">$</span> capture cid mtch
-
-<span class="co">-- | an alternative for captureTextMaybe</span>
-<span class="ot">(!$$?) ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a
-(<span class="fu">!$$?</span>) <span class="fu">=</span> flip captureTextMaybe
-
-<span class="co">-- | look up the text of the nth capture (0 being the match of the</span>
-<span class="co">-- whole), returning Nothing if the Match doesn&#39;t contain the capture</span>
-<span class="ot">captureTextMaybe ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a
-captureTextMaybe cid mtch <span class="fu">=</span> <span class="kw">do</span>
-    cap <span class="ot">&lt;-</span> mtch <span class="fu">!$?</span> cid
-    <span class="kw">case</span> hasCaptured cap <span class="kw">of</span>
-      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> <span class="fu">$</span> capturedText cap
-      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-
-<span class="co">-- | an alternative for capture</span>
-<span class="ot">(!$) ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Capture</span> a
-(<span class="fu">!$</span>) <span class="fu">=</span> flip capture
-
-<span class="co">-- | look up the nth capture, 0 being the match of the whole RE against</span>
-<span class="co">-- the source text, 1, the first bracketed sub-expression to be matched</span>
-<span class="co">-- and so on</span>
-<span class="ot">capture ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Capture</span> a
-capture cid mtch <span class="fu">=</span> fromMaybe oops <span class="fu">$</span> mtch <span class="fu">!$?</span> cid
-  <span class="kw">where</span>
-    oops <span class="fu">=</span> error <span class="fu">$</span> <span class="st">&quot;capture: out of bounds (&quot;</span> <span class="fu">++</span> show cid <span class="fu">++</span> <span class="st">&quot;)&quot;</span>
-
-<span class="co">-- | an alternative for capture captureMaybe</span>
-<span class="ot">(!$?) ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a)
-(<span class="fu">!$?</span>) <span class="fu">=</span> flip captureMaybe
-
-<span class="co">-- | look up the nth capture, 0 being the match of the whole RE against</span>
-<span class="co">-- the source text, 1, the first bracketed sub-expression to be matched</span>
-<span class="co">-- and so on, returning Nothing if there is no such capture, or if the</span>
-<span class="co">-- capture failed to capture anything (being in a failed alternate)</span>
-<span class="ot">captureMaybe ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a)
-captureMaybe cid mtch<span class="fu">@</span><span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">do</span>
-  i   <span class="ot">&lt;-</span> lookupCaptureID cid mtch
-  cap <span class="ot">&lt;-</span> <span class="kw">case</span> bounds matchArray <span class="ot">`inRange`</span> i <span class="kw">of</span>
-    <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> <span class="fu">$</span> matchArray <span class="fu">!</span> i
-    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-  <span class="kw">case</span> hasCaptured cap <span class="kw">of</span>
-    <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> cap
-    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-
-<span class="ot">lookupCaptureID ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">CaptureOrdinal</span>
-lookupCaptureID cid <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span>
-    either (const <span class="dt">Nothing</span>) <span class="dt">Just</span> <span class="fu">$</span> findCaptureID cid captureNames</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | this instance hooks &#39;Match&#39; into regex-base: regex consumers need</span>
-<span class="co">-- not worry about any of this</span>
-<span class="kw">instance</span>
-    ( <span class="dt">RegexContext</span> regex source (<span class="dt">AllTextSubmatches</span> (<span class="dt">Array</span> <span class="dt">Int</span>) (source,(<span class="dt">Int</span>,<span class="dt">Int</span>)))
-    , <span class="dt">RegexLike</span>    regex source
-    , <span class="dt">RegexFix</span>     regex source
-    ) <span class="ot">=&gt;</span>
-  <span class="dt">RegexContext</span> regex source (<span class="dt">Match</span> source) <span class="kw">where</span>
-    match  r s <span class="fu">=</span> convertMatchText r s <span class="fu">$</span> getAllTextSubmatches <span class="fu">$</span> match r s
-    matchM r s <span class="fu">=</span> <span class="kw">do</span>
-      y <span class="ot">&lt;-</span> matchM r s
-      return <span class="fu">$</span> convertMatchText r s <span class="fu">$</span> getAllTextSubmatches y</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | convert a regex-base native MatchText into a regex Match type</span>
-<span class="ot">convertMatchText ::</span> <span class="dt">RegexFix</span> regex source
-                 <span class="ot">=&gt;</span> regex
-                 <span class="ot">-&gt;</span> source
-                 <span class="ot">-&gt;</span> <span class="dt">MatchText</span> source
-                 <span class="ot">-&gt;</span> <span class="dt">Match</span> source
-convertMatchText re hay arr <span class="fu">=</span>
-    <span class="dt">Match</span>
-      { matchSource  <span class="fu">=</span> hay
-      , captureNames <span class="fu">=</span> noCaptureNames
-      , matchArray   <span class="fu">=</span>
-          ixmap (<span class="dt">CaptureOrdinal</span> lo,<span class="dt">CaptureOrdinal</span> hi) getCaptureOrdinal <span class="fu">$</span>
-            fmap f arr
-      }
-  <span class="kw">where</span>
-    (lo,hi) <span class="fu">=</span> bounds arr
-
-    f (ndl,(off_,len_)) <span class="fu">=</span>
-      <span class="dt">Capture</span>
-        { captureSource <span class="fu">=</span> hay
-        , capturedText  <span class="fu">=</span> ndl
-        , captureOffset <span class="fu">=</span> off
-        , captureLength <span class="fu">=</span> len
-        }
-      <span class="kw">where</span>
-        <span class="dt">CharRange</span> off len <span class="fu">=</span> utf8_correct re hay off_ len_</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">CharRange</span> <span class="fu">=</span> <span class="dt">CharRange</span> <span class="fu">!</span><span class="dt">Int</span> <span class="fu">!</span><span class="dt">Int</span>
-  <span class="kw">deriving</span> (<span class="dt">Show</span>)
-
-<span class="kw">class</span> <span class="dt">RegexFix</span> regex source <span class="kw">where</span>
-<span class="ot">  utf8_correct ::</span> regex <span class="ot">-&gt;</span> source <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span>
-  utf8_correct _ _ <span class="fu">=</span> <span class="dt">CharRange</span>
-
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> [<span class="dt">Char</span>]         <span class="kw">where</span>
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">B.ByteString</span>   <span class="kw">where</span>
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">LBS.ByteString</span> <span class="kw">where</span>
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">T.Text</span>         <span class="kw">where</span>
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">LT</span><span class="fu">.</span><span class="dt">Text</span>        <span class="kw">where</span>
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> (<span class="dt">S.Seq</span> <span class="dt">Char</span>)   <span class="kw">where</span>
-
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> [<span class="dt">Char</span>]         <span class="kw">where</span>
-  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> B.fromString
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">B.ByteString</span>   <span class="kw">where</span>
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">LBS.ByteString</span> <span class="kw">where</span>
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">T.Text</span>         <span class="kw">where</span>
-  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> T.encodeUtf8
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">LT</span><span class="fu">.</span><span class="dt">Text</span>        <span class="kw">where</span>
-  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> T.encodeUtf8 <span class="fu">.</span> <span class="dt">LT</span><span class="fu">.</span>toStrict
-<span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> (<span class="dt">S.Seq</span> <span class="dt">Char</span>)   <span class="kw">where</span>
-
-<span class="co">-- convert a byte offset+length in a UTF-8-encoded ByteString</span>
-<span class="co">-- into a character offset+length</span>
-<span class="ot">utf8_correct_bs ::</span> <span class="dt">B.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span>
-utf8_correct_bs bs ix0 ln0 <span class="fu">=</span> <span class="kw">case</span> ix0<span class="fu">+</span>ln0 <span class="fu">&gt;</span> BW.length bs <span class="kw">of</span>
-    <span class="dt">True</span>  <span class="ot">-&gt;</span> error <span class="st">&quot;utf8_correct_bs: index+length out of range&quot;</span>
-    <span class="dt">False</span> <span class="ot">-&gt;</span> skip <span class="dv">0</span> <span class="dv">0</span>     <span class="co">-- BW.index calls below should not fail</span>
-  <span class="kw">where</span>
-    skip ix di <span class="fu">=</span> <span class="kw">case</span> compare ix ix0 <span class="kw">of</span>
-      <span class="dt">GT</span> <span class="ot">-&gt;</span> error <span class="st">&quot;utf8_correct_bs: UTF-8 decoding error&quot;</span>
-      <span class="dt">EQ</span> <span class="ot">-&gt;</span> count ix di <span class="dv">0</span> ln0
-      <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="kw">case</span> u8_width <span class="fu">$</span> BW.index bs ix <span class="kw">of</span>
-        <span class="dt">Single</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">1</span>)   di
-        <span class="dt">Double</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">2</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">1</span>
-        <span class="dt">Triple</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">3</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">2</span>
-        <span class="dt">Quadruple</span> <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">4</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">3</span>
-
-    count ix di dl c <span class="fu">=</span> <span class="kw">case</span> compare c <span class="dv">0</span> <span class="kw">of</span>
-      <span class="dt">LT</span> <span class="ot">-&gt;</span> error <span class="st">&quot;utf8_correct_bs: length ends inside character&quot;</span>
-      <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span> (ix0<span class="fu">-</span>di) (ln0<span class="fu">-</span>dl)
-      <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="kw">case</span> u8_width <span class="fu">$</span> BW.index bs ix <span class="kw">of</span>
-        <span class="dt">Single</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">1</span>) di  dl    <span class="fu">$</span> c<span class="fu">-</span><span class="dv">1</span>
-        <span class="dt">Double</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">2</span>) di (dl<span class="fu">+</span><span class="dv">1</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">2</span>
-        <span class="dt">Triple</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">3</span>) di (dl<span class="fu">+</span><span class="dv">2</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">3</span>
-        <span class="dt">Quadruple</span> <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">4</span>) di (dl<span class="fu">+</span><span class="dv">3</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">4</span>
-
-<span class="kw">data</span> <span class="dt">UTF8Size</span> <span class="fu">=</span> <span class="dt">Single</span> <span class="fu">|</span> <span class="dt">Double</span> <span class="fu">|</span> <span class="dt">Triple</span> <span class="fu">|</span> <span class="dt">Quadruple</span>
-  <span class="kw">deriving</span> (<span class="dt">Show</span>)
-
-<span class="ot">u8_width ::</span> <span class="dt">Word8</span> <span class="ot">-&gt;</span> <span class="dt">UTF8Size</span>
-u8_width w8 <span class="fu">=</span> <span class="kw">case</span>   w8 <span class="fu">.&amp;.</span> <span class="bn">0x80</span> <span class="fu">==</span> <span class="bn">0x00</span> <span class="kw">of</span>
-  <span class="dt">True</span>  <span class="ot">-&gt;</span>       <span class="dt">Single</span>
-  <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>      w8 <span class="fu">.&amp;.</span> <span class="bn">0xE0</span> <span class="fu">==</span> <span class="bn">0xC0</span> <span class="kw">of</span>
-    <span class="dt">True</span>  <span class="ot">-&gt;</span>     <span class="dt">Double</span>
-    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>    w8 <span class="fu">.&amp;.</span> <span class="bn">0xF0</span> <span class="fu">==</span> <span class="bn">0xE0</span> <span class="kw">of</span>
-      <span class="dt">True</span>  <span class="ot">-&gt;</span>   <span class="dt">Triple</span>
-      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>  w8 <span class="fu">.&amp;.</span> <span class="bn">0xF8</span> <span class="fu">==</span> <span class="bn">0xF0</span> <span class="kw">of</span>
-        <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Quadruple</span>
-        <span class="dt">False</span> <span class="ot">-&gt;</span> error <span class="st">&quot;u8_width: UTF-8 decoding error&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="ot">{-# LANGUAGE FlexibleInstances          #-}</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="ot">{-# LANGUAGE UndecidableInstances       #-}</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="ot">{-# LANGUAGE MultiParamTypeClasses      #-}</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="ot">{-# LANGUAGE DeriveDataTypeable         #-}</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="ot">{-# LANGUAGE MonoLocalBinds             #-}</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.Types.Match</span></a>
+<a class="sourceLine" id="cb2-2" title="2">  ( <span class="dt">Match</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3">  , noMatch</a>
+<a class="sourceLine" id="cb2-4" title="4">  , emptyMatchArray</a>
+<a class="sourceLine" id="cb2-5" title="5">  , matched</a>
+<a class="sourceLine" id="cb2-6" title="6">  , matchedText</a>
+<a class="sourceLine" id="cb2-7" title="7">  , matchCapture</a>
+<a class="sourceLine" id="cb2-8" title="8">  , matchCaptures</a>
+<a class="sourceLine" id="cb2-9" title="9">  , (<span class="fu">!$$</span>)</a>
+<a class="sourceLine" id="cb2-10" title="10">  , captureText</a>
+<a class="sourceLine" id="cb2-11" title="11">  , (<span class="fu">!$$?</span>)</a>
+<a class="sourceLine" id="cb2-12" title="12">  , captureTextMaybe</a>
+<a class="sourceLine" id="cb2-13" title="13">  , (<span class="fu">!$</span>)</a>
+<a class="sourceLine" id="cb2-14" title="14">  , capture</a>
+<a class="sourceLine" id="cb2-15" title="15">  , (<span class="fu">!$?</span>)</a>
+<a class="sourceLine" id="cb2-16" title="16">  , captureMaybe</a>
+<a class="sourceLine" id="cb2-17" title="17">  , <span class="dt">RegexFix</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb2-18" title="18">  , convertMatchText</a>
+<a class="sourceLine" id="cb2-19" title="19">  ) <span class="kw">where</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">import</span>           <span class="dt">Data.Array</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">import</span>           <span class="dt">Data.Bits</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString</span>                <span class="kw">as</span> <span class="dt">BW</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Char8</span>          <span class="kw">as</span> <span class="dt">B</span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>     <span class="kw">as</span> <span class="dt">LBS</span></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.UTF8</span>           <span class="kw">as</span> <span class="dt">B</span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="kw">import</span>           <span class="dt">Data.Maybe</span></a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Sequence</span>                  <span class="kw">as</span> <span class="dt">S</span></a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span>                      <span class="kw">as</span> <span class="dt">T</span></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.Encoding</span>             <span class="kw">as</span> <span class="dt">T</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.Lazy</span>                 <span class="kw">as</span> <span class="dt">LT</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="kw">import</span>           <span class="dt">Data.Typeable</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="kw">import</span>           <span class="dt">Data.Word</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.Capture</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.CaptureID</span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="kw">import</span>           <span class="dt">Text.Regex.Base</span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Text.Regex.PCRE</span>                <span class="kw">as</span> <span class="dt">PCRE</span></a>
+<a class="sourceLine" id="cb3-18" title="18"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Text.Regex.TDFA</span>                <span class="kw">as</span> <span class="dt">TDFA</span></a>
+<a class="sourceLine" id="cb3-19" title="19"></a>
+<a class="sourceLine" id="cb3-20" title="20"><span class="kw">infixl</span> <span class="dv">9</span> <span class="fu">!$</span>, <span class="fu">!$$</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="co">-- | the result of matching a RE to a text once (with @?=~@), retaining</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">-- the text that was matched against</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="kw">data</span> <span class="dt">Match</span> a <span class="fu">=</span></a>
+<a class="sourceLine" id="cb4-4" title="4">  <span class="dt">Match</span></a>
+<a class="sourceLine" id="cb4-5" title="5">    {<span class="ot"> matchSource  ::</span> <span class="fu">!</span>a                <span class="co">-- ^ the whole source text</span></a>
+<a class="sourceLine" id="cb4-6" title="6">    ,<span class="ot"> captureNames ::</span> <span class="fu">!</span><span class="dt">CaptureNames</span>     <span class="co">-- ^ the RE&#39;s capture names</span></a>
+<a class="sourceLine" id="cb4-7" title="7">    ,<span class="ot"> matchArray   ::</span> <span class="fu">!</span>(<span class="dt">Array</span> <span class="dt">CaptureOrdinal</span> (<span class="dt">Capture</span> a))</a>
+<a class="sourceLine" id="cb4-8" title="8">                                        <span class="co">-- ^ 0..n-1 captures,</span></a>
+<a class="sourceLine" id="cb4-9" title="9">                                        <span class="co">-- starting with the</span></a>
+<a class="sourceLine" id="cb4-10" title="10">                                        <span class="co">-- text matched by the</span></a>
+<a class="sourceLine" id="cb4-11" title="11">                                        <span class="co">-- whole RE</span></a>
+<a class="sourceLine" id="cb4-12" title="12">    }</a>
+<a class="sourceLine" id="cb4-13" title="13">  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>,<span class="dt">Typeable</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="co">-- | Construct a Match that does not match anything.</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="ot">noMatch ::</span> a <span class="ot">-&gt;</span> <span class="dt">Match</span> a</a>
+<a class="sourceLine" id="cb5-3" title="3">noMatch t <span class="fu">=</span> <span class="dt">Match</span> t noCaptureNames emptyMatchArray</a>
+<a class="sourceLine" id="cb5-4" title="4"></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">-- | an empty array of Capture</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="ot">emptyMatchArray ::</span> <span class="dt">Array</span> <span class="dt">CaptureOrdinal</span> (<span class="dt">Capture</span> a)</a>
+<a class="sourceLine" id="cb5-7" title="7">emptyMatchArray <span class="fu">=</span> listArray (<span class="dt">CaptureOrdinal</span> <span class="dv">0</span>,<span class="dt">CaptureOrdinal</span> <span class="fu">$</span> <span class="fu">-</span><span class="dv">1</span>) []</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Match</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb6-2" title="2">  <span class="fu">fmap</span> f <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-3" title="3">    <span class="dt">Match</span></a>
+<a class="sourceLine" id="cb6-4" title="4">      { matchSource  <span class="fu">=</span> f matchSource</a>
+<a class="sourceLine" id="cb6-5" title="5">      , captureNames <span class="fu">=</span> captureNames</a>
+<a class="sourceLine" id="cb6-6" title="6">      , matchArray   <span class="fu">=</span> <span class="fu">fmap</span> (<span class="fu">fmap</span> f) matchArray</a>
+<a class="sourceLine" id="cb6-7" title="7">      }</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="co">-- | tests whether the RE matched the source text at all</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="ot">matched ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Bool</span></a>
+<a class="sourceLine" id="cb7-3" title="3">matched <span class="fu">=</span> isJust <span class="fu">.</span> matchCapture</a>
+<a class="sourceLine" id="cb7-4" title="4"></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">-- | yields the text matched by the RE, Nothing if no match</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="ot">matchedText ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a</a>
+<a class="sourceLine" id="cb7-7" title="7">matchedText <span class="fu">=</span> <span class="fu">fmap</span> capturedText <span class="fu">.</span> matchCapture</a>
+<a class="sourceLine" id="cb7-8" title="8"></a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="co">-- | the top-level capture if the source text matched the RE,</span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co">-- Nothing otherwise</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="ot">matchCapture ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a)</a>
+<a class="sourceLine" id="cb7-12" title="12">matchCapture <span class="fu">=</span> <span class="fu">fmap</span> <span class="fu">fst</span> <span class="fu">.</span> matchCaptures</a>
+<a class="sourceLine" id="cb7-13" title="13"></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="co">-- | the main top-level capture (capture \&#39;0&#39;&#39;) and the sub captures</span></a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="co">-- if the text matched the RE, @Nothing@ otherwise</span></a>
+<a class="sourceLine" id="cb7-16" title="16"><span class="ot">matchCaptures ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a,[<span class="dt">Capture</span> a])</a>
+<a class="sourceLine" id="cb7-17" title="17">matchCaptures <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">case</span> <span class="fu">rangeSize</span> (bounds matchArray) <span class="fu">==</span> <span class="dv">0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-18" title="18">  <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb7-19" title="19">  <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Just</span> (matchArray<span class="fu">!</span><span class="dv">0</span>,<span class="fu">drop</span> <span class="dv">1</span> <span class="fu">$</span> elems matchArray)</a>
+<a class="sourceLine" id="cb7-20" title="20"></a>
+<a class="sourceLine" id="cb7-21" title="21"><span class="co">-- | an alternative for captureText</span></a>
+<a class="sourceLine" id="cb7-22" title="22"><span class="ot">(!$$) ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> a</a>
+<a class="sourceLine" id="cb7-23" title="23">(<span class="fu">!$$</span>) <span class="fu">=</span> <span class="fu">flip</span> captureText</a>
+<a class="sourceLine" id="cb7-24" title="24"></a>
+<a class="sourceLine" id="cb7-25" title="25"><span class="co">-- | look up the text of the nth capture, 0 being the match of the whole</span></a>
+<a class="sourceLine" id="cb7-26" title="26"><span class="co">-- RE against the source text, 1, the first bracketed sub-expression to</span></a>
+<a class="sourceLine" id="cb7-27" title="27"><span class="co">-- be matched and so on</span></a>
+<a class="sourceLine" id="cb7-28" title="28"><span class="ot">captureText ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> a</a>
+<a class="sourceLine" id="cb7-29" title="29">captureText cid mtch <span class="fu">=</span> capturedText <span class="fu">$</span> capture cid mtch</a>
+<a class="sourceLine" id="cb7-30" title="30"></a>
+<a class="sourceLine" id="cb7-31" title="31"><span class="co">-- | an alternative for captureTextMaybe</span></a>
+<a class="sourceLine" id="cb7-32" title="32"><span class="ot">(!$$?) ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a</a>
+<a class="sourceLine" id="cb7-33" title="33">(<span class="fu">!$$?</span>) <span class="fu">=</span> <span class="fu">flip</span> captureTextMaybe</a>
+<a class="sourceLine" id="cb7-34" title="34"></a>
+<a class="sourceLine" id="cb7-35" title="35"><span class="co">-- | look up the text of the nth capture (0 being the match of the</span></a>
+<a class="sourceLine" id="cb7-36" title="36"><span class="co">-- whole), returning Nothing if the Match doesn&#39;t contain the capture</span></a>
+<a class="sourceLine" id="cb7-37" title="37"><span class="ot">captureTextMaybe ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a</a>
+<a class="sourceLine" id="cb7-38" title="38">captureTextMaybe cid mtch <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb7-39" title="39">    cap <span class="ot">&lt;-</span> mtch <span class="fu">!$?</span> cid</a>
+<a class="sourceLine" id="cb7-40" title="40">    <span class="kw">case</span> hasCaptured cap <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-41" title="41">      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> <span class="fu">$</span> capturedText cap</a>
+<a class="sourceLine" id="cb7-42" title="42">      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb7-43" title="43"></a>
+<a class="sourceLine" id="cb7-44" title="44"><span class="co">-- | an alternative for capture</span></a>
+<a class="sourceLine" id="cb7-45" title="45"><span class="ot">(!$) ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Capture</span> a</a>
+<a class="sourceLine" id="cb7-46" title="46">(<span class="fu">!$</span>) <span class="fu">=</span> <span class="fu">flip</span> capture</a>
+<a class="sourceLine" id="cb7-47" title="47"></a>
+<a class="sourceLine" id="cb7-48" title="48"><span class="co">-- | look up the nth capture, 0 being the match of the whole RE against</span></a>
+<a class="sourceLine" id="cb7-49" title="49"><span class="co">-- the source text, 1, the first bracketed sub-expression to be matched</span></a>
+<a class="sourceLine" id="cb7-50" title="50"><span class="co">-- and so on</span></a>
+<a class="sourceLine" id="cb7-51" title="51"><span class="ot">capture ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Capture</span> a</a>
+<a class="sourceLine" id="cb7-52" title="52">capture cid mtch <span class="fu">=</span> fromMaybe oops <span class="fu">$</span> mtch <span class="fu">!$?</span> cid</a>
+<a class="sourceLine" id="cb7-53" title="53">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb7-54" title="54">    oops <span class="fu">=</span> <span class="fu">error</span> <span class="fu">$</span> <span class="st">&quot;capture: out of bounds (&quot;</span> <span class="fu">++</span> <span class="fu">show</span> cid <span class="fu">++</span> <span class="st">&quot;)&quot;</span></a>
+<a class="sourceLine" id="cb7-55" title="55"></a>
+<a class="sourceLine" id="cb7-56" title="56"><span class="co">-- | an alternative for capture captureMaybe</span></a>
+<a class="sourceLine" id="cb7-57" title="57"><span class="ot">(!$?) ::</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a)</a>
+<a class="sourceLine" id="cb7-58" title="58">(<span class="fu">!$?</span>) <span class="fu">=</span> <span class="fu">flip</span> captureMaybe</a>
+<a class="sourceLine" id="cb7-59" title="59"></a>
+<a class="sourceLine" id="cb7-60" title="60"><span class="co">-- | look up the nth capture, 0 being the match of the whole RE against</span></a>
+<a class="sourceLine" id="cb7-61" title="61"><span class="co">-- the source text, 1, the first bracketed sub-expression to be matched</span></a>
+<a class="sourceLine" id="cb7-62" title="62"><span class="co">-- and so on, returning Nothing if there is no such capture, or if the</span></a>
+<a class="sourceLine" id="cb7-63" title="63"><span class="co">-- capture failed to capture anything (being in a failed alternate)</span></a>
+<a class="sourceLine" id="cb7-64" title="64"><span class="ot">captureMaybe ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Capture</span> a)</a>
+<a class="sourceLine" id="cb7-65" title="65">captureMaybe cid mtch<span class="fu">@</span><span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb7-66" title="66">  i   <span class="ot">&lt;-</span> lookupCaptureID cid mtch</a>
+<a class="sourceLine" id="cb7-67" title="67">  cap <span class="ot">&lt;-</span> <span class="kw">case</span> bounds matchArray <span class="ot">`inRange`</span> i <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-68" title="68">    <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> <span class="fu">$</span> matchArray <span class="fu">!</span> i</a>
+<a class="sourceLine" id="cb7-69" title="69">    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb7-70" title="70">  <span class="kw">case</span> hasCaptured cap <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-71" title="71">    <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> cap</a>
+<a class="sourceLine" id="cb7-72" title="72">    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb7-73" title="73"></a>
+<a class="sourceLine" id="cb7-74" title="74"><span class="ot">lookupCaptureID ::</span> <span class="dt">CaptureID</span> <span class="ot">-&gt;</span> <span class="dt">Match</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">CaptureOrdinal</span></a>
+<a class="sourceLine" id="cb7-75" title="75">lookupCaptureID cid <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
+<a class="sourceLine" id="cb7-76" title="76">    <span class="fu">either</span> (<span class="fu">const</span> <span class="dt">Nothing</span>) <span class="dt">Just</span> <span class="fu">$</span> findCaptureID cid captureNames</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1"><span class="co">-- | this instance hooks &#39;Match&#39; into regex-base: regex consumers need</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">-- not worry about any of this</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="kw">instance</span></a>
+<a class="sourceLine" id="cb8-4" title="4">    ( <span class="dt">RegexContext</span> regex source (<span class="dt">AllTextSubmatches</span> (<span class="dt">Array</span> <span class="dt">Int</span>) (source,(<span class="dt">Int</span>,<span class="dt">Int</span>)))</a>
+<a class="sourceLine" id="cb8-5" title="5">    , <span class="dt">RegexLike</span>    regex source</a>
+<a class="sourceLine" id="cb8-6" title="6">    , <span class="dt">RegexFix</span>     regex source</a>
+<a class="sourceLine" id="cb8-7" title="7">    ) <span class="ot">=&gt;</span></a>
+<a class="sourceLine" id="cb8-8" title="8">  <span class="dt">RegexContext</span> regex source (<span class="dt">Match</span> source) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb8-9" title="9">    match  r s <span class="fu">=</span> convertMatchText r s <span class="fu">$</span> getAllTextSubmatches <span class="fu">$</span> match r s</a>
+<a class="sourceLine" id="cb8-10" title="10">    matchM r s <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb8-11" title="11">      y <span class="ot">&lt;-</span> matchM r s</a>
+<a class="sourceLine" id="cb8-12" title="12">      <span class="fu">return</span> <span class="fu">$</span> convertMatchText r s <span class="fu">$</span> getAllTextSubmatches y</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1"><span class="co">-- | convert a regex-base native MatchText into a regex Match type</span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="ot">convertMatchText ::</span> <span class="dt">RegexFix</span> regex source</a>
+<a class="sourceLine" id="cb9-3" title="3">                 <span class="ot">=&gt;</span> regex</a>
+<a class="sourceLine" id="cb9-4" title="4">                 <span class="ot">-&gt;</span> source</a>
+<a class="sourceLine" id="cb9-5" title="5">                 <span class="ot">-&gt;</span> <span class="dt">MatchText</span> source</a>
+<a class="sourceLine" id="cb9-6" title="6">                 <span class="ot">-&gt;</span> <span class="dt">Match</span> source</a>
+<a class="sourceLine" id="cb9-7" title="7">convertMatchText re hay arr <span class="fu">=</span></a>
+<a class="sourceLine" id="cb9-8" title="8">    <span class="dt">Match</span></a>
+<a class="sourceLine" id="cb9-9" title="9">      { matchSource  <span class="fu">=</span> hay</a>
+<a class="sourceLine" id="cb9-10" title="10">      , captureNames <span class="fu">=</span> noCaptureNames</a>
+<a class="sourceLine" id="cb9-11" title="11">      , matchArray   <span class="fu">=</span></a>
+<a class="sourceLine" id="cb9-12" title="12">          ixmap (<span class="dt">CaptureOrdinal</span> lo,<span class="dt">CaptureOrdinal</span> hi) getCaptureOrdinal <span class="fu">$</span></a>
+<a class="sourceLine" id="cb9-13" title="13">            <span class="fu">fmap</span> f arr</a>
+<a class="sourceLine" id="cb9-14" title="14">      }</a>
+<a class="sourceLine" id="cb9-15" title="15">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb9-16" title="16">    (lo,hi) <span class="fu">=</span> bounds arr</a>
+<a class="sourceLine" id="cb9-17" title="17"></a>
+<a class="sourceLine" id="cb9-18" title="18">    f (ndl,(off_,len_)) <span class="fu">=</span></a>
+<a class="sourceLine" id="cb9-19" title="19">      <span class="dt">Capture</span></a>
+<a class="sourceLine" id="cb9-20" title="20">        { captureSource <span class="fu">=</span> hay</a>
+<a class="sourceLine" id="cb9-21" title="21">        , capturedText  <span class="fu">=</span> ndl</a>
+<a class="sourceLine" id="cb9-22" title="22">        , captureOffset <span class="fu">=</span> off</a>
+<a class="sourceLine" id="cb9-23" title="23">        , captureLength <span class="fu">=</span> len</a>
+<a class="sourceLine" id="cb9-24" title="24">        }</a>
+<a class="sourceLine" id="cb9-25" title="25">      <span class="kw">where</span></a>
+<a class="sourceLine" id="cb9-26" title="26">        <span class="dt">CharRange</span> off len <span class="fu">=</span> utf8_correct re hay off_ len_</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">data</span> <span class="dt">CharRange</span> <span class="fu">=</span> <span class="dt">CharRange</span> <span class="fu">!</span><span class="dt">Int</span> <span class="fu">!</span><span class="dt">Int</span></a>
+<a class="sourceLine" id="cb10-2" title="2">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
+<a class="sourceLine" id="cb10-3" title="3"></a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="kw">class</span> <span class="dt">RegexFix</span> regex source <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="ot">  utf8_correct ::</span> regex <span class="ot">-&gt;</span> source <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span></a>
+<a class="sourceLine" id="cb10-6" title="6">  utf8_correct _ _ <span class="fu">=</span> <span class="dt">CharRange</span></a>
+<a class="sourceLine" id="cb10-7" title="7"></a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> [<span class="dt">Char</span>]         <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">B.ByteString</span>   <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">LBS.ByteString</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">T.Text</span>         <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> <span class="dt">LT</span><span class="fu">.</span><span class="dt">Text</span>        <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">TDFA.Regex</span> (<span class="dt">S.Seq</span> <span class="dt">Char</span>)   <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-14" title="14"></a>
+<a class="sourceLine" id="cb10-15" title="15"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> [<span class="dt">Char</span>]         <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-16" title="16">  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> B.fromString</a>
+<a class="sourceLine" id="cb10-17" title="17"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">B.ByteString</span>   <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-18" title="18"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">LBS.ByteString</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-19" title="19"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">T.Text</span>         <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-20" title="20">  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> T.encodeUtf8</a>
+<a class="sourceLine" id="cb10-21" title="21"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> <span class="dt">LT</span><span class="fu">.</span><span class="dt">Text</span>        <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-22" title="22">  utf8_correct _ <span class="fu">=</span> utf8_correct_bs <span class="fu">.</span> T.encodeUtf8 <span class="fu">.</span> <span class="dt">LT</span><span class="fu">.</span>toStrict</a>
+<a class="sourceLine" id="cb10-23" title="23"><span class="kw">instance</span> <span class="dt">RegexFix</span> <span class="dt">PCRE.Regex</span> (<span class="dt">S.Seq</span> <span class="dt">Char</span>)   <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-24" title="24"></a>
+<a class="sourceLine" id="cb10-25" title="25"><span class="co">-- convert a byte offset+length in a UTF-8-encoded ByteString</span></a>
+<a class="sourceLine" id="cb10-26" title="26"><span class="co">-- into a character offset+length</span></a>
+<a class="sourceLine" id="cb10-27" title="27"><span class="ot">utf8_correct_bs ::</span> <span class="dt">B.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span></a>
+<a class="sourceLine" id="cb10-28" title="28">utf8_correct_bs bs ix0 ln0 <span class="fu">=</span> <span class="kw">case</span> ix0<span class="fu">+</span>ln0 <span class="fu">&gt;</span> BW.length bs <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-29" title="29">    <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;utf8_correct_bs: index+length out of range&quot;</span></a>
+<a class="sourceLine" id="cb10-30" title="30">    <span class="dt">False</span> <span class="ot">-&gt;</span> skip <span class="dv">0</span> <span class="dv">0</span>     <span class="co">-- BW.index calls below should not fail</span></a>
+<a class="sourceLine" id="cb10-31" title="31">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb10-32" title="32">    skip ix di <span class="fu">=</span> <span class="kw">case</span> <span class="fu">compare</span> ix ix0 <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-33" title="33">      <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;utf8_correct_bs: UTF-8 decoding error&quot;</span></a>
+<a class="sourceLine" id="cb10-34" title="34">      <span class="dt">EQ</span> <span class="ot">-&gt;</span> count ix di <span class="dv">0</span> ln0</a>
+<a class="sourceLine" id="cb10-35" title="35">      <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="kw">case</span> u8_width <span class="fu">$</span> BW.index bs ix <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-36" title="36">        <span class="dt">Single</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">1</span>)   di</a>
+<a class="sourceLine" id="cb10-37" title="37">        <span class="dt">Double</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">2</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb10-38" title="38">        <span class="dt">Triple</span>    <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">3</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb10-39" title="39">        <span class="dt">Quadruple</span> <span class="ot">-&gt;</span> skip (ix<span class="fu">+</span><span class="dv">4</span>) <span class="fu">$</span> di<span class="fu">+</span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb10-40" title="40"></a>
+<a class="sourceLine" id="cb10-41" title="41">    count ix di dl c <span class="fu">=</span> <span class="kw">case</span> <span class="fu">compare</span> c <span class="dv">0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-42" title="42">      <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;utf8_correct_bs: length ends inside character&quot;</span></a>
+<a class="sourceLine" id="cb10-43" title="43">      <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">CharRange</span> (ix0<span class="fu">-</span>di) (ln0<span class="fu">-</span>dl)</a>
+<a class="sourceLine" id="cb10-44" title="44">      <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="kw">case</span> u8_width <span class="fu">$</span> BW.index bs ix <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-45" title="45">        <span class="dt">Single</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">1</span>) di  dl    <span class="fu">$</span> c<span class="fu">-</span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb10-46" title="46">        <span class="dt">Double</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">2</span>) di (dl<span class="fu">+</span><span class="dv">1</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb10-47" title="47">        <span class="dt">Triple</span>    <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">3</span>) di (dl<span class="fu">+</span><span class="dv">2</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb10-48" title="48">        <span class="dt">Quadruple</span> <span class="ot">-&gt;</span> count (ix<span class="fu">+</span><span class="dv">4</span>) di (dl<span class="fu">+</span><span class="dv">3</span>) <span class="fu">$</span> c<span class="fu">-</span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb10-49" title="49"></a>
+<a class="sourceLine" id="cb10-50" title="50"><span class="kw">data</span> <span class="dt">UTF8Size</span> <span class="fu">=</span> <span class="dt">Single</span> <span class="fu">|</span> <span class="dt">Double</span> <span class="fu">|</span> <span class="dt">Triple</span> <span class="fu">|</span> <span class="dt">Quadruple</span></a>
+<a class="sourceLine" id="cb10-51" title="51">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
+<a class="sourceLine" id="cb10-52" title="52"></a>
+<a class="sourceLine" id="cb10-53" title="53"><span class="ot">u8_width ::</span> <span class="dt">Word8</span> <span class="ot">-&gt;</span> <span class="dt">UTF8Size</span></a>
+<a class="sourceLine" id="cb10-54" title="54">u8_width w8 <span class="fu">=</span> <span class="kw">case</span>   w8 <span class="fu">.&amp;.</span> <span class="bn">0x80</span> <span class="fu">==</span> <span class="bn">0x00</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-55" title="55">  <span class="dt">True</span>  <span class="ot">-&gt;</span>       <span class="dt">Single</span></a>
+<a class="sourceLine" id="cb10-56" title="56">  <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>      w8 <span class="fu">.&amp;.</span> <span class="bn">0xE0</span> <span class="fu">==</span> <span class="bn">0xC0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-57" title="57">    <span class="dt">True</span>  <span class="ot">-&gt;</span>     <span class="dt">Double</span></a>
+<a class="sourceLine" id="cb10-58" title="58">    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>    w8 <span class="fu">.&amp;.</span> <span class="bn">0xF0</span> <span class="fu">==</span> <span class="bn">0xE0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-59" title="59">      <span class="dt">True</span>  <span class="ot">-&gt;</span>   <span class="dt">Triple</span></a>
+<a class="sourceLine" id="cb10-60" title="60">      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span>  w8 <span class="fu">.&amp;.</span> <span class="bn">0xF8</span> <span class="fu">==</span> <span class="bn">0xF0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb10-61" title="61">        <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Quadruple</span></a>
+<a class="sourceLine" id="cb10-62" title="62">        <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;u8_width: UTF-8 decoding error&quot;</span></a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

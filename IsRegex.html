@@ -1,50 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>regex – Text.RE.ZeInternals/Types.IsRegex</title>
-  <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <link rel="stylesheet" href="lib/lhs-styles.css">
-  <link rel="stylesheet" href="lib/bs.css">
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lib/lhs-styles.css" />
+  <link rel="stylesheet" href="lib/bs.css" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -66,68 +97,68 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">Text.RE.ZeInternals/Types.IsRegex</h1>
 </header>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span>
-<span class="ot">{-# LANGUAGE MultiParamTypeClasses      #-}</span>
-<span class="ot">{-# LANGUAGE AllowAmbiguousTypes        #-}</span>
-<span class="ot">{-# LANGUAGE CPP                        #-}</span>
-<span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span>
-<span class="ot">{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}</span>
-<span class="ot">#endif</span>
-
-<span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.Types.IsRegex</span>
-  ( <span class="dt">IsRegex</span>(<span class="fu">..</span>)
-  , <span class="dt">SearchReplace</span>(<span class="fu">..</span>)
-  , searchReplaceAll
-  , searchReplaceFirst
-  ) <span class="kw">where</span>
-
-<span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.EscapeREString</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.SearchReplace</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | the &#39;IsRegex&#39; class allows polymorhic tools to be written that</span>
-<span class="co">-- will work with a variety of regex back ends and text types</span>
-<span class="kw">class</span> <span class="dt">Replace</span> s <span class="ot">=&gt;</span> <span class="dt">IsRegex</span> re s <span class="kw">where</span>
-  <span class="co">-- | finding the first match</span>
-<span class="ot">  matchOnce             ::</span> re <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> <span class="dt">Match</span> s
-  <span class="co">-- | finding all matches</span>
-<span class="ot">  matchMany             ::</span> re <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> <span class="dt">Matches</span> s
-  <span class="co">-- | compiling an RE, failing if the RE is not well formed</span>
-<span class="ot">  makeRegex             ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> s <span class="ot">-&gt;</span> m re
-  <span class="co">-- | comiling an RE, specifying the &#39;SimpleREOptions&#39;</span>
-<span class="ot">  makeRegexWith         ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">SimpleREOptions</span> <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m re
-  <span class="co">-- | compiling a &#39;SearchReplace&#39; template from the RE text and the template Text, failing if they are not well formed</span>
-<span class="ot">  makeSearchReplace     ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m,<span class="dt">IsRegex</span> re s) <span class="ot">=&gt;</span> s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m (<span class="dt">SearchReplace</span> re s)
-  <span class="co">-- | compiling a &#39;SearchReplace&#39; template specifing the &#39;SimpleREOptions&#39; for the RE</span>
-<span class="ot">  makeSearchReplaceWith ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m,<span class="dt">IsRegex</span> re s) <span class="ot">=&gt;</span> <span class="dt">SimpleREOptions</span> <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m (<span class="dt">SearchReplace</span> re s)
-  <span class="co">-- | incorporate an escaped string into a compiled RE with the default options</span>
-<span class="ot">  makeEscaped           ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> (s<span class="ot">-&gt;</span>s) <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m re
-  <span class="co">-- | incorporate an escaped string into a compiled RE with the specified &#39;SimpleREOptions&#39;</span>
-<span class="ot">  makeEscapedWith       ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">SimpleREOptions</span> <span class="ot">-&gt;</span> (s<span class="ot">-&gt;</span>s) <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m re
-  <span class="co">-- | extract the text of the RE from the RE</span>
-<span class="ot">  regexSource           ::</span> re <span class="ot">-&gt;</span> s
-
-  makeRegex           <span class="fu">=</span> makeRegexWith         minBound
-  makeSearchReplace   <span class="fu">=</span> makeSearchReplaceWith minBound
-  makeEscaped         <span class="fu">=</span> makeEscapedWith       minBound
-  makeEscapedWith o f <span class="fu">=</span> makeRegexWith o <span class="fu">.</span> f <span class="fu">.</span> packR <span class="fu">.</span> escapeREString <span class="fu">.</span> unpackR</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | search and replace all matches in the argument text; e.g., this function</span>
-<span class="co">-- will convert every YYYY-MM-DD format date in its argument text into a</span>
-<span class="co">-- DD\/MM\/YYYY date:</span>
-<span class="co">--</span>
-<span class="co">--   @searchReplaceAll [ed|${y}([0-9]{4})-0*${m}([0-9]{2})-0*${d}([0-9]{2})\/\/\/${d}\/${m}\/${y}|]@</span>
-<span class="co">--</span>
-<span class="ot">searchReplaceAll ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> re s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s
-searchReplaceAll <span class="dt">SearchReplace</span>{<span class="fu">..</span>} <span class="fu">=</span> replaceAll getTemplate <span class="fu">.</span> matchMany getSearch
-
-<span class="co">-- | search and replace the first occurrence only (if any) in the input text</span>
-<span class="co">-- e.g., to prefix the first string of four hex digits in the imput text,</span>
-<span class="co">-- if any, with @0x@:</span>
-<span class="co">--</span>
-<span class="co">--  @searchReplaceFirst [ed|[0-9A-Fa-f]{4}\/\/\/0x$0|]@</span>
-<span class="co">--</span>
-<span class="ot">searchReplaceFirst ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> re s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s
-searchReplaceFirst <span class="dt">SearchReplace</span>{<span class="fu">..</span>} <span class="fu">=</span> replace    getTemplate <span class="fu">.</span> matchOnce getSearch</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="ot">{-# LANGUAGE MultiParamTypeClasses      #-}</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="ot">{-# LANGUAGE AllowAmbiguousTypes        #-}</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="ot">{-# LANGUAGE CPP                        #-}</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="ot">{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="ot">#endif</span></a>
+<a class="sourceLine" id="cb1-8" title="8"></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.Types.IsRegex</span></a>
+<a class="sourceLine" id="cb1-10" title="10">  ( <span class="dt">IsRegex</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-11" title="11">  , <span class="dt">SearchReplace</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-12" title="12">  , searchReplaceAll</a>
+<a class="sourceLine" id="cb1-13" title="13">  , searchReplaceFirst</a>
+<a class="sourceLine" id="cb1-14" title="14">  ) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb1-15" title="15"></a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="kw">import</span>           <span class="dt">Text.RE.REOptions</span></a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="kw">import</span>           <span class="dt">Text.RE.Replace</span></a>
+<a class="sourceLine" id="cb1-18" title="18"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.EscapeREString</span></a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.SearchReplace</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="co">-- | the &#39;IsRegex&#39; class allows polymorhic tools to be written that</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co">-- will work with a variety of regex back ends and text types</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="kw">class</span> <span class="dt">Replace</span> s <span class="ot">=&gt;</span> <span class="dt">IsRegex</span> re s <span class="kw">where</span></a>
+<a class="sourceLine" id="cb2-4" title="4">  <span class="co">-- | finding the first match</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="ot">  matchOnce             ::</span> re <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> <span class="dt">Match</span> s</a>
+<a class="sourceLine" id="cb2-6" title="6">  <span class="co">-- | finding all matches</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="ot">  matchMany             ::</span> re <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> <span class="dt">Matches</span> s</a>
+<a class="sourceLine" id="cb2-8" title="8">  <span class="co">-- | compiling an RE, failing if the RE is not well formed</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="ot">  makeRegex             ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> s <span class="ot">-&gt;</span> m re</a>
+<a class="sourceLine" id="cb2-10" title="10">  <span class="co">-- | comiling an RE, specifying the &#39;SimpleREOptions&#39;</span></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="ot">  makeRegexWith         ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">SimpleREOptions</span> <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m re</a>
+<a class="sourceLine" id="cb2-12" title="12">  <span class="co">-- | compiling a &#39;SearchReplace&#39; template from the RE text and the template Text, failing if they are not well formed</span></a>
+<a class="sourceLine" id="cb2-13" title="13"><span class="ot">  makeSearchReplace     ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m,<span class="dt">IsRegex</span> re s) <span class="ot">=&gt;</span> s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m (<span class="dt">SearchReplace</span> re s)</a>
+<a class="sourceLine" id="cb2-14" title="14">  <span class="co">-- | compiling a &#39;SearchReplace&#39; template specifing the &#39;SimpleREOptions&#39; for the RE</span></a>
+<a class="sourceLine" id="cb2-15" title="15"><span class="ot">  makeSearchReplaceWith ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m,<span class="dt">IsRegex</span> re s) <span class="ot">=&gt;</span> <span class="dt">SimpleREOptions</span> <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m (<span class="dt">SearchReplace</span> re s)</a>
+<a class="sourceLine" id="cb2-16" title="16">  <span class="co">-- | incorporate an escaped string into a compiled RE with the default options</span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="ot">  makeEscaped           ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> (s<span class="ot">-&gt;</span>s) <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m re</a>
+<a class="sourceLine" id="cb2-18" title="18">  <span class="co">-- | incorporate an escaped string into a compiled RE with the specified &#39;SimpleREOptions&#39;</span></a>
+<a class="sourceLine" id="cb2-19" title="19"><span class="ot">  makeEscapedWith       ::</span> (<span class="dt">Functor</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">SimpleREOptions</span> <span class="ot">-&gt;</span> (s<span class="ot">-&gt;</span>s) <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> m re</a>
+<a class="sourceLine" id="cb2-20" title="20">  <span class="co">-- | extract the text of the RE from the RE</span></a>
+<a class="sourceLine" id="cb2-21" title="21"><span class="ot">  regexSource           ::</span> re <span class="ot">-&gt;</span> s</a>
+<a class="sourceLine" id="cb2-22" title="22"></a>
+<a class="sourceLine" id="cb2-23" title="23">  makeRegex           <span class="fu">=</span> makeRegexWith         <span class="fu">minBound</span></a>
+<a class="sourceLine" id="cb2-24" title="24">  makeSearchReplace   <span class="fu">=</span> makeSearchReplaceWith <span class="fu">minBound</span></a>
+<a class="sourceLine" id="cb2-25" title="25">  makeEscaped         <span class="fu">=</span> makeEscapedWith       <span class="fu">minBound</span></a>
+<a class="sourceLine" id="cb2-26" title="26">  makeEscapedWith o f <span class="fu">=</span> makeRegexWith o <span class="fu">.</span> f <span class="fu">.</span> packR <span class="fu">.</span> escapeREString <span class="fu">.</span> unpackR</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="co">-- | search and replace all matches in the argument text; e.g., this function</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">-- will convert every YYYY-MM-DD format date in its argument text into a</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">-- DD\/MM\/YYYY date:</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">--</span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co">--   @searchReplaceAll [ed|${y}([0-9]{4})-0*${m}([0-9]{2})-0*${d}([0-9]{2})\/\/\/${d}\/${m}\/${y}|]@</span></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="co">--</span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="ot">searchReplaceAll ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> re s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s</a>
+<a class="sourceLine" id="cb3-8" title="8">searchReplaceAll <span class="dt">SearchReplace</span>{<span class="fu">..</span>} <span class="fu">=</span> replaceAll getTemplate <span class="fu">.</span> matchMany getSearch</a>
+<a class="sourceLine" id="cb3-9" title="9"></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">-- | search and replace the first occurrence only (if any) in the input text</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="co">-- e.g., to prefix the first string of four hex digits in the imput text,</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="co">-- if any, with @0x@:</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="co">--</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="co">--  @searchReplaceFirst [ed|[0-9A-Fa-f]{4}\/\/\/0x$0|]@</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="co">--</span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="ot">searchReplaceFirst ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> <span class="dt">SearchReplace</span> re s <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s</a>
+<a class="sourceLine" id="cb3-17" title="17">searchReplaceFirst <span class="dt">SearchReplace</span>{<span class="fu">..</span>} <span class="fu">=</span> replace    getTemplate <span class="fu">.</span> matchOnce getSearch</a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

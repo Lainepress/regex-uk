@@ -1,50 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>regex – examples/TestKit.lhs</title>
-  <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <link rel="stylesheet" href="lib/lhs-styles.css">
-  <link rel="stylesheet" href="lib/bs.css">
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lib/lhs-styles.css" />
+  <link rel="stylesheet" href="lib/bs.css" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -66,293 +97,294 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">examples/TestKit.lhs</h1>
 </header>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE NoImplicitPrelude          #-}</span>
-<span class="ot">{-# LANGUAGE QuasiQuotes                #-}</span>
-<span class="ot">{-# LANGUAGE RecordWildCards            #-}</span>
-<span class="ot">{-# LANGUAGE OverloadedStrings          #-}</span>
-<span class="ot">{-# LANGUAGE FlexibleContexts           #-}</span>
-<span class="ot">{-# LANGUAGE CPP                        #-}</span>
-<span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span>
-<span class="ot">{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}</span>
-<span class="ot">#endif</span>
-
-<span class="kw">module</span> <span class="dt">TestKit</span>
-  ( <span class="dt">Vrn</span>(<span class="fu">..</span>)
-  , presentVrn
-  , parseVrn
-  , bumpVersion
-  , substVersion
-  , substVersion_
-  , readCurrentVersion
-  , <span class="dt">Test</span>(<span class="fu">..</span>)
-  , runTheTests
-  , checkThis
-  , checkThisWith
-  , convertMaybeTextList
-  , castInt
-  , packLBS
-  , test_pp
-  , include
-  , cmp
-  , dumpMacroTable
-  , sortImports
-  , groupSort
-  , groupSortBy
-  , read_file
-  , write_file
-  ) <span class="kw">where</span>
-
-<span class="kw">import           </span><span class="dt">Control.Applicative</span>
-<span class="kw">import           </span><span class="dt">Control.Exception</span>
-<span class="kw">import qualified</span> <span class="dt">Control.Monad</span>                            <span class="kw">as</span> <span class="dt">M</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span>
-<span class="kw">import qualified</span> <span class="dt">Data.List</span>                                <span class="kw">as</span> <span class="dt">L</span>
-<span class="kw">import           </span><span class="dt">Data.Maybe</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import           </span><span class="dt">Prelude.Compat</span>
-<span class="kw">import qualified</span> <span class="dt">Shelly</span>                                   <span class="kw">as</span> <span class="dt">SH</span>
-<span class="kw">import           </span><span class="dt">System.Directory</span>
-<span class="kw">import           </span><span class="dt">System.Environment</span>
-<span class="kw">import           </span><span class="dt">System.Exit</span>
-<span class="kw">import           </span><span class="dt">System.IO</span>
-<span class="kw">import           </span><span class="dt">Text.Printf</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TDFA</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TestBench</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Tools.Grep</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Tools.Sed</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">{-# LANGUAGE NoImplicitPrelude          #-}</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="ot">{-# LANGUAGE QuasiQuotes                #-}</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="ot">{-# LANGUAGE OverloadedStrings          #-}</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="ot">{-# LANGUAGE FlexibleContexts           #-}</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="ot">{-# LANGUAGE CPP                        #-}</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="ot">{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}</span></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="ot">#endif</span></a>
+<a class="sourceLine" id="cb1-10" title="10"></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="kw">module</span> <span class="dt">TestKit</span></a>
+<a class="sourceLine" id="cb1-12" title="12">  ( <span class="dt">Vrn</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-13" title="13">  , presentVrn</a>
+<a class="sourceLine" id="cb1-14" title="14">  , parseVrn</a>
+<a class="sourceLine" id="cb1-15" title="15">  , bumpVersion</a>
+<a class="sourceLine" id="cb1-16" title="16">  , substVersion</a>
+<a class="sourceLine" id="cb1-17" title="17">  , substVersion_</a>
+<a class="sourceLine" id="cb1-18" title="18">  , readCurrentVersion</a>
+<a class="sourceLine" id="cb1-19" title="19">  , <span class="dt">Test</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-20" title="20">  , runTheTests</a>
+<a class="sourceLine" id="cb1-21" title="21">  , checkThis</a>
+<a class="sourceLine" id="cb1-22" title="22">  , checkThisWith</a>
+<a class="sourceLine" id="cb1-23" title="23">  , convertMaybeTextList</a>
+<a class="sourceLine" id="cb1-24" title="24">  , castInt</a>
+<a class="sourceLine" id="cb1-25" title="25">  , packLBS</a>
+<a class="sourceLine" id="cb1-26" title="26">  , test_pp</a>
+<a class="sourceLine" id="cb1-27" title="27">  , include</a>
+<a class="sourceLine" id="cb1-28" title="28">  , cmp</a>
+<a class="sourceLine" id="cb1-29" title="29">  , dumpMacroTable</a>
+<a class="sourceLine" id="cb1-30" title="30">  , sortImports</a>
+<a class="sourceLine" id="cb1-31" title="31">  , groupSort</a>
+<a class="sourceLine" id="cb1-32" title="32">  , groupSortBy</a>
+<a class="sourceLine" id="cb1-33" title="33">  , read_file</a>
+<a class="sourceLine" id="cb1-34" title="34">  , write_file</a>
+<a class="sourceLine" id="cb1-35" title="35">  ) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb1-36" title="36"></a>
+<a class="sourceLine" id="cb1-37" title="37"><span class="kw">import</span>           <span class="dt">Control.Applicative</span></a>
+<a class="sourceLine" id="cb1-38" title="38"><span class="kw">import</span>           <span class="dt">Control.Exception</span></a>
+<a class="sourceLine" id="cb1-39" title="39"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Control.Monad</span>                            <span class="kw">as</span> <span class="dt">M</span></a>
+<a class="sourceLine" id="cb1-40" title="40"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span></a>
+<a class="sourceLine" id="cb1-41" title="41"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.List</span>                                <span class="kw">as</span> <span class="dt">L</span></a>
+<a class="sourceLine" id="cb1-42" title="42"><span class="kw">import</span>           <span class="dt">Data.Maybe</span></a>
+<a class="sourceLine" id="cb1-43" title="43"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span></a>
+<a class="sourceLine" id="cb1-44" title="44"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.IO</span>                             <span class="kw">as</span> <span class="dt">T</span></a>
+<a class="sourceLine" id="cb1-45" title="45"><span class="kw">import</span>           <span class="dt">Prelude.Compat</span></a>
+<a class="sourceLine" id="cb1-46" title="46"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Shelly</span>                                   <span class="kw">as</span> <span class="dt">SH</span></a>
+<a class="sourceLine" id="cb1-47" title="47"><span class="kw">import</span>           <span class="dt">System.Directory</span></a>
+<a class="sourceLine" id="cb1-48" title="48"><span class="kw">import</span>           <span class="dt">System.Environment</span></a>
+<a class="sourceLine" id="cb1-49" title="49"><span class="kw">import</span>           <span class="dt">System.Exit</span></a>
+<a class="sourceLine" id="cb1-50" title="50"><span class="kw">import</span>           <span class="dt">System.IO</span></a>
+<a class="sourceLine" id="cb1-51" title="51"><span class="kw">import</span>           <span class="dt">Text.Printf</span></a>
+<a class="sourceLine" id="cb1-52" title="52"><span class="kw">import</span>           <span class="dt">Text.RE.Replace</span></a>
+<a class="sourceLine" id="cb1-53" title="53"><span class="kw">import</span>           <span class="dt">Text.RE.TDFA</span></a>
+<a class="sourceLine" id="cb1-54" title="54"><span class="kw">import</span>           <span class="dt">Text.RE.TestBench</span></a>
+<a class="sourceLine" id="cb1-55" title="55"><span class="kw">import</span>           <span class="dt">Text.RE.Tools.Grep</span></a>
+<a class="sourceLine" id="cb1-56" title="56"><span class="kw">import</span>           <span class="dt">Text.RE.Tools.Sed</span></a></code></pre></div>
 <h2 id="vrn-and-friends">Vrn and friends</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Vrn</span> <span class="fu">=</span> <span class="dt">Vrn</span> { _vrn_a, _vrn_b, _vrn_c,<span class="ot"> _vrn_d ::</span> <span class="dt">Int</span> }
-  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>,<span class="dt">Ord</span>)
-
-<span class="ot">presentVrn ::</span> <span class="dt">Vrn</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
-presentVrn <span class="dt">Vrn</span>{<span class="fu">..</span>} <span class="fu">=</span> printf <span class="st">&quot;%d.%d.%d.%d&quot;</span> _vrn_a _vrn_b _vrn_c _vrn_d
-
-<span class="ot">parseVrn ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Vrn</span>
-parseVrn vrn_s <span class="fu">=</span> <span class="kw">case</span> matched m <span class="kw">of</span>
-    <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Vrn</span> (p [cp|a|]) (p [cp|b|]) (p [cp|c|]) (p [cp|d|])
-    <span class="dt">False</span> <span class="ot">-&gt;</span> error <span class="fu">$</span> <span class="st">&quot;not a valid version: &quot;</span> <span class="fu">++</span> vrn_s
-  <span class="kw">where</span>
-    p c  <span class="fu">=</span> fromMaybe oops <span class="fu">$</span> parseInteger <span class="fu">$</span> m <span class="fu">!$$</span> c
-    m    <span class="fu">=</span> vrn_s <span class="fu">?=~</span> [re|^${a}(@{%nat})\.${b}(@{%nat})\.${c}(@{%nat})\.${d}(@{%nat})$|]
-
-    oops <span class="fu">=</span> error <span class="st">&quot;parseVrn&quot;</span>
-
-<span class="co">-- | register a new version of the package</span>
-<span class="ot">bumpVersion ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-bumpVersion vrn_s <span class="fu">=</span> <span class="kw">do</span>
-    vrn0 <span class="ot">&lt;-</span> readCurrentVersion
-    rex&#39; <span class="ot">&lt;-</span> compileRegex <span class="fu">$</span> printf <span class="st">&quot;- \\[[xX]\\].*%d\\.%d\\.%d\\.%d&quot;</span> _vrn_a _vrn_b _vrn_c _vrn_d
-    nada <span class="ot">&lt;-</span> null <span class="fu">.</span> linesMatched <span class="dt">LinesMatched</span> <span class="fu">&lt;$&gt;</span> grepLines rex&#39; <span class="st">&quot;lib/md/roadmap-incl.md&quot;</span>
-    M.when nada <span class="fu">$</span>
-      error <span class="fu">$</span> vrn_s <span class="fu">++</span> <span class="st">&quot;: not ticked off in the roadmap&quot;</span>
-    rex  <span class="ot">&lt;-</span> compileRegex <span class="fu">$</span> printf <span class="st">&quot;%d\\.%d\\.%d\\.%d&quot;</span> _vrn_a _vrn_b _vrn_c _vrn_d
-    nope <span class="ot">&lt;-</span> null <span class="fu">.</span> linesMatched <span class="dt">LinesMatched</span> <span class="fu">&lt;$&gt;</span> grepLines rex <span class="st">&quot;changelog&quot;</span>
-    M.when nope <span class="fu">$</span>
-      error <span class="fu">$</span> vrn_s <span class="fu">++</span> <span class="st">&quot;: not in the changelog&quot;</span>
-    <span class="kw">case</span> vrn <span class="fu">&gt;</span> vrn0 <span class="kw">of</span>
-      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="kw">do</span>
-        write_current_version vrn
-        substVersion <span class="st">&quot;lib/hackage-template.svg&quot;</span> <span class="st">&quot;docs/badges/hackage.svg&quot;</span>
-      <span class="dt">False</span> <span class="ot">-&gt;</span> error <span class="fu">$</span>
-        printf <span class="st">&quot;version not later ~(%s &gt; %s)&quot;</span> vrn_s <span class="fu">$</span> presentVrn vrn0
-  <span class="kw">where</span>
-    vrn<span class="fu">@</span><span class="dt">Vrn</span>{<span class="fu">..</span>} <span class="fu">=</span> parseVrn vrn_s
-
-<span class="ot">substVersion ::</span> FilePath <span class="ot">-&gt;</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-substVersion in_f out_f <span class="fu">=</span>
-    LBS.readFile in_f <span class="fu">&gt;&gt;=</span> substVersion_ <span class="fu">&gt;&gt;=</span> LBS.writeFile out_f
-
-<span class="ot">substVersion_ ::</span> (<span class="dt">IsRegex</span> <span class="dt">RE</span> a,<span class="dt">Replace</span> a) <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> a
-substVersion_ txt <span class="fu">=</span>
-    flip replaceAll ms <span class="fu">.</span> packR <span class="fu">.</span> presentVrn <span class="fu">&lt;$&gt;</span> readCurrentVersion
-  <span class="kw">where</span>
-    ms <span class="fu">=</span> txt <span class="fu">*=~</span> [re|&lt;&lt;\$version\$&gt;&gt;|]
-
-<span class="ot">readCurrentVersion ::</span> <span class="dt">IO</span> <span class="dt">Vrn</span>
-readCurrentVersion <span class="fu">=</span> parseVrn <span class="fu">&lt;$&gt;</span> readFile <span class="st">&quot;lib/version.txt&quot;</span>
-
-<span class="ot">write_current_version ::</span> <span class="dt">Vrn</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-write_current_version <span class="fu">=</span> writeFile <span class="st">&quot;lib/version.txt&quot;</span> <span class="fu">.</span> presentVrn</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">data</span> <span class="dt">Vrn</span> <span class="fu">=</span> <span class="dt">Vrn</span> { _vrn_a, _vrn_b, _vrn_c,<span class="ot"> _vrn_d ::</span> <span class="dt">Int</span> }</a>
+<a class="sourceLine" id="cb2-2" title="2">  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>,<span class="dt">Ord</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="ot">presentVrn ::</span> <span class="dt">Vrn</span> <span class="ot">-&gt;</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb2-5" title="5">presentVrn <span class="dt">Vrn</span>{<span class="fu">..</span>} <span class="fu">=</span> printf <span class="st">&quot;%d.%d.%d.%d&quot;</span> _vrn_a _vrn_b _vrn_c _vrn_d</a>
+<a class="sourceLine" id="cb2-6" title="6"></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="ot">parseVrn ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Vrn</span></a>
+<a class="sourceLine" id="cb2-8" title="8">parseVrn vrn_s <span class="fu">=</span> <span class="kw">case</span> matched m <span class="kw">of</span></a>
+<a class="sourceLine" id="cb2-9" title="9">    <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Vrn</span> (p [cp|a|]) (p [cp|b|]) (p [cp|c|]) (p [cp|d|])</a>
+<a class="sourceLine" id="cb2-10" title="10">    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="fu">$</span> <span class="st">&quot;not a valid version: &quot;</span> <span class="fu">++</span> vrn_s</a>
+<a class="sourceLine" id="cb2-11" title="11">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb2-12" title="12">    p c  <span class="fu">=</span> fromMaybe oops <span class="fu">$</span> parseInteger <span class="fu">$</span> m <span class="fu">!$$</span> c</a>
+<a class="sourceLine" id="cb2-13" title="13">    m    <span class="fu">=</span> vrn_s <span class="fu">?=~</span> [re|^${a}(@{%nat})\.${b}(@{%nat})\.${c}(@{%nat})\.${d}(@{%nat})$|]</a>
+<a class="sourceLine" id="cb2-14" title="14"></a>
+<a class="sourceLine" id="cb2-15" title="15">    oops <span class="fu">=</span> <span class="fu">error</span> <span class="st">&quot;parseVrn&quot;</span></a>
+<a class="sourceLine" id="cb2-16" title="16"></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="co">-- | register a new version of the package</span></a>
+<a class="sourceLine" id="cb2-18" title="18"><span class="ot">bumpVersion ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb2-19" title="19">bumpVersion vrn_s <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb2-20" title="20">    vrn0 <span class="ot">&lt;-</span> readCurrentVersion</a>
+<a class="sourceLine" id="cb2-21" title="21">    rex&#39; <span class="ot">&lt;-</span> compileRegex <span class="fu">$</span> printf <span class="st">&quot;- \\[[xX]\\].*%d\\.%d\\.%d\\.%d&quot;</span> _vrn_a _vrn_b _vrn_c _vrn_d</a>
+<a class="sourceLine" id="cb2-22" title="22">    nada <span class="ot">&lt;-</span> <span class="fu">null</span> <span class="fu">.</span> linesMatched <span class="dt">LinesMatched</span> <span class="fu">&lt;$&gt;</span> grepLines rex&#39; <span class="st">&quot;lib/md/roadmap-incl.md&quot;</span></a>
+<a class="sourceLine" id="cb2-23" title="23">    M.when nada <span class="fu">$</span></a>
+<a class="sourceLine" id="cb2-24" title="24">      <span class="fu">error</span> <span class="fu">$</span> vrn_s <span class="fu">++</span> <span class="st">&quot;: not ticked off in the roadmap&quot;</span></a>
+<a class="sourceLine" id="cb2-25" title="25">    rex  <span class="ot">&lt;-</span> compileRegex <span class="fu">$</span> printf <span class="st">&quot;%d\\.%d\\.%d\\.%d&quot;</span> _vrn_a _vrn_b _vrn_c _vrn_d</a>
+<a class="sourceLine" id="cb2-26" title="26">    nope <span class="ot">&lt;-</span> <span class="fu">null</span> <span class="fu">.</span> linesMatched <span class="dt">LinesMatched</span> <span class="fu">&lt;$&gt;</span> grepLines rex <span class="st">&quot;changelog&quot;</span></a>
+<a class="sourceLine" id="cb2-27" title="27">    M.when nope <span class="fu">$</span></a>
+<a class="sourceLine" id="cb2-28" title="28">      <span class="fu">error</span> <span class="fu">$</span> vrn_s <span class="fu">++</span> <span class="st">&quot;: not in the changelog&quot;</span></a>
+<a class="sourceLine" id="cb2-29" title="29">    <span class="kw">case</span> vrn <span class="fu">&gt;</span> vrn0 <span class="kw">of</span></a>
+<a class="sourceLine" id="cb2-30" title="30">      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb2-31" title="31">        write_current_version vrn</a>
+<a class="sourceLine" id="cb2-32" title="32">        substVersion <span class="st">&quot;lib/hackage-template.svg&quot;</span> <span class="st">&quot;docs/badges/hackage.svg&quot;</span></a>
+<a class="sourceLine" id="cb2-33" title="33">      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="fu">$</span></a>
+<a class="sourceLine" id="cb2-34" title="34">        printf <span class="st">&quot;version not later ~(%s &gt; %s)&quot;</span> vrn_s <span class="fu">$</span> presentVrn vrn0</a>
+<a class="sourceLine" id="cb2-35" title="35">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb2-36" title="36">    vrn<span class="fu">@</span><span class="dt">Vrn</span>{<span class="fu">..</span>} <span class="fu">=</span> parseVrn vrn_s</a>
+<a class="sourceLine" id="cb2-37" title="37"></a>
+<a class="sourceLine" id="cb2-38" title="38"><span class="ot">substVersion ::</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb2-39" title="39">substVersion in_f out_f <span class="fu">=</span></a>
+<a class="sourceLine" id="cb2-40" title="40">    LBS.readFile in_f <span class="fu">&gt;&gt;=</span> substVersion_ <span class="fu">&gt;&gt;=</span> LBS.writeFile out_f</a>
+<a class="sourceLine" id="cb2-41" title="41"></a>
+<a class="sourceLine" id="cb2-42" title="42"><span class="ot">substVersion_ ::</span> (<span class="dt">IsRegex</span> <span class="dt">RE</span> a,<span class="dt">Replace</span> a) <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> a</a>
+<a class="sourceLine" id="cb2-43" title="43">substVersion_ txt <span class="fu">=</span></a>
+<a class="sourceLine" id="cb2-44" title="44">    <span class="fu">flip</span> replaceAll ms <span class="fu">.</span> packR <span class="fu">.</span> presentVrn <span class="fu">&lt;$&gt;</span> readCurrentVersion</a>
+<a class="sourceLine" id="cb2-45" title="45">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb2-46" title="46">    ms <span class="fu">=</span> txt <span class="fu">*=~</span> [re|&lt;&lt;\$version\$&gt;&gt;|]</a>
+<a class="sourceLine" id="cb2-47" title="47"></a>
+<a class="sourceLine" id="cb2-48" title="48"><span class="ot">readCurrentVersion ::</span> <span class="dt">IO</span> <span class="dt">Vrn</span></a>
+<a class="sourceLine" id="cb2-49" title="49">readCurrentVersion <span class="fu">=</span> parseVrn <span class="fu">.</span> T.unpack <span class="fu">&lt;$&gt;</span> T.readFile <span class="st">&quot;lib/version.txt&quot;</span></a>
+<a class="sourceLine" id="cb2-50" title="50"></a>
+<a class="sourceLine" id="cb2-51" title="51"><span class="ot">write_current_version ::</span> <span class="dt">Vrn</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb2-52" title="52">write_current_version <span class="fu">=</span> <span class="fu">writeFile</span> <span class="st">&quot;lib/version.txt&quot;</span> <span class="fu">.</span> presentVrn</a></code></pre></div>
 <h2 id="test-and-friends">Test and friends</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Test</span> <span class="fu">=</span>
-  <span class="dt">Test</span>
-    {<span class="ot"> testLabel    ::</span> <span class="dt">String</span>
-    ,<span class="ot"> testExpected ::</span> <span class="dt">String</span>
-    ,<span class="ot"> testResult   ::</span> <span class="dt">String</span>
-    ,<span class="ot"> testPassed   ::</span> <span class="dt">Bool</span>
-    }
-  <span class="kw">deriving</span> (<span class="dt">Show</span>)
-
-<span class="ot">runTheTests ::</span> [<span class="dt">Test</span>] <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-runTheTests tests <span class="fu">=</span> <span class="kw">do</span>
-  as <span class="ot">&lt;-</span> getArgs
-  <span class="kw">case</span> as <span class="kw">of</span>
-    [] <span class="ot">-&gt;</span> return ()
-    _  <span class="ot">-&gt;</span> <span class="kw">do</span>
-      pn <span class="ot">&lt;-</span> getProgName
-      putStrLn <span class="fu">$</span> <span class="st">&quot;usage:\n  &quot;</span><span class="fu">++</span>pn<span class="fu">++</span><span class="st">&quot; --help&quot;</span>
-      exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span>
-  <span class="kw">case</span> filter (not <span class="fu">.</span> testPassed) tests <span class="kw">of</span>
-    []  <span class="ot">-&gt;</span> putStrLn <span class="fu">$</span> <span class="st">&quot;All &quot;</span><span class="fu">++</span>show (length tests)<span class="fu">++</span><span class="st">&quot; tests passed.&quot;</span>
-    fts <span class="ot">-&gt;</span> <span class="kw">do</span>
-      mapM_ (putStr <span class="fu">.</span> present_test) fts
-      putStrLn <span class="fu">$</span> show (length fts) <span class="fu">++</span> <span class="st">&quot; tests failed.&quot;</span>
-      exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span>
-
-<span class="ot">checkThis ::</span> (<span class="dt">Show</span> a,<span class="dt">Eq</span> a) <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Test</span>
-checkThis <span class="fu">=</span> checkThisWith id
-
-<span class="ot">checkThisWith ::</span> (<span class="dt">Show</span> a,<span class="dt">Eq</span> a) <span class="ot">=&gt;</span> (b<span class="ot">-&gt;</span>a) <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Test</span>
-checkThisWith f lab ref0 val <span class="fu">=</span>
-  <span class="dt">Test</span>
-    { testLabel    <span class="fu">=</span> lab
-    , testExpected <span class="fu">=</span> show ref
-    , testResult   <span class="fu">=</span> show val
-    , testPassed   <span class="fu">=</span> ref <span class="fu">==</span> val
-    }
-  <span class="kw">where</span>
-    ref <span class="fu">=</span> f ref0
-
-<span class="ot">convertMaybeTextList ::</span> [<span class="dt">Maybe</span> <span class="dt">String</span>] <span class="ot">-&gt;</span> [<span class="dt">Maybe</span> <span class="dt">T.Text</span>]
-convertMaybeTextList <span class="fu">=</span> map <span class="fu">$</span> fmap T.pack
-
-<span class="ot">castInt ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>
-castInt <span class="fu">=</span> id
-
-<span class="ot">packLBS ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
-packLBS <span class="fu">=</span> LBS.pack
-
-<span class="ot">present_test ::</span> <span class="dt">Test</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
-present_test <span class="dt">Test</span>{<span class="fu">..</span>} <span class="fu">=</span> unlines
-  [ <span class="st">&quot;test: &quot;</span> <span class="fu">++</span> testLabel
-  , <span class="st">&quot;  expected : &quot;</span> <span class="fu">++</span> testExpected
-  , <span class="st">&quot;  result   : &quot;</span> <span class="fu">++</span> testResult
-  , <span class="st">&quot;  passed   : &quot;</span> <span class="fu">++</span> (<span class="kw">if</span> testPassed <span class="kw">then</span> <span class="st">&quot;passed&quot;</span> <span class="kw">else</span> <span class="st">&quot;**FAILED**&quot;</span>)
-  ]</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">test_pp ::</span> <span class="dt">String</span>
-        <span class="ot">-&gt;</span> (FilePath<span class="ot">-&gt;</span>FilePath<span class="ot">-&gt;</span><span class="dt">IO</span>())
-        <span class="ot">-&gt;</span> FilePath
-        <span class="ot">-&gt;</span> FilePath
-        <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-test_pp lab loop test_file gold_file <span class="fu">=</span> <span class="kw">do</span>
-    createDirectoryIfMissing <span class="dt">False</span> <span class="st">&quot;tmp&quot;</span>
-    loop test_file tmp_pth
-    ok <span class="ot">&lt;-</span> cmp (T.pack tmp_pth) (T.pack gold_file)
-    <span class="kw">case</span> ok <span class="kw">of</span>
-      <span class="dt">True</span>  <span class="ot">-&gt;</span> return ()
-      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
-        putStrLn <span class="fu">$</span> lab <span class="fu">++</span> <span class="st">&quot;: mismatch with &quot;</span> <span class="fu">++</span> gold_file
-        exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span>
-  <span class="kw">where</span>
-    tmp_pth <span class="fu">=</span> <span class="st">&quot;tmp/mod.lhs&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">data</span> <span class="dt">Test</span> <span class="fu">=</span></a>
+<a class="sourceLine" id="cb3-2" title="2">  <span class="dt">Test</span></a>
+<a class="sourceLine" id="cb3-3" title="3">    {<span class="ot"> testLabel    ::</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb3-4" title="4">    ,<span class="ot"> testExpected ::</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb3-5" title="5">    ,<span class="ot"> testResult   ::</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb3-6" title="6">    ,<span class="ot"> testPassed   ::</span> <span class="dt">Bool</span></a>
+<a class="sourceLine" id="cb3-7" title="7">    }</a>
+<a class="sourceLine" id="cb3-8" title="8">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
+<a class="sourceLine" id="cb3-9" title="9"></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="ot">runTheTests ::</span> [<span class="dt">Test</span>] <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb3-11" title="11">runTheTests tests <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb3-12" title="12">  as <span class="ot">&lt;-</span> getArgs</a>
+<a class="sourceLine" id="cb3-13" title="13">  <span class="kw">case</span> as <span class="kw">of</span></a>
+<a class="sourceLine" id="cb3-14" title="14">    [] <span class="ot">-&gt;</span> <span class="fu">return</span> ()</a>
+<a class="sourceLine" id="cb3-15" title="15">    _  <span class="ot">-&gt;</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb3-16" title="16">      pn <span class="ot">&lt;-</span> getProgName</a>
+<a class="sourceLine" id="cb3-17" title="17">      <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;usage:\n  &quot;</span><span class="fu">++</span>pn<span class="fu">++</span><span class="st">&quot; --help&quot;</span></a>
+<a class="sourceLine" id="cb3-18" title="18">      exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb3-19" title="19">  <span class="kw">case</span> <span class="fu">filter</span> (<span class="fu">not</span> <span class="fu">.</span> testPassed) tests <span class="kw">of</span></a>
+<a class="sourceLine" id="cb3-20" title="20">    []  <span class="ot">-&gt;</span> <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="st">&quot;All &quot;</span><span class="fu">++show</span> (<span class="fu">length</span> tests)<span class="fu">++</span><span class="st">&quot; tests passed.&quot;</span></a>
+<a class="sourceLine" id="cb3-21" title="21">    fts <span class="ot">-&gt;</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb3-22" title="22">      <span class="fu">mapM_</span> (<span class="fu">putStr</span> <span class="fu">.</span> present_test) fts</a>
+<a class="sourceLine" id="cb3-23" title="23">      <span class="fu">putStrLn</span> <span class="fu">$</span> <span class="fu">show</span> (<span class="fu">length</span> fts) <span class="fu">++</span> <span class="st">&quot; tests failed.&quot;</span></a>
+<a class="sourceLine" id="cb3-24" title="24">      exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb3-25" title="25"></a>
+<a class="sourceLine" id="cb3-26" title="26"><span class="ot">checkThis ::</span> (<span class="dt">Show</span> a,<span class="dt">Eq</span> a) <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Test</span></a>
+<a class="sourceLine" id="cb3-27" title="27">checkThis <span class="fu">=</span> checkThisWith <span class="fu">id</span></a>
+<a class="sourceLine" id="cb3-28" title="28"></a>
+<a class="sourceLine" id="cb3-29" title="29"><span class="ot">checkThisWith ::</span> (<span class="dt">Show</span> a,<span class="dt">Eq</span> a) <span class="ot">=&gt;</span> (b<span class="ot">-&gt;</span>a) <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Test</span></a>
+<a class="sourceLine" id="cb3-30" title="30">checkThisWith f lab ref0 val <span class="fu">=</span></a>
+<a class="sourceLine" id="cb3-31" title="31">  <span class="dt">Test</span></a>
+<a class="sourceLine" id="cb3-32" title="32">    { testLabel    <span class="fu">=</span> lab</a>
+<a class="sourceLine" id="cb3-33" title="33">    , testExpected <span class="fu">=</span> <span class="fu">show</span> ref</a>
+<a class="sourceLine" id="cb3-34" title="34">    , testResult   <span class="fu">=</span> <span class="fu">show</span> val</a>
+<a class="sourceLine" id="cb3-35" title="35">    , testPassed   <span class="fu">=</span> ref <span class="fu">==</span> val</a>
+<a class="sourceLine" id="cb3-36" title="36">    }</a>
+<a class="sourceLine" id="cb3-37" title="37">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-38" title="38">    ref <span class="fu">=</span> f ref0</a>
+<a class="sourceLine" id="cb3-39" title="39"></a>
+<a class="sourceLine" id="cb3-40" title="40"><span class="ot">convertMaybeTextList ::</span> [<span class="dt">Maybe</span> <span class="dt">String</span>] <span class="ot">-&gt;</span> [<span class="dt">Maybe</span> <span class="dt">T.Text</span>]</a>
+<a class="sourceLine" id="cb3-41" title="41">convertMaybeTextList <span class="fu">=</span> <span class="fu">map</span> <span class="fu">$</span> <span class="fu">fmap</span> T.pack</a>
+<a class="sourceLine" id="cb3-42" title="42"></a>
+<a class="sourceLine" id="cb3-43" title="43"><span class="ot">castInt ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb3-44" title="44">castInt <span class="fu">=</span> <span class="fu">id</span></a>
+<a class="sourceLine" id="cb3-45" title="45"></a>
+<a class="sourceLine" id="cb3-46" title="46"><span class="ot">packLBS ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></a>
+<a class="sourceLine" id="cb3-47" title="47">packLBS <span class="fu">=</span> LBS.pack</a>
+<a class="sourceLine" id="cb3-48" title="48"></a>
+<a class="sourceLine" id="cb3-49" title="49"><span class="ot">present_test ::</span> <span class="dt">Test</span> <span class="ot">-&gt;</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb3-50" title="50">present_test <span class="dt">Test</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="fu">unlines</span></a>
+<a class="sourceLine" id="cb3-51" title="51">  [ <span class="st">&quot;test: &quot;</span> <span class="fu">++</span> testLabel</a>
+<a class="sourceLine" id="cb3-52" title="52">  , <span class="st">&quot;  expected : &quot;</span> <span class="fu">++</span> testExpected</a>
+<a class="sourceLine" id="cb3-53" title="53">  , <span class="st">&quot;  result   : &quot;</span> <span class="fu">++</span> testResult</a>
+<a class="sourceLine" id="cb3-54" title="54">  , <span class="st">&quot;  passed   : &quot;</span> <span class="fu">++</span> (<span class="kw">if</span> testPassed <span class="kw">then</span> <span class="st">&quot;passed&quot;</span> <span class="kw">else</span> <span class="st">&quot;**FAILED**&quot;</span>)</a>
+<a class="sourceLine" id="cb3-55" title="55">  ]</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="ot">test_pp ::</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb4-2" title="2">        <span class="ot">-&gt;</span> (<span class="dt">FilePath</span><span class="ot">-&gt;</span><span class="dt">FilePath</span><span class="ot">-&gt;</span><span class="dt">IO</span>())</a>
+<a class="sourceLine" id="cb4-3" title="3">        <span class="ot">-&gt;</span> <span class="dt">FilePath</span></a>
+<a class="sourceLine" id="cb4-4" title="4">        <span class="ot">-&gt;</span> <span class="dt">FilePath</span></a>
+<a class="sourceLine" id="cb4-5" title="5">        <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb4-6" title="6">test_pp lab loop test_file gold_file <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb4-7" title="7">    createDirectoryIfMissing <span class="dt">False</span> <span class="st">&quot;tmp&quot;</span></a>
+<a class="sourceLine" id="cb4-8" title="8">    loop test_file tmp_pth</a>
+<a class="sourceLine" id="cb4-9" title="9">    ok <span class="ot">&lt;-</span> cmp (T.pack tmp_pth) (T.pack gold_file)</a>
+<a class="sourceLine" id="cb4-10" title="10">    <span class="kw">case</span> ok <span class="kw">of</span></a>
+<a class="sourceLine" id="cb4-11" title="11">      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="fu">return</span> ()</a>
+<a class="sourceLine" id="cb4-12" title="12">      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb4-13" title="13">        <span class="fu">putStrLn</span> <span class="fu">$</span> lab <span class="fu">++</span> <span class="st">&quot;: mismatch with &quot;</span> <span class="fu">++</span> gold_file</a>
+<a class="sourceLine" id="cb4-14" title="14">        exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb4-15" title="15">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb4-16" title="16">    tmp_pth <span class="fu">=</span> <span class="st">&quot;tmp/mod.lhs&quot;</span></a></code></pre></div>
 <h2 id="simple-include-processor">simple include processor</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | this function looks for lines of the form</span>
-<span class="co">--</span>
-<span class="co">--    `%include &lt;file&gt; [exclude &lt;RE&gt;]`</span>
-<span class="co">--</span>
-<span class="co">-- and replaces them with the contents of the named file, optionally</span>
-<span class="co">-- excluding any lines that match the given RE.</span>
-<span class="ot">include ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
-include <span class="fu">=</span> sed&#39; <span class="fu">$</span> <span class="dt">Select</span>
-    [ <span class="dt">Function</span> [re|^%include ${file}(@{%string})$|]                              <span class="dt">TOP</span> incl
-    , <span class="dt">Function</span> [re|^%include ${file}(@{%string}) *exclude *${rex}(@{%string})$|] <span class="dt">TOP</span> incl
-    , <span class="dt">Function</span> [re|^.*$|]                                                        <span class="dt">TOP</span> nop
-    ]
-  <span class="kw">where</span>
-    incl _ mtch _ _ <span class="fu">=</span> include&#39; mtch
-    nop  _ _    _ _ <span class="fu">=</span> return <span class="dt">Nothing</span>
-
-<span class="co">-- | processes the match from a &#39;%include&#39; line, analyses the match,</span>
-<span class="co">-- fetches the file, optionally excludes lines specified by an RE,</span>
-<span class="co">-- returning the text to include.</span>
-<span class="ot">include&#39; ::</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)
-include&#39; mtch <span class="fu">=</span> <span class="kw">do</span>
-    ftr <span class="ot">&lt;-</span> <span class="kw">case</span> prs_s <span class="fu">&lt;$&gt;</span> mtch <span class="fu">!$$?</span> [cp|rex|] <span class="kw">of</span>
-      <span class="dt">Nothing</span>     <span class="ot">-&gt;</span> return id
-      <span class="dt">Just</span> re_lbs <span class="ot">-&gt;</span> excl <span class="fu">&lt;$&gt;</span> makeRegex re_lbs
-    <span class="dt">Just</span> <span class="fu">.</span> ftr <span class="fu">&lt;$&gt;</span> LBS.readFile (prs_s <span class="fu">$</span> mtch <span class="fu">!$$</span> [cp|file|])
-  <span class="kw">where</span>
-<span class="ot">    excl ::</span> <span class="dt">RE</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
-    excl rex <span class="fu">=</span>
-        LBS.unlines <span class="fu">.</span> map (matchesSource <span class="fu">.</span> getLineMatches)
-          <span class="fu">.</span> filter (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches)
-          <span class="fu">.</span> grepFilter rex
-
-    prs_s  <span class="fu">=</span> maybe (error <span class="st">&quot;include&#39;&quot;</span>) T.unpack <span class="fu">.</span> parseString</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="co">-- | this function looks for lines of the form</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co">--</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">--    `%include &lt;file&gt; [exclude &lt;RE&gt;]`</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">--</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">-- and replaces them with the contents of the named file, optionally</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">-- excluding any lines that match the given RE.</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="ot">include ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span></a>
+<a class="sourceLine" id="cb5-8" title="8">include <span class="fu">=</span> sed&#39; <span class="fu">$</span> <span class="dt">Select</span></a>
+<a class="sourceLine" id="cb5-9" title="9">    [ <span class="dt">Function</span> [re|^%include ${file}(@{%string})$|]                              <span class="dt">TOP</span> incl</a>
+<a class="sourceLine" id="cb5-10" title="10">    , <span class="dt">Function</span> [re|^%include ${file}(@{%string}) *exclude *${rex}(@{%string})$|] <span class="dt">TOP</span> incl</a>
+<a class="sourceLine" id="cb5-11" title="11">    , <span class="dt">Function</span> [re|^.*$|]                                                        <span class="dt">TOP</span> nop</a>
+<a class="sourceLine" id="cb5-12" title="12">    ]</a>
+<a class="sourceLine" id="cb5-13" title="13">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb5-14" title="14">    incl _ mtch _ _ <span class="fu">=</span> include&#39; mtch</a>
+<a class="sourceLine" id="cb5-15" title="15">    nop  _ _    _ _ <span class="fu">=</span> <span class="fu">return</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb5-16" title="16"></a>
+<a class="sourceLine" id="cb5-17" title="17"><span class="co">-- | processes the match from a &#39;%include&#39; line, analyses the match,</span></a>
+<a class="sourceLine" id="cb5-18" title="18"><span class="co">-- fetches the file, optionally excludes lines specified by an RE,</span></a>
+<a class="sourceLine" id="cb5-19" title="19"><span class="co">-- returning the text to include.</span></a>
+<a class="sourceLine" id="cb5-20" title="20"><span class="ot">include&#39; ::</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)</a>
+<a class="sourceLine" id="cb5-21" title="21">include&#39; mtch <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb5-22" title="22">    ftr <span class="ot">&lt;-</span> <span class="kw">case</span> prs_s <span class="fu">&lt;$&gt;</span> mtch <span class="fu">!$$?</span> [cp|rex|] <span class="kw">of</span></a>
+<a class="sourceLine" id="cb5-23" title="23">      <span class="dt">Nothing</span>     <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="fu">id</span></a>
+<a class="sourceLine" id="cb5-24" title="24">      <span class="dt">Just</span> re_lbs <span class="ot">-&gt;</span> excl <span class="fu">&lt;$&gt;</span> makeRegex re_lbs</a>
+<a class="sourceLine" id="cb5-25" title="25">    <span class="dt">Just</span> <span class="fu">.</span> ftr <span class="fu">&lt;$&gt;</span> LBS.readFile (prs_s <span class="fu">$</span> mtch <span class="fu">!$$</span> [cp|file|])</a>
+<a class="sourceLine" id="cb5-26" title="26">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb5-27" title="27"><span class="ot">    excl ::</span> <span class="dt">RE</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></a>
+<a class="sourceLine" id="cb5-28" title="28">    excl rex <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-29" title="29">        LBS.unlines <span class="fu">.</span> <span class="fu">map</span> (matchesSource <span class="fu">.</span> getLineMatches)</a>
+<a class="sourceLine" id="cb5-30" title="30">          <span class="fu">.</span> <span class="fu">filter</span> (<span class="fu">not</span> <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches)</a>
+<a class="sourceLine" id="cb5-31" title="31">          <span class="fu">.</span> grepFilter rex</a>
+<a class="sourceLine" id="cb5-32" title="32"></a>
+<a class="sourceLine" id="cb5-33" title="33">    prs_s  <span class="fu">=</span> <span class="fu">maybe</span> (<span class="fu">error</span> <span class="st">&quot;include&#39;&quot;</span>) T.unpack <span class="fu">.</span> parseString</a></code></pre></div>
 <h2 id="cmp">cmp</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">cmp ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Bool</span>
-cmp src dst <span class="fu">=</span> handle hdl <span class="fu">$</span> <span class="kw">do</span>
-    _ <span class="ot">&lt;-</span> SH.shelly <span class="fu">$</span> SH.verbosely <span class="fu">$</span>
-            SH.run <span class="st">&quot;cmp&quot;</span> [src,dst]
-    return <span class="dt">True</span>
-  <span class="kw">where</span>
-<span class="ot">    hdl ::</span> <span class="dt">SomeException</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Bool</span>
-    hdl se <span class="fu">=</span> <span class="kw">do</span>
-      hPutStrLn stderr <span class="fu">$</span>
-        <span class="st">&quot;testing results against model answers failed: &quot;</span> <span class="fu">++</span> show se
-      return <span class="dt">False</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="ot">cmp ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Bool</span></a>
+<a class="sourceLine" id="cb6-2" title="2">cmp src dst <span class="fu">=</span> handle hdl <span class="fu">$</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb6-3" title="3">    _ <span class="ot">&lt;-</span> SH.shelly <span class="fu">$</span> SH.verbosely <span class="fu">$</span></a>
+<a class="sourceLine" id="cb6-4" title="4">            SH.run <span class="st">&quot;cmp&quot;</span> [src,dst]</a>
+<a class="sourceLine" id="cb6-5" title="5">    <span class="fu">return</span> <span class="dt">True</span></a>
+<a class="sourceLine" id="cb6-6" title="6">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="ot">    hdl ::</span> <span class="dt">SomeException</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Bool</span></a>
+<a class="sourceLine" id="cb6-8" title="8">    hdl se <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb6-9" title="9">      hPutStrLn stderr <span class="fu">$</span></a>
+<a class="sourceLine" id="cb6-10" title="10">        <span class="st">&quot;testing results against model answers failed: &quot;</span> <span class="fu">++</span> <span class="fu">show</span> se</a>
+<a class="sourceLine" id="cb6-11" title="11">      <span class="fu">return</span> <span class="dt">False</span></a></code></pre></div>
 <h2 id="dumpmacrotable">dumpMacroTable</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | dump a MacroEnv into the docs directory</span>
-<span class="ot">dumpMacroTable ::</span> FilePath
-               <span class="ot">-&gt;</span> FilePath
-               <span class="ot">-&gt;</span> <span class="dt">RegexType</span>
-               <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span>
-               <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-dumpMacroTable fp_t fp_s rty m_env <span class="fu">=</span> <span class="kw">do</span>
-  writeFile fp_t <span class="fu">$</span> formatMacroTable   rty              m_env
-  writeFile fp_s <span class="fu">$</span> formatMacroSources rty <span class="dt">ExclCaptures</span> m_env</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="co">-- | dump a MacroEnv into the docs directory</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="ot">dumpMacroTable ::</span> <span class="dt">FilePath</span></a>
+<a class="sourceLine" id="cb7-3" title="3">               <span class="ot">-&gt;</span> <span class="dt">FilePath</span></a>
+<a class="sourceLine" id="cb7-4" title="4">               <span class="ot">-&gt;</span> <span class="dt">RegexType</span></a>
+<a class="sourceLine" id="cb7-5" title="5">               <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span></a>
+<a class="sourceLine" id="cb7-6" title="6">               <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb7-7" title="7">dumpMacroTable fp_t fp_s rty m_env <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb7-8" title="8">  <span class="fu">writeFile</span> fp_t <span class="fu">$</span> formatMacroTable   rty              m_env</a>
+<a class="sourceLine" id="cb7-9" title="9">  <span class="fu">writeFile</span> fp_s <span class="fu">$</span> formatMacroSources rty <span class="dt">ExclCaptures</span> m_env</a></code></pre></div>
 <h2 id="sortimports">sortImports</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">sortImports ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
-sortImports lbs <span class="fu">=</span>
-    LBS.unlines <span class="fu">$</span> map (matchesSource <span class="fu">.</span> getLineMatches) <span class="fu">$</span>
-      hdr <span class="fu">++</span> L.sortBy cMp bdy
-  <span class="kw">where</span>
-    cMp ln1 ln2 <span class="fu">=</span> <span class="kw">case</span> (extr ln1,extr ln2) <span class="kw">of</span>
-        (<span class="dt">Nothing</span>,<span class="dt">Nothing</span>) <span class="ot">-&gt;</span> <span class="dt">EQ</span>
-        (<span class="dt">Nothing</span>,<span class="dt">Just</span> _ ) <span class="ot">-&gt;</span> <span class="dt">GT</span>
-        (<span class="dt">Just</span> _ ,<span class="dt">Nothing</span>) <span class="ot">-&gt;</span> <span class="dt">LT</span>
-        (<span class="dt">Just</span> x ,<span class="dt">Just</span>  y) <span class="ot">-&gt;</span> compare x y
-
-    extr <span class="dt">Line</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">case</span> allMatches getLineMatches <span class="kw">of</span>
-      mtch<span class="fu">:</span>_  <span class="ot">-&gt;</span> mtch <span class="fu">!$$?</span> [cp|mod|]
-      _       <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-
-    (hdr,bdy) <span class="fu">=</span> span (not <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches) lns
-    lns       <span class="fu">=</span> grepFilter rex lbs
-    rex       <span class="fu">=</span> [re|^import +(qualified|         ) ${mod}([^ ].*)$|]</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1"><span class="ot">sortImports ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></a>
+<a class="sourceLine" id="cb8-2" title="2">sortImports lbs <span class="fu">=</span></a>
+<a class="sourceLine" id="cb8-3" title="3">    LBS.unlines <span class="fu">$</span> <span class="fu">map</span> (matchesSource <span class="fu">.</span> getLineMatches) <span class="fu">$</span></a>
+<a class="sourceLine" id="cb8-4" title="4">      hdr <span class="fu">++</span> L.sortBy cMp bdy</a>
+<a class="sourceLine" id="cb8-5" title="5">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb8-6" title="6">    cMp ln1 ln2 <span class="fu">=</span> <span class="kw">case</span> (extr ln1,extr ln2) <span class="kw">of</span></a>
+<a class="sourceLine" id="cb8-7" title="7">        (<span class="dt">Nothing</span>,<span class="dt">Nothing</span>) <span class="ot">-&gt;</span> <span class="dt">EQ</span></a>
+<a class="sourceLine" id="cb8-8" title="8">        (<span class="dt">Nothing</span>,<span class="dt">Just</span> _ ) <span class="ot">-&gt;</span> <span class="dt">GT</span></a>
+<a class="sourceLine" id="cb8-9" title="9">        (<span class="dt">Just</span> _ ,<span class="dt">Nothing</span>) <span class="ot">-&gt;</span> <span class="dt">LT</span></a>
+<a class="sourceLine" id="cb8-10" title="10">        (<span class="dt">Just</span> x ,<span class="dt">Just</span>  y) <span class="ot">-&gt;</span> <span class="fu">compare</span> x y</a>
+<a class="sourceLine" id="cb8-11" title="11"></a>
+<a class="sourceLine" id="cb8-12" title="12">    extr <span class="dt">Line</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="kw">case</span> allMatches getLineMatches <span class="kw">of</span></a>
+<a class="sourceLine" id="cb8-13" title="13">      mtch<span class="fu">:</span>_  <span class="ot">-&gt;</span> mtch <span class="fu">!$$?</span> [cp|mod|]</a>
+<a class="sourceLine" id="cb8-14" title="14">      _       <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb8-15" title="15"></a>
+<a class="sourceLine" id="cb8-16" title="16">    (hdr,bdy) <span class="fu">=</span> <span class="fu">span</span> (<span class="fu">not</span> <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches) lns</a>
+<a class="sourceLine" id="cb8-17" title="17">    lns       <span class="fu">=</span> grepFilter rex lbs</a>
+<a class="sourceLine" id="cb8-18" title="18">    rex       <span class="fu">=</span> [re|^import +(qualified|         ) ${mod}([^ ].*)$|]</a></code></pre></div>
 <h2 id="groupsort-and-groupsortby">groupSort and groupSortBy</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | Sort a list of elements with a stable sort, grouping together the</span>
-<span class="co">-- equal elements with the argument grouping function</span>
-<span class="ot">groupSort ::</span> (<span class="dt">Ord</span> a) <span class="ot">=&gt;</span> (a<span class="ot">-&gt;</span>[a]<span class="ot">-&gt;</span>b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]
-groupSort <span class="fu">=</span> groupSortBy compare
-
-<span class="co">-- | Sort a list of elements with a stable sort, grouping together the</span>
-<span class="co">-- equal elements with the argument grouping function.</span>
-<span class="ot">groupSortBy ::</span> (a<span class="ot">-&gt;</span>a<span class="ot">-&gt;</span><span class="dt">Ordering</span>)
-            <span class="ot">-&gt;</span> (a<span class="ot">-&gt;</span>[a]<span class="ot">-&gt;</span>b)
-            <span class="ot">-&gt;</span> [a]
-            <span class="ot">-&gt;</span> [b]
-groupSortBy comp grp <span class="fu">=</span> aggregate <span class="fu">.</span> L.sortBy comp
-  <span class="kw">where</span>
-    aggregate []    <span class="fu">=</span> []
-    aggregate (h<span class="fu">:</span>t) <span class="fu">=</span> seq g <span class="fu">$</span> g <span class="fu">:</span> aggregate rst
-      <span class="kw">where</span>
-        g         <span class="fu">=</span> grp h eqs
-        (eqs,rst) <span class="fu">=</span> span is_le t
-
-        is_le x   <span class="fu">=</span> <span class="kw">case</span> comp x h <span class="kw">of</span>
-          <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="dt">True</span>
-          <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">True</span>
-          <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="dt">False</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1"><span class="co">-- | Sort a list of elements with a stable sort, grouping together the</span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="co">-- equal elements with the argument grouping function</span></a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="ot">groupSort ::</span> (<span class="dt">Ord</span> a) <span class="ot">=&gt;</span> (a<span class="ot">-&gt;</span>[a]<span class="ot">-&gt;</span>b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]</a>
+<a class="sourceLine" id="cb9-4" title="4">groupSort <span class="fu">=</span> groupSortBy <span class="fu">compare</span></a>
+<a class="sourceLine" id="cb9-5" title="5"></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co">-- | Sort a list of elements with a stable sort, grouping together the</span></a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="co">-- equal elements with the argument grouping function.</span></a>
+<a class="sourceLine" id="cb9-8" title="8"><span class="ot">groupSortBy ::</span> (a<span class="ot">-&gt;</span>a<span class="ot">-&gt;</span><span class="dt">Ordering</span>)</a>
+<a class="sourceLine" id="cb9-9" title="9">            <span class="ot">-&gt;</span> (a<span class="ot">-&gt;</span>[a]<span class="ot">-&gt;</span>b)</a>
+<a class="sourceLine" id="cb9-10" title="10">            <span class="ot">-&gt;</span> [a]</a>
+<a class="sourceLine" id="cb9-11" title="11">            <span class="ot">-&gt;</span> [b]</a>
+<a class="sourceLine" id="cb9-12" title="12">groupSortBy comp grp <span class="fu">=</span> aggregate <span class="fu">.</span> L.sortBy comp</a>
+<a class="sourceLine" id="cb9-13" title="13">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb9-14" title="14">    aggregate []    <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb9-15" title="15">    aggregate (h<span class="fu">:</span>t) <span class="fu">=</span> <span class="fu">seq</span> g <span class="fu">$</span> g <span class="fu">:</span> aggregate rst</a>
+<a class="sourceLine" id="cb9-16" title="16">      <span class="kw">where</span></a>
+<a class="sourceLine" id="cb9-17" title="17">        g         <span class="fu">=</span> grp h eqs</a>
+<a class="sourceLine" id="cb9-18" title="18">        (eqs,rst) <span class="fu">=</span> <span class="fu">span</span> is_le t</a>
+<a class="sourceLine" id="cb9-19" title="19"></a>
+<a class="sourceLine" id="cb9-20" title="20">        is_le x   <span class="fu">=</span> <span class="kw">case</span> comp x h <span class="kw">of</span></a>
+<a class="sourceLine" id="cb9-21" title="21">          <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="dt">True</span></a>
+<a class="sourceLine" id="cb9-22" title="22">          <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">True</span></a>
+<a class="sourceLine" id="cb9-23" title="23">          <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="dt">False</span></a></code></pre></div>
 <h2 id="read_file-and-write_file">read_file and write_file</h2>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">read_file ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span>
-read_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.getContents
-read_file fp  <span class="fu">=</span> LBS.readFile fp
-
-<span class="ot">write_file ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span><span class="dt">IO</span> ()
-write_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.putStr
-write_file fp  <span class="fu">=</span> LBS.writeFile fp</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" title="1"><span class="ot">read_file ::</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span></a>
+<a class="sourceLine" id="cb10-2" title="2">read_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.getContents</a>
+<a class="sourceLine" id="cb10-3" title="3">read_file fp  <span class="fu">=</span> LBS.readFile fp</a>
+<a class="sourceLine" id="cb10-4" title="4"></a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="ot">write_file ::</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span><span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb10-6" title="6">write_file <span class="st">&quot;-&quot;</span> <span class="fu">=</span> LBS.putStr</a>
+<a class="sourceLine" id="cb10-7" title="7">write_file fp  <span class="fu">=</span> LBS.writeFile fp</a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -1,50 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>regex – Text.RE.Tools.Grep</title>
-  <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <link rel="stylesheet" href="lib/lhs-styles.css">
-  <link rel="stylesheet" href="lib/bs.css">
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lib/lhs-styles.css" />
+  <link rel="stylesheet" href="lib/bs.css" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -66,109 +97,109 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">Text.RE.Tools.Grep</h1>
 </header>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE NoImplicitPrelude          #-}</span>
-<span class="ot">{-# LANGUAGE RecordWildCards            #-}</span>
-<span class="ot">{-# LANGUAGE FlexibleContexts           #-}</span>
-<span class="ot">{-# LANGUAGE CPP                        #-}</span>
-
-<span class="kw">module</span> <span class="dt">Text.RE.Tools.Grep</span>
-  (
-  <span class="co">-- Grep</span>
-  <span class="co">-- $tutorial</span>
-    grep
-  , <span class="dt">Verbosity</span>(<span class="fu">..</span>)
-  , <span class="dt">Line</span>(<span class="fu">..</span>)
-  , grepLines
-  , grepFilter
-  , <span class="dt">GrepScript</span>
-  , grepWithScript
-  , report
-  , linesMatched
-  <span class="co">-- * IsRegex</span>
-  , <span class="dt">IsRegex</span>(<span class="fu">..</span>)
-  , <span class="dt">SearchReplace</span>(<span class="fu">..</span>)
-  , searchReplaceAll
-  , searchReplaceFirst
-  <span class="co">-- * LineNo</span>
-  , <span class="dt">LineNo</span>(<span class="fu">..</span>)
-  , firstLine
-  , getLineNo
-  , lineNo
-  <span class="co">-- * Replace</span>
-  , <span class="kw">module</span> <span class="dt">Text.RE.Replace</span>
-  ) <span class="kw">where</span>
-
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span>
-<span class="kw">import           </span><span class="dt">Prelude.Compat</span>
-<span class="kw">import           </span><span class="dt">Text.Printf</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Replace</span>
-<span class="kw">import           </span><span class="dt">Text.RE.Tools.IsRegex</span>
-<span class="kw">import           </span><span class="dt">Text.RE.ZeInternals.Types.LineNo</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | operates a bit like classic @grep@ printing out the lines matched</span>
-<span class="ot">grep ::</span> <span class="dt">IsRegex</span> re <span class="dt">LBS.ByteString</span> <span class="ot">=&gt;</span> <span class="dt">Verbosity</span> <span class="ot">-&gt;</span> re <span class="ot">-&gt;</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-grep v rex fp <span class="fu">=</span> grepLines rex fp <span class="fu">&gt;&gt;=</span> putStr <span class="fu">.</span> report v</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | specifies whether to return the linss matched or missed</span>
-<span class="kw">data</span> <span class="dt">Verbosity</span>
-  <span class="fu">=</span> <span class="dt">LinesMatched</span>
-  <span class="fu">|</span> <span class="dt">LinesNotMatched</span>
-  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>,<span class="dt">Ord</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | &#39;grepLines&#39; returns a &#39;Line&#39; for each line in the file, listing all</span>
-<span class="co">-- of the &#39;Matches&#39; for that line</span>
-<span class="kw">data</span> <span class="dt">Line</span> s <span class="fu">=</span>
-  <span class="dt">Line</span>
-    {<span class="ot"> getLineNumber  ::</span> <span class="dt">LineNo</span>    <span class="co">-- ^ the &#39;LineNo&#39; for this line</span>
-    ,<span class="ot"> getLineMatches ::</span> <span class="dt">Matches</span> s <span class="co">-- ^ all the &#39;Matches&#39; of the RE on this line</span>
-    }
-  <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | returns a &#39;Line&#39; for each line in the file, enumerating all of the</span>
-<span class="co">-- matches for that line</span>
-<span class="ot">grepLines ::</span> <span class="dt">IsRegex</span> re <span class="dt">LBS.ByteString</span>
-          <span class="ot">=&gt;</span> re
-          <span class="ot">-&gt;</span> FilePath
-          <span class="ot">-&gt;</span> <span class="dt">IO</span> [<span class="dt">Line</span> <span class="dt">LBS.ByteString</span>]
-grepLines rex fp <span class="fu">=</span> grepFilter rex <span class="fu">&lt;$&gt;</span> LBS.readFile fp</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | returns a &#39;Line&#39; for each line in the argument text, enumerating</span>
-<span class="co">-- all of the matches for that line</span>
-<span class="ot">grepFilter ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> re <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> [<span class="dt">Line</span> s]
-grepFilter rex <span class="fu">=</span> grepWithScript [(rex,mk)] <span class="fu">.</span> linesR
-  <span class="kw">where</span>
-    mk i mtchs <span class="fu">=</span> <span class="dt">Just</span> <span class="fu">$</span> <span class="dt">Line</span> i mtchs</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- | a GrepScript lists RE-action associations, with the first RE to match</span>
-<span class="co">-- a line selecting the action to be executed on each line in the file</span>
-<span class="kw">type</span> <span class="dt">GrepScript</span> re s t <span class="fu">=</span> [(re,<span class="dt">LineNo</span> <span class="ot">-&gt;</span> <span class="dt">Matches</span> s <span class="ot">-&gt;</span> <span class="dt">Maybe</span> t)]
-
-<span class="co">-- | given a list of lines, apply the &#39;GrepScript&#39; to each line of the file</span>
-<span class="ot">grepWithScript ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> <span class="dt">GrepScript</span> re s t <span class="ot">-&gt;</span> [s] <span class="ot">-&gt;</span> [t]
-grepWithScript scr <span class="fu">=</span> loop firstLine
-  <span class="kw">where</span>
-    loop _ []       <span class="fu">=</span> []
-    loop i (ln<span class="fu">:</span>lns) <span class="fu">=</span> seq i <span class="fu">$</span> choose i ln lns scr
-
-    choose i _  lns []             <span class="fu">=</span> loop (succ i) lns
-    choose i ln lns ((rex,f)<span class="fu">:</span>scr&#39;) <span class="fu">=</span> <span class="kw">case</span> f i <span class="fu">$</span> matchMany rex ln <span class="kw">of</span>
-      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> choose i ln lns scr&#39;
-      <span class="dt">Just</span> t  <span class="ot">-&gt;</span> t <span class="fu">:</span> loop (succ i) lns
-
-<span class="co">-- | generate a grep report from a list of &#39;Line&#39;</span>
-<span class="ot">report ::</span> <span class="dt">Verbosity</span> <span class="ot">-&gt;</span> [<span class="dt">Line</span> <span class="dt">LBS.ByteString</span>] <span class="ot">-&gt;</span> <span class="dt">String</span>
-report v <span class="fu">=</span> unlines <span class="fu">.</span> map fmt <span class="fu">.</span> linesMatched v
-  <span class="kw">where</span>
-    fmt <span class="dt">Line</span>{<span class="fu">..</span>} <span class="fu">=</span>
-      printf <span class="st">&quot;%05d %s&quot;</span> (getLineNo getLineNumber) <span class="fu">$</span>
-          LBS.unpack <span class="fu">$</span> matchesSource getLineMatches
-
-<span class="co">-- | given a &#39;velocity&#39; flag filter out either the lines matched or not</span>
-<span class="co">-- matched</span>
-<span class="ot">linesMatched ::</span> <span class="dt">Verbosity</span> <span class="ot">-&gt;</span> [<span class="dt">Line</span> s] <span class="ot">-&gt;</span> [<span class="dt">Line</span> s]
-linesMatched v <span class="fu">=</span> filter <span class="fu">$</span> f <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches
-  <span class="kw">where</span>
-    f <span class="fu">=</span> <span class="kw">case</span> v <span class="kw">of</span>
-      <span class="dt">LinesMatched</span>    <span class="ot">-&gt;</span> id
-      <span class="dt">LinesNotMatched</span> <span class="ot">-&gt;</span> not</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="co">-- $tutorial</span>
-<span class="co">-- The Grep toolkit matches REs againt each line of a text.</span>
-<span class="co">--</span>
-<span class="co">-- See the Regex Tools tutorial at http://re-tutorial-tools.regex.uk</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">{-# LANGUAGE NoImplicitPrelude          #-}</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="ot">{-# LANGUAGE FlexibleContexts           #-}</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="ot">{-# LANGUAGE CPP                        #-}</span></a>
+<a class="sourceLine" id="cb1-5" title="5"></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="kw">module</span> <span class="dt">Text.RE.Tools.Grep</span></a>
+<a class="sourceLine" id="cb1-7" title="7">  (</a>
+<a class="sourceLine" id="cb1-8" title="8">  <span class="co">-- Grep</span></a>
+<a class="sourceLine" id="cb1-9" title="9">  <span class="co">-- $tutorial</span></a>
+<a class="sourceLine" id="cb1-10" title="10">    grep</a>
+<a class="sourceLine" id="cb1-11" title="11">  , <span class="dt">Verbosity</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-12" title="12">  , <span class="dt">Line</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-13" title="13">  , grepLines</a>
+<a class="sourceLine" id="cb1-14" title="14">  , grepFilter</a>
+<a class="sourceLine" id="cb1-15" title="15">  , <span class="dt">GrepScript</span></a>
+<a class="sourceLine" id="cb1-16" title="16">  , grepWithScript</a>
+<a class="sourceLine" id="cb1-17" title="17">  , report</a>
+<a class="sourceLine" id="cb1-18" title="18">  , linesMatched</a>
+<a class="sourceLine" id="cb1-19" title="19">  <span class="co">-- * IsRegex</span></a>
+<a class="sourceLine" id="cb1-20" title="20">  , <span class="dt">IsRegex</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-21" title="21">  , <span class="dt">SearchReplace</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-22" title="22">  , searchReplaceAll</a>
+<a class="sourceLine" id="cb1-23" title="23">  , searchReplaceFirst</a>
+<a class="sourceLine" id="cb1-24" title="24">  <span class="co">-- * LineNo</span></a>
+<a class="sourceLine" id="cb1-25" title="25">  , <span class="dt">LineNo</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-26" title="26">  , firstLine</a>
+<a class="sourceLine" id="cb1-27" title="27">  , getLineNo</a>
+<a class="sourceLine" id="cb1-28" title="28">  , lineNo</a>
+<a class="sourceLine" id="cb1-29" title="29">  <span class="co">-- * Replace</span></a>
+<a class="sourceLine" id="cb1-30" title="30">  , <span class="kw">module</span> <span class="dt">Text.RE.Replace</span></a>
+<a class="sourceLine" id="cb1-31" title="31">  ) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb1-32" title="32"></a>
+<a class="sourceLine" id="cb1-33" title="33"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span></a>
+<a class="sourceLine" id="cb1-34" title="34"><span class="kw">import</span>           <span class="dt">Prelude.Compat</span></a>
+<a class="sourceLine" id="cb1-35" title="35"><span class="kw">import</span>           <span class="dt">Text.Printf</span></a>
+<a class="sourceLine" id="cb1-36" title="36"><span class="kw">import</span>           <span class="dt">Text.RE.Replace</span></a>
+<a class="sourceLine" id="cb1-37" title="37"><span class="kw">import</span>           <span class="dt">Text.RE.Tools.IsRegex</span></a>
+<a class="sourceLine" id="cb1-38" title="38"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.LineNo</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="co">-- | operates a bit like classic @grep@ printing out the lines matched</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="ot">grep ::</span> <span class="dt">IsRegex</span> re <span class="dt">LBS.ByteString</span> <span class="ot">=&gt;</span> <span class="dt">Verbosity</span> <span class="ot">-&gt;</span> re <span class="ot">-&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb2-3" title="3">grep v rex fp <span class="fu">=</span> grepLines rex fp <span class="fu">&gt;&gt;=</span> <span class="fu">putStr</span> <span class="fu">.</span> report v</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="co">-- | specifies whether to return the linss matched or missed</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">data</span> <span class="dt">Verbosity</span></a>
+<a class="sourceLine" id="cb3-3" title="3">  <span class="fu">=</span> <span class="dt">LinesMatched</span></a>
+<a class="sourceLine" id="cb3-4" title="4">  <span class="fu">|</span> <span class="dt">LinesNotMatched</span></a>
+<a class="sourceLine" id="cb3-5" title="5">  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>,<span class="dt">Ord</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="co">-- | &#39;grepLines&#39; returns a &#39;Line&#39; for each line in the file, listing all</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">-- of the &#39;Matches&#39; for that line</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="kw">data</span> <span class="dt">Line</span> s <span class="fu">=</span></a>
+<a class="sourceLine" id="cb4-4" title="4">  <span class="dt">Line</span></a>
+<a class="sourceLine" id="cb4-5" title="5">    {<span class="ot"> getLineNumber  ::</span> <span class="dt">LineNo</span>    <span class="co">-- ^ the &#39;LineNo&#39; for this line</span></a>
+<a class="sourceLine" id="cb4-6" title="6">    ,<span class="ot"> getLineMatches ::</span> <span class="dt">Matches</span> s <span class="co">-- ^ all the &#39;Matches&#39; of the RE on this line</span></a>
+<a class="sourceLine" id="cb4-7" title="7">    }</a>
+<a class="sourceLine" id="cb4-8" title="8">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="co">-- | returns a &#39;Line&#39; for each line in the file, enumerating all of the</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co">-- matches for that line</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="ot">grepLines ::</span> <span class="dt">IsRegex</span> re <span class="dt">LBS.ByteString</span></a>
+<a class="sourceLine" id="cb5-4" title="4">          <span class="ot">=&gt;</span> re</a>
+<a class="sourceLine" id="cb5-5" title="5">          <span class="ot">-&gt;</span> <span class="dt">FilePath</span></a>
+<a class="sourceLine" id="cb5-6" title="6">          <span class="ot">-&gt;</span> <span class="dt">IO</span> [<span class="dt">Line</span> <span class="dt">LBS.ByteString</span>]</a>
+<a class="sourceLine" id="cb5-7" title="7">grepLines rex fp <span class="fu">=</span> grepFilter rex <span class="fu">&lt;$&gt;</span> LBS.readFile fp</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="co">-- | returns a &#39;Line&#39; for each line in the argument text, enumerating</span></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="co">-- all of the matches for that line</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="ot">grepFilter ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> re <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> [<span class="dt">Line</span> s]</a>
+<a class="sourceLine" id="cb6-4" title="4">grepFilter rex <span class="fu">=</span> grepWithScript [(rex,mk)] <span class="fu">.</span> linesR</a>
+<a class="sourceLine" id="cb6-5" title="5">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb6-6" title="6">    mk i mtchs <span class="fu">=</span> <span class="dt">Just</span> <span class="fu">$</span> <span class="dt">Line</span> i mtchs</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="co">-- | a GrepScript lists RE-action associations, with the first RE to match</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="co">-- a line selecting the action to be executed on each line in the file</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">type</span> <span class="dt">GrepScript</span> re s t <span class="fu">=</span> [(re,<span class="dt">LineNo</span> <span class="ot">-&gt;</span> <span class="dt">Matches</span> s <span class="ot">-&gt;</span> <span class="dt">Maybe</span> t)]</a>
+<a class="sourceLine" id="cb7-4" title="4"></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">-- | given a list of lines, apply the &#39;GrepScript&#39; to each line of the file</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="ot">grepWithScript ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> <span class="dt">GrepScript</span> re s t <span class="ot">-&gt;</span> [s] <span class="ot">-&gt;</span> [t]</a>
+<a class="sourceLine" id="cb7-7" title="7">grepWithScript scr <span class="fu">=</span> loop firstLine</a>
+<a class="sourceLine" id="cb7-8" title="8">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb7-9" title="9">    loop _ []       <span class="fu">=</span> []</a>
+<a class="sourceLine" id="cb7-10" title="10">    loop i (ln<span class="fu">:</span>lns) <span class="fu">=</span> <span class="fu">seq</span> i <span class="fu">$</span> choose i ln lns scr</a>
+<a class="sourceLine" id="cb7-11" title="11"></a>
+<a class="sourceLine" id="cb7-12" title="12">    choose i _  lns []             <span class="fu">=</span> loop (<span class="fu">succ</span> i) lns</a>
+<a class="sourceLine" id="cb7-13" title="13">    choose i ln lns ((rex,f)<span class="fu">:</span>scr&#39;) <span class="fu">=</span> <span class="kw">case</span> f i <span class="fu">$</span> matchMany rex ln <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-14" title="14">      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> choose i ln lns scr&#39;</a>
+<a class="sourceLine" id="cb7-15" title="15">      <span class="dt">Just</span> t  <span class="ot">-&gt;</span> t <span class="fu">:</span> loop (<span class="fu">succ</span> i) lns</a>
+<a class="sourceLine" id="cb7-16" title="16"></a>
+<a class="sourceLine" id="cb7-17" title="17"><span class="co">-- | generate a grep report from a list of &#39;Line&#39;</span></a>
+<a class="sourceLine" id="cb7-18" title="18"><span class="ot">report ::</span> <span class="dt">Verbosity</span> <span class="ot">-&gt;</span> [<span class="dt">Line</span> <span class="dt">LBS.ByteString</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></a>
+<a class="sourceLine" id="cb7-19" title="19">report v <span class="fu">=</span> <span class="fu">unlines</span> <span class="fu">.</span> <span class="fu">map</span> fmt <span class="fu">.</span> linesMatched v</a>
+<a class="sourceLine" id="cb7-20" title="20">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb7-21" title="21">    fmt <span class="dt">Line</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
+<a class="sourceLine" id="cb7-22" title="22">      printf <span class="st">&quot;%05d %s&quot;</span> (getLineNo getLineNumber) <span class="fu">$</span></a>
+<a class="sourceLine" id="cb7-23" title="23">          LBS.unpack <span class="fu">$</span> matchesSource getLineMatches</a>
+<a class="sourceLine" id="cb7-24" title="24"></a>
+<a class="sourceLine" id="cb7-25" title="25"><span class="co">-- | given a &#39;velocity&#39; flag filter out either the lines matched or not</span></a>
+<a class="sourceLine" id="cb7-26" title="26"><span class="co">-- matched</span></a>
+<a class="sourceLine" id="cb7-27" title="27"><span class="ot">linesMatched ::</span> <span class="dt">Verbosity</span> <span class="ot">-&gt;</span> [<span class="dt">Line</span> s] <span class="ot">-&gt;</span> [<span class="dt">Line</span> s]</a>
+<a class="sourceLine" id="cb7-28" title="28">linesMatched v <span class="fu">=</span> <span class="fu">filter</span> <span class="fu">$</span> f <span class="fu">.</span> anyMatches <span class="fu">.</span> getLineMatches</a>
+<a class="sourceLine" id="cb7-29" title="29">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb7-30" title="30">    f <span class="fu">=</span> <span class="kw">case</span> v <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-31" title="31">      <span class="dt">LinesMatched</span>    <span class="ot">-&gt;</span> <span class="fu">id</span></a>
+<a class="sourceLine" id="cb7-32" title="32">      <span class="dt">LinesNotMatched</span> <span class="ot">-&gt;</span> <span class="fu">not</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1"><span class="co">-- $tutorial</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">-- The Grep toolkit matches REs againt each line of a text.</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">--</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">-- See the Regex Tools tutorial at http://re-tutorial-tools.regex.uk</span></a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -1,50 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>regex – re-tutorial-testbench.lhs</title>
-  <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <link rel="stylesheet" href="lib/lhs-styles.css">
-  <link rel="stylesheet" href="lib/bs.css">
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lib/lhs-styles.css" />
+  <link rel="stylesheet" href="lib/bs.css" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -69,82 +100,82 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1 id="the-regex-test-bench-tutorial">The regex Test-Bench Tutorial</h1>
 <h2 id="language-options-and-imports">Language Options and Imports</h2>
 <p>This tutorial is a literate Haskell program whwre we start by specifying the language pragmas and imports we will need for this module.</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE QuasiQuotes                      #-}</span>
-<span class="ot">{-# LANGUAGE FlexibleContexts                 #-}</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">Data.Functor.Identity</span>
-<span class="kw">import qualified</span> <span class="dt">Data.HashMap.Lazy</span>                        <span class="kw">as</span> <span class="dt">HML</span>
-<span class="kw">import           </span><span class="dt">Text.RE.REOptions</span>
-<span class="kw">import qualified</span> <span class="dt">Text.RE.TDFA</span>                             <span class="kw">as</span> <span class="dt">TDFA</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TDFA.String</span>
-<span class="kw">import           </span><span class="dt">Text.RE.TestBench</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">{-# LANGUAGE QuasiQuotes                      #-}</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="ot">{-# LANGUAGE FlexibleContexts                 #-}</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">import</span>           <span class="dt">Data.Functor.Identity</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.HashMap.Lazy</span>                        <span class="kw">as</span> <span class="dt">HML</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="kw">import</span>           <span class="dt">Text.RE.REOptions</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Text.RE.TDFA</span>                             <span class="kw">as</span> <span class="dt">TDFA</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="kw">import</span>           <span class="dt">Text.RE.TDFA.String</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="kw">import</span>           <span class="dt">Text.RE.TestBench</span></a></code></pre></div>
 <h2 id="macros-and-parsers">Macros and Parsers</h2>
 <p>regex supports macros in regular expressions. There are a bunch of standard macros and you can define your own.</p>
-RE macros are enclosed in <code>@{</code> ... '}'. By convention the macros in the standard environment start with a '%'. <code>@{%date}</code> will match an ISO 8601 date, this
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> [re|@{%date}|]
-<span class="dv">2</span></code></pre></div>
+RE macros are enclosed in <code>@{</code> … ‘}’. By convention the macros in the standard environment start with a ‘%’. <code>@{%date}</code> will match an ISO 8601 date, this
+<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> [re|@{%date}|]</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="dv">2</span></a></code></pre></div>
 <p>picking out the two dates.</p>
 <p>See the tables listing the standard macros in the tables folder of the distribution.</p>
 <p>See the log-processor example and the <code>Text.RE.TestBench</code> for more on how you can develop, document and test RE macros with the regex test bench.</p>
 <h2 id="adding-the-epsilon-macro">Adding the Epsilon Macro</h2>
-<p>You can use the regex test bench to add you own macros. As a simple example we will add an 'epsilon' macro to the standard 'prelude' macro environment. (See the <a href="re-nginx-log-processor"><code>re-nginx-log-processor</code></a> for a more extensive example of macro environments.)</p>
+<p>You can use the regex test bench to add you own macros. As a simple example we will add an ‘epsilon’ macro to the standard ‘prelude’ macro environment. (See the <a href="re-nginx-log-processor"><code>re-nginx-log-processor</code></a> for a more extensive example of macro environments.)</p>
 <p>The <code>@{epsilon}</code> macro will expand to a RE that matches only the empty string:</p>
 <pre><code>.{0}</code></pre>
 <p>(A use such a seemingly useless RE macro will become apparent in the test example below.)</p>
 <p>Firstly we define a two argument function function to create a <code>MacroDescriptor</code> from:</p>
 <ol type="1">
-<li><p>the <code>MacroEnv</code> macro environment argument will be used to compile the macro RE (we don't need it in this instance, of course, but we are following a general recipe);</p></li>
+<li><p>the <code>MacroEnv</code> macro environment argument will be used to compile the macro RE (we don’t need it in this instance, of course, but we are following a general recipe);</p></li>
 <li><p>the <code>macroId</code> name of the macro (which is passed into us because the calling context need the name of the macro).</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">epsilon_macro ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span>
-epsilon_macro env mid <span class="fu">=</span>
-  runTests TDFA.regexType <span class="dt">Just</span> samples env mid
-    <span class="dt">MacroDescriptor</span>
-      { macroSource          <span class="fu">=</span> <span class="dt">RegexSource</span> <span class="st">&quot;.{0}&quot;</span> <span class="co">-- the RE to be substituted for the macro</span>
-      , macroSamples         <span class="fu">=</span> map fst samples    <span class="co">-- list of string that should match the above macro RE</span>
-      , macroCounterSamples <span class="fu">=</span> counter_samples     <span class="co">-- list of string that should **not** match the above macro RE</span>
-      , macroTestResults    <span class="fu">=</span> []                  <span class="co">-- for bookkeeping</span>
-      , macroParser          <span class="fu">=</span> <span class="dt">Nothing</span>            <span class="co">-- no parser needed for this one!</span>
-      , macroDescription     <span class="fu">=</span> <span class="st">&quot;an epsilon parser, matching the empty string only&quot;</span>
-      }
-  <span class="kw">where</span>
-<span class="ot">    samples ::</span> [(<span class="dt">String</span>,<span class="dt">String</span>)]
-    samples <span class="fu">=</span>
-        [ dup <span class="st">&quot;&quot;</span>
-        ]
-      <span class="kw">where</span>
-        dup x <span class="fu">=</span> (x,x)
-
-    counter_samples <span class="fu">=</span>
-        [ <span class="st">&quot;not an empty string&quot;</span>
-        ]</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="ot">epsilon_macro ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span></a>
+<a class="sourceLine" id="cb5-2" title="2">epsilon_macro env mid <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-3" title="3">  runTests TDFA.regexType <span class="dt">Just</span> samples env mid</a>
+<a class="sourceLine" id="cb5-4" title="4">    <span class="dt">MacroDescriptor</span></a>
+<a class="sourceLine" id="cb5-5" title="5">      { macroSource          <span class="fu">=</span> <span class="dt">RegexSource</span> <span class="st">&quot;.{0}&quot;</span> <span class="co">-- the RE to be substituted for the macro</span></a>
+<a class="sourceLine" id="cb5-6" title="6">      , macroSamples         <span class="fu">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples    <span class="co">-- list of string that should match the above macro RE</span></a>
+<a class="sourceLine" id="cb5-7" title="7">      , macroCounterSamples <span class="fu">=</span> counter_samples     <span class="co">-- list of string that should **not** match the above macro RE</span></a>
+<a class="sourceLine" id="cb5-8" title="8">      , macroTestResults    <span class="fu">=</span> []                  <span class="co">-- for bookkeeping</span></a>
+<a class="sourceLine" id="cb5-9" title="9">      , macroParser          <span class="fu">=</span> <span class="dt">Nothing</span>            <span class="co">-- no parser needed for this one!</span></a>
+<a class="sourceLine" id="cb5-10" title="10">      , macroDescription     <span class="fu">=</span> <span class="st">&quot;an epsilon parser, matching the empty string only&quot;</span></a>
+<a class="sourceLine" id="cb5-11" title="11">      }</a>
+<a class="sourceLine" id="cb5-12" title="12">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb5-13" title="13"><span class="ot">    samples ::</span> [(<span class="dt">String</span>,<span class="dt">String</span>)]</a>
+<a class="sourceLine" id="cb5-14" title="14">    samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-15" title="15">        [ dup <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb5-16" title="16">        ]</a>
+<a class="sourceLine" id="cb5-17" title="17">      <span class="kw">where</span></a>
+<a class="sourceLine" id="cb5-18" title="18">        dup x <span class="fu">=</span> (x,x)</a>
+<a class="sourceLine" id="cb5-19" title="19"></a>
+<a class="sourceLine" id="cb5-20" title="20">    counter_samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-21" title="21">        [ <span class="st">&quot;not an empty string&quot;</span></a>
+<a class="sourceLine" id="cb5-22" title="22">        ]</a></code></pre></div>
 <p>The compiled <code>Macros RE</code> that we will slot into the <code>REOptions</code> used to compile the RE is constructed in two steps. Firstly we provide a function that takes the <span class="citation" data-cites="MacroEnv">@MacroEnv</span>@ that all of the macros will use to build their REs and returns the augmented <code>MacroEnv</code> with the new macro definitions.</p>
 This <code>MacroEnv</code> is generic and not dependent upon any back end — none of the macros have been compiled.
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">my_env ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span>
-my_env env0 <span class="fu">=</span> env
-  <span class="kw">where</span>
-    env <span class="fu">=</span> env0 <span class="ot">`HML.union`</span> HML.fromList
-      [ f <span class="st">&quot;epsilon&quot;</span> epsilon_macro
-      ]
-
-    f nm mk <span class="fu">=</span> (mid, mk env mid)
-      <span class="kw">where</span>
-        mid <span class="fu">=</span> <span class="dt">MacroID</span> nm</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="ot">my_env ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span></a>
+<a class="sourceLine" id="cb6-2" title="2">my_env env0 <span class="fu">=</span> env</a>
+<a class="sourceLine" id="cb6-3" title="3">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb6-4" title="4">    env <span class="fu">=</span> env0 <span class="ot">`HML.union`</span> HML.fromList</a>
+<a class="sourceLine" id="cb6-5" title="5">      [ f <span class="st">&quot;epsilon&quot;</span> epsilon_macro</a>
+<a class="sourceLine" id="cb6-6" title="6">      ]</a>
+<a class="sourceLine" id="cb6-7" title="7"></a>
+<a class="sourceLine" id="cb6-8" title="8">    f nm mk <span class="fu">=</span> (mid, mk env mid)</a>
+<a class="sourceLine" id="cb6-9" title="9">      <span class="kw">where</span></a>
+<a class="sourceLine" id="cb6-10" title="10">        mid <span class="fu">=</span> <span class="dt">MacroID</span> nm</a></code></pre></div>
 From the <code>MacroEnv</code> we compile the macros into a <code>Macros RE</code> macro table that we can insert into an <code>REOptions</code> that can be used to compile REs in the application.
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">my_macros ::</span> <span class="dt">Macros</span> <span class="dt">RE</span>
-my_macros <span class="fu">=</span> runIdentity <span class="fu">$</span> mkMacros mk TDFA.regexType <span class="dt">ExclCaptures</span> <span class="fu">$</span> my_env TDFA.preludeEnv
-  <span class="kw">where</span>
-    mk   <span class="fu">=</span> maybe oops <span class="dt">Identity</span> <span class="fu">.</span> TDFA.compileRegexWithOptions TDFA.noPreludeREOptions
-
-    oops <span class="fu">=</span> error <span class="st">&quot;my_macros: unexpected RE compilation error&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="ot">my_macros ::</span> <span class="dt">Macros</span> <span class="dt">RE</span></a>
+<a class="sourceLine" id="cb7-2" title="2">my_macros <span class="fu">=</span> runIdentity <span class="fu">$</span> mkMacros mk TDFA.regexType <span class="dt">ExclCaptures</span> <span class="fu">$</span> my_env TDFA.preludeEnv</a>
+<a class="sourceLine" id="cb7-3" title="3">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb7-4" title="4">    mk   <span class="fu">=</span> <span class="fu">maybe</span> oops <span class="dt">Identity</span> <span class="fu">.</span> TDFA.compileRegexWithOptions TDFA.noPreludeREOptions</a>
+<a class="sourceLine" id="cb7-5" title="5"></a>
+<a class="sourceLine" id="cb7-6" title="6">    oops <span class="fu">=</span> <span class="fu">error</span> <span class="st">&quot;my_macros: unexpected RE compilation error&quot;</span></a></code></pre></div>
 <p>The <code>makeREOptions</code> function can be used to construct an <code>REOptions</code> for compiling REs with <code>[re_| ... |]</code> and <code>[ed_| ... /// ... |]</code> quasi quoters.</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><span class="ot">myOptions ::</span> <span class="dt">TDFA.REOptions</span>
-myOptions <span class="fu">=</span> TDFA.makeREOptions my_macros</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1"><span class="ot">myOptions ::</span> <span class="dt">TDFA.REOptions</span></a>
+<a class="sourceLine" id="cb8-2" title="2">myOptions <span class="fu">=</span> TDFA.makeREOptions my_macros</a></code></pre></div>
 <p>Now we can try out the <code>@{epsilon}</code> macro, using it to match nothing!</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;///&quot;</span> <span class="fu">?=~</span> [re_|^//@{epsilon}/$|] myOptions
-<span class="dt">True</span></code></pre></div>
-<p>Why would we we want to match nothing? To break up three '/' in the RE part of a <code>[ed_| ... /// ... |]</code> <code>SearchReplace</code> template.</p>
-<div class="sourceCode"><pre class="sourceCode literate haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> <span class="st">&quot;a &lt;///&gt; replacement example&quot;</span> <span class="fu">*=~/</span> [ed_|&lt;//@{epsilon}/&gt;///&lt;three slashes&gt;|] myOptions
-<span class="st">&quot;a &lt;three slashes&gt; replacement example&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;///&quot;</span> <span class="fu">?=~</span> [re_|^//@{epsilon}/$|] myOptions</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="dt">True</span></a></code></pre></div>
+<p>Why would we we want to match nothing? To break up three ‘/’ in the RE part of a <code>[ed_| ... /// ... |]</code> <code>SearchReplace</code> template.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" title="1">ghci<span class="fu">&gt;</span> <span class="st">&quot;a &lt;///&gt; replacement example&quot;</span> <span class="fu">*=~/</span> [ed_|&lt;//@{epsilon}/&gt;///&lt;three slashes&gt;|] myOptions</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="st">&quot;a &lt;three slashes&gt; replacement example&quot;</span></a></code></pre></div>
 <p>For a more extensive example of macro environments see the <a href="re-nginx-log-processor"><code>re-nginx-log-processor</code></a></p>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
