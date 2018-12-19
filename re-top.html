@@ -113,7 +113,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-11" title="11"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.HashMap.Lazy</span>     <span class="kw">as</span> <span class="dt">HML</span></a>
 <a class="sourceLine" id="cb1-12" title="12"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.List</span>             <span class="kw">as</span> <span class="dt">L</span></a>
 <a class="sourceLine" id="cb1-13" title="13"><span class="kw">import</span>           <span class="dt">Data.Maybe</span></a>
-<a class="sourceLine" id="cb1-14" title="14"><span class="kw">import</span>           <span class="dt">Data.Monoid</span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Monoid</span>           <span class="kw">as</span> <span class="dt">M</span></a>
 <a class="sourceLine" id="cb1-15" title="15"><span class="kw">import</span>           <span class="dt">Data.Ord</span></a>
 <a class="sourceLine" id="cb1-16" title="16"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span>             <span class="kw">as</span> <span class="dt">T</span></a>
 <a class="sourceLine" id="cb1-17" title="17"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.IO</span>          <span class="kw">as</span> <span class="dt">T</span></a>
@@ -396,7 +396,7 @@ primParseGames
 <p>Generate the markdown for a table and optionally use Pandoc to generate the Html.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" title="1"><span class="ot">formatTable ::</span> <span class="dt">Job</span> <span class="ot">-&gt;</span> <span class="dt">Table</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">T.Text</span></a>
 <a class="sourceLine" id="cb35-2" title="2">formatTable <span class="dt">Job</span>{<span class="fu">..</span>} (<span class="dt">Table</span> ps) <span class="fu">=</span> to_html <span class="fu">$</span> T.unlines <span class="fu">$</span></a>
-<a class="sourceLine" id="cb35-3" title="3">    [ <span class="st">&quot;# &quot;</span> <span class="fu">&lt;&gt;</span> jobTitle</a>
+<a class="sourceLine" id="cb35-3" title="3">    [ <span class="st">&quot;# &quot;</span> <span class="fu">M.&lt;&gt;</span> jobTitle</a>
 <a class="sourceLine" id="cb35-4" title="4">    , <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb35-5" title="5">    , mk_row header_row</a>
 <a class="sourceLine" id="cb35-6" title="6">    , mk_row divider_row</a>
@@ -513,9 +513,9 @@ primParseGames
 <a class="sourceLine" id="cb36-55" title="55">    mk dy js<span class="fu">@</span><span class="dt">JobSpec</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
 <a class="sourceLine" id="cb36-56" title="56">        [ <span class="dt">Job</span></a>
 <a class="sourceLine" id="cb36-57" title="57">            { jobTitle  <span class="fu">=</span> T.unwords <span class="fu">$</span></a>
-<a class="sourceLine" id="cb36-58" title="58">                [ <span class="st">&quot;Premier League &quot;</span> <span class="fu">&lt;&gt;</span> T.pack jsSeason</a>
-<a class="sourceLine" id="cb36-59" title="59">                , <span class="fu">maybe</span> <span class="st">&quot;&quot;</span> (\n<span class="ot">-&gt;</span><span class="st">&quot;Top &quot;</span><span class="fu">&lt;&gt;</span>showText n<span class="fu">&lt;&gt;</span><span class="st">&quot; &quot;</span>) jsSize</a>
-<a class="sourceLine" id="cb36-60" title="60">                , <span class="st">&quot;[&quot;</span><span class="fu">&lt;&gt;</span>showText dy<span class="fu">&lt;&gt;</span><span class="st">&quot;]&quot;</span></a>
+<a class="sourceLine" id="cb36-58" title="58">                [ <span class="st">&quot;Premier League &quot;</span> <span class="fu">M.&lt;&gt;</span> T.pack jsSeason</a>
+<a class="sourceLine" id="cb36-59" title="59">                , <span class="fu">maybe</span> <span class="st">&quot;&quot;</span> (\n<span class="ot">-&gt;</span><span class="st">&quot;Top &quot;</span> <span class="fu">M.&lt;&gt;</span> showText n <span class="fu">M.&lt;&gt;</span> <span class="st">&quot; &quot;</span>) jsSize</a>
+<a class="sourceLine" id="cb36-60" title="60">                , <span class="st">&quot;[&quot;</span> <span class="fu">M.&lt;&gt;</span> showText dy <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;]&quot;</span></a>
 <a class="sourceLine" id="cb36-61" title="61">                ]</a>
 <a class="sourceLine" id="cb36-62" title="62">            , jobSize   <span class="fu">=</span> jsSize</a>
 <a class="sourceLine" id="cb36-63" title="63">            , jobInputs <span class="fu">=</span></a>
@@ -533,7 +533,7 @@ primParseGames
 <a class="sourceLine" id="cb36-75" title="75">updateIndex <span class="fu">=</span> pandoc title toc <span class="fu">&gt;&gt;=</span> T.writeFile index_file</a>
 <a class="sourceLine" id="cb36-76" title="76">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb36-77" title="77">    toc <span class="fu">=</span> T.unlines <span class="fu">$</span></a>
-<a class="sourceLine" id="cb36-78" title="78">      [ <span class="st">&quot;# &quot;</span> <span class="fu">&lt;&gt;</span> title</a>
+<a class="sourceLine" id="cb36-78" title="78">      [ <span class="st">&quot;# &quot;</span> <span class="fu">M.&lt;&gt;</span> title</a>
 <a class="sourceLine" id="cb36-79" title="79">      , <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb36-80" title="80">      , mk_row [<span class="st">&quot;Season&quot;</span>, <span class="st">&quot;Top-N&quot;</span>, <span class="st">&quot;Html&quot;</span>, <span class="st">&quot;Text&quot;</span>]</a>
 <a class="sourceLine" id="cb36-81" title="81">      , mk_row [<span class="st">&quot;------&quot;</span>, <span class="st">&quot;-----&quot;</span>, <span class="st">&quot;----&quot;</span>, <span class="st">&quot;----&quot;</span>]</a>
@@ -552,7 +552,7 @@ primParseGames
 <a class="sourceLine" id="cb36-94" title="94"></a>
 <a class="sourceLine" id="cb36-95" title="95">    mk_row     <span class="fu">=</span> T.intercalate <span class="st">&quot;|&quot;</span></a>
 <a class="sourceLine" id="cb36-96" title="96"></a>
-<a class="sourceLine" id="cb36-97" title="97">    lk lab url <span class="fu">=</span> <span class="st">&quot;[&quot;</span><span class="fu">&lt;&gt;</span>lab<span class="fu">&lt;&gt;</span><span class="st">&quot;](&quot;</span><span class="fu">&lt;&gt;</span>url<span class="fu">&lt;&gt;</span><span class="st">&quot;)&quot;</span></a>
+<a class="sourceLine" id="cb36-97" title="97">    lk lab url <span class="fu">=</span> <span class="st">&quot;[&quot;</span> <span class="fu">M.&lt;&gt;</span> lab <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;](&quot;</span> <span class="fu">M.&lt;&gt;</span> url <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;)&quot;</span></a>
 <a class="sourceLine" id="cb36-98" title="98"></a>
 <a class="sourceLine" id="cb36-99" title="99"><span class="ot">tableFile ::</span> <span class="dt">JobSpec</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span></a>
 <a class="sourceLine" id="cb36-100" title="100">tableFile <span class="dt">JobSpec</span>{<span class="fu">..</span>} is_html <span class="fu">=</span> jsSeason <span class="fu">++</span> <span class="st">&quot;-&quot;</span> <span class="fu">++</span> sze <span class="fu">&lt;.&gt;</span> ext</a>
@@ -594,7 +594,7 @@ primParseGames
 <a class="sourceLine" id="cb36-136" title="136">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb36-137" title="137">    fp_t            <span class="fu">=</span> T.pack fp</a>
 <a class="sourceLine" id="cb36-138" title="138"></a>
-<a class="sourceLine" id="cb36-139" title="139">    mk_ttl ssn      <span class="fu">=</span> <span class="st">&quot;Premier League &quot;</span> <span class="fu">&lt;&gt;</span> ssn</a>
+<a class="sourceLine" id="cb36-139" title="139">    mk_ttl ssn      <span class="fu">=</span> <span class="st">&quot;Premier League &quot;</span> <span class="fu">M.&lt;&gt;</span> ssn</a>
 <a class="sourceLine" id="cb36-140" title="140"></a>
 <a class="sourceLine" id="cb36-141" title="141">    dscvr []        <span class="fu">=</span> <span class="fu">error</span> <span class="fu">$</span> fp <span class="fu">++</span> <span class="st">&quot;: no data found&quot;</span></a>
 <a class="sourceLine" id="cb36-142" title="142">    dscvr (fps<span class="fu">:</span>cds) <span class="fu">=</span> <span class="kw">do</span></a>
@@ -625,7 +625,7 @@ primParseGames
 <a class="sourceLine" id="cb37-3" title="3">    T.writeFile inp_file   txt</a>
 <a class="sourceLine" id="cb37-4" title="4">    T.writeFile mda_file <span class="fu">$</span> T.unlines</a>
 <a class="sourceLine" id="cb37-5" title="5">          [ <span class="st">&quot;---&quot;</span></a>
-<a class="sourceLine" id="cb37-6" title="6">          , <span class="st">&quot;title: &quot;</span><span class="fu">&lt;&gt;</span>title</a>
+<a class="sourceLine" id="cb37-6" title="6">          , <span class="st">&quot;title: &quot;</span> <span class="fu">M.&lt;&gt;</span> title</a>
 <a class="sourceLine" id="cb37-7" title="7">          , <span class="st">&quot;---&quot;</span></a>
 <a class="sourceLine" id="cb37-8" title="8">          ]</a>
 <a class="sourceLine" id="cb37-9" title="9">    <span class="fu">fmap</span> (<span class="fu">const</span> ()) <span class="fu">$</span></a>

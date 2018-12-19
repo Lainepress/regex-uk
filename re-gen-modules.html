@@ -109,7 +109,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-7" title="7"><span class="kw">module</span> <span class="dt">Main</span> (main) <span class="kw">where</span></a>
 <a class="sourceLine" id="cb1-8" title="8"></a>
 <a class="sourceLine" id="cb1-9" title="9"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy.Char8</span>               <span class="kw">as</span> <span class="dt">LBS</span></a>
-<a class="sourceLine" id="cb1-10" title="10"><span class="kw">import</span>           <span class="dt">Data.Monoid</span></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Monoid</span>                              <span class="kw">as</span> <span class="dt">M</span></a>
 <a class="sourceLine" id="cb1-11" title="11"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span></a>
 <a class="sourceLine" id="cb1-12" title="12"><span class="kw">import</span>           <span class="dt">Prelude.Compat</span></a>
 <a class="sourceLine" id="cb1-13" title="13"><span class="kw">import</span>           <span class="dt">System.Directory</span></a>
@@ -241,7 +241,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-139" title="139">source_api_mp <span class="fu">=</span> <span class="st">&quot;Text.RE.TDFA.ByteString.Lazy&quot;</span></a>
 <a class="sourceLine" id="cb1-140" title="140"></a>
 <a class="sourceLine" id="cb1-141" title="141"><span class="ot">orphan_import ::</span> <span class="dt">ModPath</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></a>
-<a class="sourceLine" id="cb1-142" title="142">orphan_import mp <span class="fu">=</span> <span class="st">&quot;import           Text.Regex.&quot;</span> <span class="fu">&lt;&gt;</span> LBS.pack mp <span class="fu">&lt;&gt;</span> <span class="st">&quot;()&quot;</span></a>
+<a class="sourceLine" id="cb1-142" title="142">orphan_import mp <span class="fu">=</span> <span class="st">&quot;import           Text.Regex.&quot;</span> <span class="fu">M.&lt;&gt;</span> LBS.pack mp <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;()&quot;</span></a>
 <a class="sourceLine" id="cb1-143" title="143"></a>
 <a class="sourceLine" id="cb1-144" title="144">tdfa_re, module_re, <span class="kw">import</span>_re, bs_re, orp_re :: <span class="dt">RE</span></a>
 <a class="sourceLine" id="cb1-145" title="145">tdfa_re   <span class="fu">=</span> [re|TDFA|]</a>

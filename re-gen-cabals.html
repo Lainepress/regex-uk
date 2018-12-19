@@ -115,7 +115,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-13" title="13"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.List</span>                                <span class="kw">as</span> <span class="dt">L</span></a>
 <a class="sourceLine" id="cb1-14" title="14"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Map</span>                                 <span class="kw">as</span> <span class="dt">Map</span></a>
 <a class="sourceLine" id="cb1-15" title="15"><span class="kw">import</span>           <span class="dt">Data.Maybe</span></a>
-<a class="sourceLine" id="cb1-16" title="16"><span class="kw">import</span>           <span class="dt">Data.Monoid</span></a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Monoid</span>                              <span class="kw">as</span> <span class="dt">M</span></a>
 <a class="sourceLine" id="cb1-17" title="17"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span></a>
 <a class="sourceLine" id="cb1-18" title="18"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.Encoding</span>                       <span class="kw">as</span> <span class="dt">TE</span></a>
 <a class="sourceLine" id="cb1-19" title="19"><span class="kw">import</span>           <span class="dt">Prelude.Compat</span></a>
@@ -249,9 +249,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-147" title="147">    mb <span class="ot">&lt;-</span> readIORef _ctx_test_exe</a>
 <a class="sourceLine" id="cb1-148" title="148">    <span class="kw">case</span> mb <span class="kw">of</span></a>
 <a class="sourceLine" id="cb1-149" title="149">      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="fu">$</span> <span class="dt">ReplaceWith</span> ln</a>
-<a class="sourceLine" id="cb1-150" title="150">      <span class="dt">Just</span> te <span class="ot">-&gt;</span> <span class="kw">case</span> <span class="fu">isSpace</span> <span class="fu">$</span> LBS.head <span class="fu">$</span> ln<span class="fu">&lt;&gt;</span><span class="st">&quot;\n&quot;</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb1-150" title="150">      <span class="dt">Just</span> te <span class="ot">-&gt;</span> <span class="kw">case</span> <span class="fu">isSpace</span> <span class="fu">$</span> LBS.head <span class="fu">$</span> ln <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;\n&quot;</span> <span class="kw">of</span></a>
 <a class="sourceLine" id="cb1-151" title="151">        <span class="dt">True</span>  <span class="ot">-&gt;</span> put ctx ln</a>
-<a class="sourceLine" id="cb1-152" title="152">        <span class="dt">False</span> <span class="ot">-&gt;</span> adjust_le (<span class="fu">&lt;&gt;</span>ln) <span class="fu">&lt;$&gt;</span> close_test_exe ctx te</a>
+<a class="sourceLine" id="cb1-152" title="152">        <span class="dt">False</span> <span class="ot">-&gt;</span> adjust_le (<span class="fu">M.&lt;&gt;</span>ln) <span class="fu">&lt;$&gt;</span> close_test_exe ctx te</a>
 <a class="sourceLine" id="cb1-153" title="153">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb1-154" title="154">    ln   <span class="fu">=</span> matchSource mtch</a>
 <a class="sourceLine" id="cb1-155" title="155">    mtch <span class="fu">=</span> allMatches mtchs <span class="fu">!!</span> <span class="dv">0</span></a>
@@ -292,17 +292,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-190" title="190">    <span class="kw">case</span> mb <span class="kw">of</span></a>
 <a class="sourceLine" id="cb1-191" title="191">      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="fu">$</span> <span class="dt">ReplaceWith</span> lbs</a>
 <a class="sourceLine" id="cb1-192" title="192">      <span class="dt">Just</span> te <span class="ot">-&gt;</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb1-193" title="193">        writeIORef _ctx_test_exe <span class="fu">$</span> <span class="dt">Just</span> te { _te_text <span class="fu">=</span> _te_text te <span class="fu">&lt;&gt;</span> lbs <span class="fu">&lt;&gt;</span> <span class="st">&quot;\n&quot;</span> }</a>
+<a class="sourceLine" id="cb1-193" title="193">        writeIORef _ctx_test_exe <span class="fu">$</span> <span class="dt">Just</span> te { _te_text <span class="fu">=</span> _te_text te <span class="fu">M.&lt;&gt;</span> lbs <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;\n&quot;</span> }</a>
 <a class="sourceLine" id="cb1-194" title="194">        <span class="fu">return</span> <span class="dt">Delete</span></a>
 <a class="sourceLine" id="cb1-195" title="195"></a>
 <a class="sourceLine" id="cb1-196" title="196"><span class="ot">mk_test_exe ::</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">TestExe</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></a>
-<a class="sourceLine" id="cb1-197" title="197">mk_test_exe is_t te te_lbs_kw <span class="fu">=</span> (<span class="fu">&lt;&gt;</span>_te_text te) <span class="fu">$</span> LBS.unlines <span class="fu">$</span> <span class="fu">concat</span></a>
+<a class="sourceLine" id="cb1-197" title="197">mk_test_exe is_t te te_lbs_kw <span class="fu">=</span> (<span class="fu">M.&lt;&gt;</span> _te_text te) <span class="fu">$</span> LBS.unlines <span class="fu">$</span> <span class="fu">concat</span></a>
 <a class="sourceLine" id="cb1-198" title="198">    [ [ LBS.pack <span class="fu">$</span> printf <span class="st">&quot;%s %s&quot;</span> (LBS.unpack te_lbs_kw) nm ]</a>
 <a class="sourceLine" id="cb1-199" title="199">    , [ <span class="st">&quot;    type:               exitcode-stdio-1.0&quot;</span> <span class="fu">|</span> is_t ]</a>
 <a class="sourceLine" id="cb1-200" title="200">    ]</a>
 <a class="sourceLine" id="cb1-201" title="201">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb1-202" title="202">    nm <span class="fu">=</span> <span class="kw">case</span> is_t <span class="kw">of</span></a>
-<a class="sourceLine" id="cb1-203" title="203">      <span class="dt">True</span>  <span class="ot">-&gt;</span> LBS.unpack <span class="fu">$</span> _te_name te <span class="fu">&lt;&gt;</span> <span class="st">&quot;-test&quot;</span></a>
+<a class="sourceLine" id="cb1-203" title="203">      <span class="dt">True</span>  <span class="ot">-&gt;</span> LBS.unpack <span class="fu">$</span> _te_name te <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;-test&quot;</span></a>
 <a class="sourceLine" id="cb1-204" title="204">      <span class="dt">False</span> <span class="ot">-&gt;</span> LBS.unpack <span class="fu">$</span> _te_name te</a>
 <a class="sourceLine" id="cb1-205" title="205"></a>
 <a class="sourceLine" id="cb1-206" title="206"><span class="ot">mk_build_depends ::</span> <span class="dt">Bool</span></a>
@@ -344,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-242" title="242">        [ <span class="st">&quot;    GHC-Options:&quot;</span></a>
 <a class="sourceLine" id="cb1-243" title="243">        , <span class="st">&quot;      -Wall&quot;</span></a>
 <a class="sourceLine" id="cb1-244" title="244">        , <span class="st">&quot;      -fwarn-tabs&quot;</span></a>
-<a class="sourceLine" id="cb1-245" title="245">        , <span class="st">&quot;      &quot;</span> <span class="fu">&lt;&gt;</span> w_error_or_warn</a>
+<a class="sourceLine" id="cb1-245" title="245">        , <span class="st">&quot;      &quot;</span> <span class="fu">M.&lt;&gt;</span> w_error_or_warn</a>
 <a class="sourceLine" id="cb1-246" title="246">        , <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb1-247" title="247">        , <span class="st">&quot;    Build-depends:&quot;</span></a>
 <a class="sourceLine" id="cb1-248" title="248">        ] <span class="fu">++</span> (<span class="fu">map</span> fmt <span class="fu">$</span> <span class="fu">zip</span> (<span class="dt">True</span> <span class="fu">:</span> <span class="fu">repeat</span> <span class="dt">False</span>) <span class="fu">$</span> L.sortBy comp pks)</a>
@@ -404,7 +404,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-22" title="22">    SH.cp readme <span class="st">&quot;README.markdown&quot;</span></a>
 <a class="sourceLine" id="cb2-23" title="23">    SH.run_ <span class="st">&quot;stack&quot;</span> [<span class="st">&quot;sdist&quot;</span>,<span class="st">&quot;--stack-yaml&quot;</span>,<span class="st">&quot;stack-8.0.yaml&quot;</span>]</a>
 <a class="sourceLine" id="cb2-24" title="24">    (pth,tb) <span class="ot">&lt;-</span> analyse_so <span class="fu">&lt;$&gt;</span> SH.lastStderr</a>
-<a class="sourceLine" id="cb2-25" title="25">    SH.cp (SH.fromText <span class="fu">$</span> pth) <span class="fu">$</span> SH.fromText <span class="fu">$</span> <span class="st">&quot;releases/&quot;</span><span class="fu">&lt;&gt;</span>tb</a>
+<a class="sourceLine" id="cb2-25" title="25">    SH.cp (SH.fromText <span class="fu">$</span> pth) <span class="fu">$</span> SH.fromText <span class="fu">$</span> <span class="st">&quot;releases/&quot;</span> <span class="fu">M.&lt;&gt;</span> tb</a>
 <a class="sourceLine" id="cb2-26" title="26">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb2-27" title="27">    analyse_so so <span class="fu">=</span> (mtch<span class="fu">!$$</span>[cp|pth|],mtch<span class="fu">!$$</span>[cp|tb|])</a>
 <a class="sourceLine" id="cb2-28" title="28">      <span class="kw">where</span></a>
@@ -419,8 +419,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-37" title="37">    SH.rm_f <span class="st">&quot;regex-examples.cabal&quot;</span></a>
 <a class="sourceLine" id="cb2-38" title="38">    SH.cp (SH.fromText sf) (SH.fromText df)</a>
 <a class="sourceLine" id="cb2-39" title="39">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb2-40" title="40">    sf <span class="fu">=</span> <span class="st">&quot;lib/&quot;</span><span class="fu">&lt;&gt;</span>nm<span class="fu">&lt;&gt;</span><span class="st">&quot;.cabal&quot;</span></a>
-<a class="sourceLine" id="cb2-41" title="41">    df <span class="fu">=</span> nm&#39;<span class="fu">&lt;&gt;</span><span class="st">&quot;.cabal&quot;</span></a>
+<a class="sourceLine" id="cb2-40" title="40">    sf <span class="fu">=</span> <span class="st">&quot;lib/&quot;</span> <span class="fu">M.&lt;&gt;</span> nm <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;.cabal&quot;</span></a>
+<a class="sourceLine" id="cb2-41" title="41">    df <span class="fu">=</span> nm&#39; <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;.cabal&quot;</span></a>
 <a class="sourceLine" id="cb2-42" title="42"></a>
 <a class="sourceLine" id="cb2-43" title="43"><span class="ot">test_release ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
 <a class="sourceLine" id="cb2-44" title="44">test_release vrn_t <span class="fu">=</span> <span class="kw">do</span></a>
@@ -437,10 +437,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-55" title="55">    setCurrentDirectory <span class="st">&quot;../..&quot;</span></a>
 <a class="sourceLine" id="cb2-56" title="56">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb2-57" title="57">    unpack rp pn <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb2-58" title="58">        SH.run_ <span class="st">&quot;tar&quot;</span> [<span class="st">&quot;xzf&quot;</span>,rp<span class="fu">&lt;&gt;</span><span class="st">&quot;/&quot;</span><span class="fu">&lt;&gt;</span>pn_vrn<span class="fu">&lt;&gt;</span><span class="st">&quot;.tar.gz&quot;</span>]</a>
-<a class="sourceLine" id="cb2-59" title="59">        SH.mv (SH.fromText pn_vrn) (SH.fromText <span class="fu">$</span> <span class="st">&quot;test-&quot;</span><span class="fu">&lt;&gt;</span>pn)</a>
+<a class="sourceLine" id="cb2-58" title="58">        SH.run_ <span class="st">&quot;tar&quot;</span> [<span class="st">&quot;xzf&quot;</span>,rp <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;/&quot;</span> <span class="fu">M.&lt;&gt;</span> pn_vrn <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;.tar.gz&quot;</span>]</a>
+<a class="sourceLine" id="cb2-59" title="59">        SH.mv (SH.fromText pn_vrn) (SH.fromText <span class="fu">$</span> <span class="st">&quot;test-&quot;</span> <span class="fu">M.&lt;&gt;</span> pn)</a>
 <a class="sourceLine" id="cb2-60" title="60">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb2-61" title="61">        pn_vrn <span class="fu">=</span> pn<span class="fu">&lt;&gt;</span><span class="st">&quot;-&quot;</span><span class="fu">&lt;&gt;</span>vrn_t</a></code></pre></div>
+<a class="sourceLine" id="cb2-61" title="61">        pn_vrn <span class="fu">=</span> pn <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;-&quot;</span> <span class="fu">M.&lt;&gt;</span> vrn_t</a></code></pre></div>
 <h2 id="building-the-release-commit-message-from-the-changelog">Building the Release Commit Message from the Changelog</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="ot">commit_message ::</span> <span class="dt">IO</span> ()</a>
 <a class="sourceLine" id="cb3-2" title="2">commit_message <span class="fu">=</span> <span class="kw">do</span></a>

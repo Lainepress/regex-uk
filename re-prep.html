@@ -118,7 +118,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-16" title="16"><span class="kw">import</span>           <span class="dt">Data.IORef</span></a>
 <a class="sourceLine" id="cb1-17" title="17"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.List</span>                                <span class="kw">as</span> <span class="dt">L</span></a>
 <a class="sourceLine" id="cb1-18" title="18"><span class="kw">import</span>           <span class="dt">Data.Maybe</span></a>
-<a class="sourceLine" id="cb1-19" title="19"><span class="kw">import</span>           <span class="dt">Data.Monoid</span></a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Monoid</span>                              <span class="kw">as</span> <span class="dt">M</span></a>
 <a class="sourceLine" id="cb1-20" title="20"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span>                                <span class="kw">as</span> <span class="dt">T</span></a>
 <a class="sourceLine" id="cb1-21" title="21"><span class="kw">import</span>           <span class="dt">Network.HTTP.Conduit</span></a>
 <a class="sourceLine" id="cb1-22" title="22"><span class="kw">import</span>           <span class="dt">Prelude.Compat</span></a>
@@ -340,13 +340,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb12-29" title="29">  _ <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;mainGen (a)&quot;</span></a></code></pre></div>
 <p>We cannot place these strings inline without confusing pandoc so we use these definitions instead.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" title="1">begin_code,<span class="ot"> end_code ::</span> <span class="dt">LBS.ByteString</span></a>
-<a class="sourceLine" id="cb13-2" title="2">begin_code <span class="fu">=</span> <span class="st">&quot;\\&quot;</span><span class="fu">&lt;&gt;</span><span class="st">&quot;begin{code}&quot;</span></a>
-<a class="sourceLine" id="cb13-3" title="3">end_code   <span class="fu">=</span> <span class="st">&quot;\\&quot;</span><span class="fu">&lt;&gt;</span><span class="st">&quot;end{code}&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb13-2" title="2">begin_code <span class="fu">=</span> <span class="st">&quot;\\&quot;</span> <span class="fu">M.&lt;&gt;</span>  <span class="st">&quot;begin{code}&quot;</span></a>
+<a class="sourceLine" id="cb13-3" title="3">end_code   <span class="fu">=</span> <span class="st">&quot;\\&quot;</span> <span class="fu">M.&lt;&gt;</span>  <span class="st">&quot;end{code}&quot;</span></a></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" title="1"><span class="ot">mk_list ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> [<span class="dt">LBS.ByteString</span>]</a>
 <a class="sourceLine" id="cb14-2" title="2">mk_list []          <span class="fu">=</span> [<span class="st">&quot;  []&quot;</span>]</a>
 <a class="sourceLine" id="cb14-3" title="3">mk_list (ide0<span class="fu">:</span>ides) <span class="fu">=</span> f <span class="st">&quot;[&quot;</span> ide0 <span class="fu">$</span> <span class="fu">foldr</span> (f <span class="st">&quot;,&quot;</span>) [<span class="st">&quot;  ]&quot;</span>] ides</a>
 <a class="sourceLine" id="cb14-4" title="4">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb14-5" title="5">    f pfx ide t <span class="fu">=</span> (<span class="st">&quot;  &quot;</span><span class="fu">&lt;&gt;</span>pfx<span class="fu">&lt;&gt;</span><span class="st">&quot; &quot;</span><span class="fu">&lt;&gt;</span>LBS.pack ide) <span class="fu">:</span> t</a></code></pre></div>
+<a class="sourceLine" id="cb14-5" title="5">    f pfx ide t <span class="fu">=</span> (<span class="st">&quot;  &quot;</span> <span class="fu">M.&lt;&gt;</span> pfx <span class="fu">M.&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">M.&lt;&gt;</span> LBS.pack ide) <span class="fu">:</span> t</a></code></pre></div>
 <h2 id="include_code_pp">include_code_pp</h2>
 <div class="sourceCode" id="cb15"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" title="1"><span class="ot">include_code_pp ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">LBS.ByteString</span></a>
 <a class="sourceLine" id="cb15-2" title="2">include_code_pp <span class="fu">=</span></a>
@@ -512,7 +512,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb27-2" title="2">pandoc_page pg <span class="fu">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb27-3" title="3">  mt_lbs <span class="ot">&lt;-</span> setup_ttl <span class="fu">&lt;$&gt;</span> LBS.readFile (page_master_file pg)</a>
 <a class="sourceLine" id="cb27-4" title="4">  (hdgs,md_lbs) <span class="ot">&lt;-</span> prep_page&#39; <span class="dt">MM_pandoc</span> mt_lbs</a>
-<a class="sourceLine" id="cb27-5" title="5">  LBS.writeFile <span class="st">&quot;tmp/metadata.markdown&quot;</span>  <span class="fu">$</span> LBS.unlines [<span class="st">&quot;---&quot;</span>,<span class="st">&quot;title: &quot;</span><span class="fu">&lt;&gt;</span>page_title pg,<span class="st">&quot;---&quot;</span>]</a>
+<a class="sourceLine" id="cb27-5" title="5">  LBS.writeFile <span class="st">&quot;tmp/metadata.markdown&quot;</span>  <span class="fu">$</span> LBS.unlines [<span class="st">&quot;---&quot;</span>,<span class="st">&quot;title: &quot;</span> <span class="fu">M.&lt;&gt;</span> page_title pg,<span class="st">&quot;---&quot;</span>]</a>
 <a class="sourceLine" id="cb27-6" title="6">  LBS.writeFile <span class="st">&quot;tmp/heading.markdown&quot;</span>   <span class="fu">$</span> page_heading pg</a>
 <a class="sourceLine" id="cb27-7" title="7">  LBS.writeFile <span class="st">&quot;tmp/page_pre_body.html&quot;</span> <span class="fu">$</span> mk_pre_body_html pg hdgs</a>
 <a class="sourceLine" id="cb27-8" title="8">  LBS.writeFile <span class="st">&quot;tmp/page_pst_body.html&quot;</span>   pst_body_html</a>
@@ -553,7 +553,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb27-43" title="43"><span class="ot">page_heading ::</span> <span class="dt">Page</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></a>
 <a class="sourceLine" id="cb27-44" title="44">page_heading <span class="dt">PG_index</span> <span class="fu">=</span> <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb27-45" title="45">page_heading pg       <span class="fu">=</span></a>
-<a class="sourceLine" id="cb27-46" title="46">  <span class="st">&quot;&lt;p class=&#39;pagebc&#39;&gt;&lt;a href=&#39;.&#39; title=&#39;Home&#39;&gt;Home&lt;/a&gt; &amp;raquo; **&quot;</span><span class="fu">&lt;&gt;</span>page_title pg<span class="fu">&lt;&gt;</span><span class="st">&quot;**&lt;/p&gt;\n&quot;</span></a>
+<a class="sourceLine" id="cb27-46" title="46">  <span class="st">&quot;&lt;p class=&#39;pagebc&#39;&gt;&lt;a href=&#39;.&#39; title=&#39;Home&#39;&gt;Home&lt;/a&gt; &amp;raquo; **&quot;</span> <span class="fu">M.&lt;&gt;</span> page_title pg <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;**&lt;/p&gt;\n&quot;</span></a>
 <a class="sourceLine" id="cb27-47" title="47"></a>
 <a class="sourceLine" id="cb27-48" title="48"><span class="ot">prep_page ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">MarkdownMode</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
 <a class="sourceLine" id="cb27-49" title="49">prep_page ttl mmd in_fp out_fp <span class="fu">=</span> <span class="kw">do</span></a>
@@ -576,7 +576,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb27-66" title="66">    lbs1 <span class="ot">&lt;-</span> <span class="fu">fmap</span> (tweak_md mmd) <span class="fu">$</span> sed&#39; (scr rf_h rf_t) <span class="fu">=&lt;&lt;</span> include lbs</a>
 <a class="sourceLine" id="cb27-67" title="67">    lbs2 <span class="ot">&lt;-</span> fromMaybe <span class="st">&quot;&quot;</span> <span class="fu">&lt;$&gt;</span> fin_task_list&#39; mmd rf_t</a>
 <a class="sourceLine" id="cb27-68" title="68">    hdgs <span class="ot">&lt;-</span> <span class="fu">reverse</span> <span class="fu">&lt;$&gt;</span> readIORef rf_h</a>
-<a class="sourceLine" id="cb27-69" title="69">    <span class="fu">return</span> (hdgs,lbs1<span class="fu">&lt;&gt;</span>lbs2)</a>
+<a class="sourceLine" id="cb27-69" title="69">    <span class="fu">return</span> (hdgs,lbs1 <span class="fu">M.&lt;&gt;</span> lbs2)</a>
 <a class="sourceLine" id="cb27-70" title="70">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb27-71" title="71">    scr rf_h rf_t <span class="fu">=</span> <span class="dt">Select</span></a>
 <a class="sourceLine" id="cb27-72" title="72">      [ <span class="dt">Function</span> [re|^%heading#${ide}(@{%id}) +${ttl}([^ ].*)$|] <span class="dt">TOP</span> <span class="fu">$</span> heading       mmd rf_t rf_h</a>
@@ -596,24 +596,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb27-86" title="86">heading mmd rf_t rf_h _ mtch _ _ <span class="fu">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb27-87" title="87">    lbs <span class="ot">&lt;-</span> fromMaybe <span class="st">&quot;&quot;</span> <span class="fu">&lt;$&gt;</span> fin_task_list&#39; mmd rf_t</a>
 <a class="sourceLine" id="cb27-88" title="88">    modifyIORef rf_h (<span class="dt">Heading</span> ide ttl<span class="fu">:</span>)</a>
-<a class="sourceLine" id="cb27-89" title="89">    <span class="fu">return</span> <span class="fu">$</span> <span class="dt">Just</span> <span class="fu">$</span> lbs<span class="fu">&lt;&gt;</span>h2</a>
+<a class="sourceLine" id="cb27-89" title="89">    <span class="fu">return</span> <span class="fu">$</span> <span class="dt">Just</span> <span class="fu">$</span> lbs <span class="fu">M.&lt;&gt;</span> h2</a>
 <a class="sourceLine" id="cb27-90" title="90">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb27-91" title="91">    h2 <span class="fu">=</span> <span class="kw">case</span> mmd <span class="kw">of</span></a>
-<a class="sourceLine" id="cb27-92" title="92">      <span class="dt">MM_github</span>  <span class="ot">-&gt;</span> <span class="st">&quot;## &quot;</span><span class="fu">&lt;&gt;</span>ttl</a>
-<a class="sourceLine" id="cb27-93" title="93">      <span class="dt">MM_hackage</span> <span class="ot">-&gt;</span> <span class="st">&quot;## &quot;</span><span class="fu">&lt;&gt;</span>ttl</a>
-<a class="sourceLine" id="cb27-94" title="94">      <span class="dt">MM_pandoc</span>  <span class="ot">-&gt;</span> <span class="st">&quot;&lt;h2 id=&#39;&quot;</span><span class="fu">&lt;&gt;</span>ide<span class="fu">&lt;&gt;</span><span class="st">&quot;&#39;&gt;&quot;</span><span class="fu">&lt;&gt;</span>ttl<span class="fu">&lt;&gt;</span><span class="st">&quot;&lt;/h2&gt;&quot;</span></a>
+<a class="sourceLine" id="cb27-92" title="92">      <span class="dt">MM_github</span>  <span class="ot">-&gt;</span> <span class="st">&quot;## &quot;</span> <span class="fu">M.&lt;&gt;</span> ttl</a>
+<a class="sourceLine" id="cb27-93" title="93">      <span class="dt">MM_hackage</span> <span class="ot">-&gt;</span> <span class="st">&quot;## &quot;</span> <span class="fu">M.&lt;&gt;</span> ttl</a>
+<a class="sourceLine" id="cb27-94" title="94">      <span class="dt">MM_pandoc</span>  <span class="ot">-&gt;</span> <span class="st">&quot;&lt;h2 id=&#39;&quot;</span> <span class="fu">M.&lt;&gt;</span> ide <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;&#39;&gt;&quot;</span> <span class="fu">M.&lt;&gt;</span> ttl <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;&lt;/h2&gt;&quot;</span></a>
 <a class="sourceLine" id="cb27-95" title="95"></a>
 <a class="sourceLine" id="cb27-96" title="96">    ide <span class="fu">=</span> mtch <span class="fu">!$$</span> [cp|ide|]</a>
 <a class="sourceLine" id="cb27-97" title="97">    ttl <span class="fu">=</span> mtch <span class="fu">!$$</span> [cp|ttl|]</a>
 <a class="sourceLine" id="cb27-98" title="98"></a>
 <a class="sourceLine" id="cb27-99" title="99"><span class="ot">mk_pre_body_html ::</span> <span class="dt">Page</span> <span class="ot">-&gt;</span> [<span class="dt">Heading</span>] <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></a>
-<a class="sourceLine" id="cb27-100" title="100">mk_pre_body_html pg hdgs <span class="fu">=</span> hdr <span class="fu">&lt;&gt;</span> LBS.concat (<span class="fu">map</span> nav [<span class="fu">minBound..maxBound</span>]) <span class="fu">&lt;&gt;</span> ftr</a>
+<a class="sourceLine" id="cb27-100" title="100">mk_pre_body_html pg hdgs <span class="fu">=</span> hdr <span class="fu">M.&lt;&gt;</span> LBS.concat (<span class="fu">map</span> nav [<span class="fu">minBound..maxBound</span>]) <span class="fu">M.&lt;&gt;</span> ftr</a>
 <a class="sourceLine" id="cb27-101" title="101">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb27-102" title="102"><span class="ot">    hdr ::</span> <span class="dt">LBS.ByteString</span></a>
 <a class="sourceLine" id="cb27-103" title="103">    hdr <span class="fu">=</span> [here|    &lt;div id=&quot;container&quot;&gt;</a>
 <a class="sourceLine" id="cb27-104" title="104">    &lt;div id=&quot;sidebar&quot;&gt;</a>
 <a class="sourceLine" id="cb27-105" title="105">      &lt;div id=&quot;corner&quot;&gt;</a>
-<a class="sourceLine" id="cb27-106" title="106">        |] <span class="fu">&lt;&gt;</span> branding <span class="fu">&lt;&gt;</span> [here|</a>
+<a class="sourceLine" id="cb27-106" title="106">        |] <span class="fu">M.&lt;&gt;</span> branding <span class="fu">M.&lt;&gt;</span> [here|</a>
 <a class="sourceLine" id="cb27-107" title="107">      &lt;/div&gt;</a>
 <a class="sourceLine" id="cb27-108" title="108">      &lt;div class=&quot;widget&quot; id=&quot;pages&quot;&gt;</a>
 <a class="sourceLine" id="cb27-109" title="109">        &lt;ul class=&quot;page-nav&quot;&gt;</a>
@@ -621,7 +621,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb27-111" title="111"></a>
 <a class="sourceLine" id="cb27-112" title="112">    nav dst_pg <span class="fu">=</span> LBS.unlines <span class="fu">$</span></a>
 <a class="sourceLine" id="cb27-113" title="113">      nav_li <span class="st">&quot;          &quot;</span> pg_cls pg_adr pg_ttl <span class="fu">:</span></a>
-<a class="sourceLine" id="cb27-114" title="114">        [ nav_li <span class="st">&quot;            &quot;</span> [<span class="st">&quot;secnav&quot;</span>] (<span class="st">&quot;#&quot;</span><span class="fu">&lt;&gt;</span>_hdg_id) _hdg_title</a>
+<a class="sourceLine" id="cb27-114" title="114">        [ nav_li <span class="st">&quot;            &quot;</span> [<span class="st">&quot;secnav&quot;</span>] (<span class="st">&quot;#&quot;</span> <span class="fu">M.&lt;&gt;</span> _hdg_id) _hdg_title</a>
 <a class="sourceLine" id="cb27-115" title="115">          <span class="fu">|</span> <span class="dt">Heading</span>{<span class="fu">..</span>} <span class="ot">&lt;-</span> hdgs</a>
 <a class="sourceLine" id="cb27-116" title="116">          , is_moi</a>
 <a class="sourceLine" id="cb27-117" title="117">          ]</a>
@@ -687,7 +687,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb27-177" title="177"><span class="ot">pst_body_html ::</span> <span class="dt">LBS.ByteString</span></a>
 <a class="sourceLine" id="cb27-178" title="178">pst_body_html <span class="fu">=</span> [here|      &lt;/div&gt;</a>
 <a class="sourceLine" id="cb27-179" title="179">    &lt;/div&gt;</a>
-<a class="sourceLine" id="cb27-180" title="180">|] <span class="fu">&lt;&gt;</span> tracking</a></code></pre></div>
+<a class="sourceLine" id="cb27-180" title="180">|] <span class="fu">M.&lt;&gt;</span> tracking</a></code></pre></div>
 <h2 id="task-lists">Task Lists</h2>
 <div class="sourceCode" id="cb28"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" title="1"><span class="co">-- | replacement function to convert GFM task list line into HTML if we</span></a>
 <a class="sourceLine" id="cb28-2" title="2"><span class="co">-- aren&#39;t writing GFM (i.e.,  generating markdown for GitHub)</span></a>
@@ -702,7 +702,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb28-11" title="11">task_list mmd rf chk _ mtch _ _ <span class="fu">=</span></a>
 <a class="sourceLine" id="cb28-12" title="12">  <span class="kw">case</span> mmd <span class="kw">of</span></a>
 <a class="sourceLine" id="cb28-13" title="13">    <span class="dt">MM_github</span>  <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb28-14" title="14">    <span class="dt">MM_hackage</span> <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="fu">$</span> <span class="dt">Just</span> <span class="fu">$</span> <span class="st">&quot;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;</span><span class="fu">&lt;&gt;</span>cb<span class="fu">&lt;&gt;</span><span class="st">&quot;&amp;nbsp;&amp;nbsp;&quot;</span><span class="fu">&lt;&gt;</span>itm<span class="fu">&lt;&gt;</span><span class="st">&quot;\n&quot;</span></a>
+<a class="sourceLine" id="cb28-14" title="14">    <span class="dt">MM_hackage</span> <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="fu">$</span> <span class="dt">Just</span> <span class="fu">$</span> <span class="st">&quot;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;</span> <span class="fu">M.&lt;&gt;</span> cb <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;&amp;nbsp;&amp;nbsp;&quot;</span> <span class="fu">M.&lt;&gt;</span> itm <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;\n&quot;</span></a>
 <a class="sourceLine" id="cb28-15" title="15">    <span class="dt">MM_pandoc</span>  <span class="ot">-&gt;</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb28-16" title="16">      in_tl <span class="ot">&lt;-</span> readIORef rf</a>
 <a class="sourceLine" id="cb28-17" title="17">      writeIORef rf <span class="dt">True</span></a>
@@ -732,7 +732,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb28-41" title="41">              <span class="ot">-&gt;</span> <span class="dt">Capture</span> <span class="dt">LBS.ByteString</span>     <span class="co">-- ^ the capture weare replacing (unsuded)</span></a>
 <a class="sourceLine" id="cb28-42" title="42">              <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)  <span class="co">-- ^ the replacement text, or Nothing to indicate no change to this line</span></a>
 <a class="sourceLine" id="cb28-43" title="43">fin_task_list mmd rf_t _ mtch _ _ <span class="fu">=</span></a>
-<a class="sourceLine" id="cb28-44" title="44">  <span class="fu">fmap</span> (<span class="fu">&lt;&gt;</span>matchSource mtch) <span class="fu">&lt;$&gt;</span> fin_task_list&#39; mmd rf_t</a>
+<a class="sourceLine" id="cb28-44" title="44">  <span class="fu">fmap</span> ( <span class="fu">M.&lt;&gt;</span> matchSource mtch) <span class="fu">&lt;$&gt;</span> fin_task_list&#39; mmd rf_t</a>
 <a class="sourceLine" id="cb28-45" title="45"></a>
 <a class="sourceLine" id="cb28-46" title="46"><span class="co">-- | close any task list being processed, returning the closing text</span></a>
 <a class="sourceLine" id="cb28-47" title="47"><span class="co">-- as necessary</span></a>
@@ -755,7 +755,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb29-7" title="7">  LBS.writeFile <span class="st">&quot;tmp/metadata.markdown&quot;</span>  <span class="fu">$</span></a>
 <a class="sourceLine" id="cb29-8" title="8">                    LBS.unlines</a>
 <a class="sourceLine" id="cb29-9" title="9">                      [ <span class="st">&quot;---&quot;</span></a>
-<a class="sourceLine" id="cb29-10" title="10">                      , <span class="st">&quot;title: &quot;</span><span class="fu">&lt;&gt;</span>LBS.pack title</a>
+<a class="sourceLine" id="cb29-10" title="10">                      , <span class="st">&quot;title: &quot;</span> <span class="fu">M.&lt;&gt;</span> LBS.pack title</a>
 <a class="sourceLine" id="cb29-11" title="11">                      , <span class="st">&quot;---&quot;</span></a>
 <a class="sourceLine" id="cb29-12" title="12">                      ]</a>
 <a class="sourceLine" id="cb29-13" title="13">  LBS.writeFile <span class="st">&quot;tmp/bc.html&quot;</span> bc</a>
@@ -779,13 +779,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb29-31" title="31">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb29-32" title="32">    bc <span class="fu">=</span> LBS.unlines</a>
 <a class="sourceLine" id="cb29-33" title="33">    <span class="co">--  [ &quot;&lt;div class=&#39;brandingdiv&#39;&gt;&quot;</span></a>
-<a class="sourceLine" id="cb29-34" title="34">    <span class="co">--  , &quot;  &quot; &lt;&gt; branding</span></a>
+<a class="sourceLine" id="cb29-34" title="34">    <span class="co">--  , &quot;  &quot; M.&lt;&gt; branding</span></a>
 <a class="sourceLine" id="cb29-35" title="35">    <span class="co">--  , &quot;&lt;/div&gt;&quot;</span></a>
 <a class="sourceLine" id="cb29-36" title="36">      [ <span class="st">&quot;&lt;div class=&#39;bcdiv&#39;&gt;&quot;</span></a>
 <a class="sourceLine" id="cb29-37" title="37">      , <span class="st">&quot;  &lt;ol class=&#39;breadcrumb&#39;&gt;&quot;</span></a>
-<a class="sourceLine" id="cb29-38" title="38">      , <span class="st">&quot;    &lt;li&gt;&quot;</span><span class="fu">&lt;&gt;</span>branding<span class="fu">&lt;&gt;</span><span class="st">&quot;&lt;/li&gt;&quot;</span></a>
-<a class="sourceLine" id="cb29-39" title="39">      , <span class="st">&quot;    &lt;li&gt;&lt;a title=&#39;source file&#39; href=&#39;&quot;</span> <span class="fu">&lt;&gt;</span></a>
-<a class="sourceLine" id="cb29-40" title="40">              repo_url <span class="fu">&lt;&gt;</span> <span class="st">&quot;&#39;&gt;&quot;</span> <span class="fu">&lt;&gt;</span> (LBS.pack title) <span class="fu">&lt;&gt;</span> <span class="st">&quot;&lt;/a&gt;&lt;/li&gt;&quot;</span></a>
+<a class="sourceLine" id="cb29-38" title="38">      , <span class="st">&quot;    &lt;li&gt;&quot;</span> <span class="fu">M.&lt;&gt;</span> branding <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;&lt;/li&gt;&quot;</span></a>
+<a class="sourceLine" id="cb29-39" title="39">      , <span class="st">&quot;    &lt;li&gt;&lt;a title=&#39;source file&#39; href=&#39;&quot;</span>  <span class="fu">M.&lt;&gt;</span></a>
+<a class="sourceLine" id="cb29-40" title="40">              repo_url <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;&#39;&gt;&quot;</span> <span class="fu">M.&lt;&gt;</span> (LBS.pack title) <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;&lt;/a&gt;&lt;/li&gt;&quot;</span></a>
 <a class="sourceLine" id="cb29-41" title="41">      , <span class="st">&quot;&lt;/ol&gt;&quot;</span></a>
 <a class="sourceLine" id="cb29-42" title="42">      , <span class="st">&quot;&lt;/div&gt;&quot;</span></a>
 <a class="sourceLine" id="cb29-43" title="43">      , <span class="st">&quot;&lt;div class=&#39;litcontent&#39;&gt;&quot;</span></a>
@@ -793,7 +793,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb29-45" title="45"></a>
 <a class="sourceLine" id="cb29-46" title="46">    ft <span class="fu">=</span> LBS.concat</a>
 <a class="sourceLine" id="cb29-47" title="47">      [ <span class="st">&quot;&lt;/div&gt;&quot;</span></a>
-<a class="sourceLine" id="cb29-48" title="48">      ] <span class="fu">&lt;&gt;</span> tracking</a>
+<a class="sourceLine" id="cb29-48" title="48">      ] <span class="fu">M.&lt;&gt;</span> tracking</a>
 <a class="sourceLine" id="cb29-49" title="49"></a>
 <a class="sourceLine" id="cb29-50" title="50">    repo_url <span class="fu">=</span> LBS.concat</a>
 <a class="sourceLine" id="cb29-51" title="51">      [ <span class="st">&quot;https://github.com/iconnect/regex/blob/master/&quot;</span></a>
