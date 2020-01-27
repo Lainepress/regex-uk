@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 </div>
 <div class='litcontent'>
-<header>
+<header id="title-block-header">
 <h1 class="title">Text.RE.ZeInternals/Tools.Lex</h1>
 </header>
 <div class="sourceCode" id="cb1"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">{-# LANGUAGE NoImplicitPrelude          #-}</span></a>
@@ -110,7 +110,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="co">-- | a simple regex-based scanner interpretter for prototyping</span></a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="co">-- scanners</span></a>
 <a class="sourceLine" id="cb2-3" title="3"><span class="ot">alex ::</span> <span class="dt">IsRegex</span> re s <span class="ot">=&gt;</span> [(re,<span class="dt">Match</span> s<span class="ot">-&gt;</span><span class="dt">Maybe</span> t)] <span class="ot">-&gt;</span> t <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> [t]</a>
-<a class="sourceLine" id="cb2-4" title="4">alex <span class="fu">=</span> alex&#39; matchOnce</a>
+<a class="sourceLine" id="cb2-4" title="4">alex <span class="ot">=</span> alex&#39; matchOnce</a>
 <a class="sourceLine" id="cb2-5" title="5"></a>
 <a class="sourceLine" id="cb2-6" title="6"><span class="co">-- | a higher order version of &#39;alex&#39; parameterised over the @matchOnce@</span></a>
 <a class="sourceLine" id="cb2-7" title="7"><span class="co">-- function</span></a>
@@ -120,24 +120,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-11" title="11">      <span class="ot">-&gt;</span> t</a>
 <a class="sourceLine" id="cb2-12" title="12">      <span class="ot">-&gt;</span> s</a>
 <a class="sourceLine" id="cb2-13" title="13">      <span class="ot">-&gt;</span> [t]</a>
-<a class="sourceLine" id="cb2-14" title="14">alex&#39; mo al t_err <span class="fu">=</span> loop</a>
+<a class="sourceLine" id="cb2-14" title="14">alex&#39; mo al t_err <span class="ot">=</span> loop</a>
 <a class="sourceLine" id="cb2-15" title="15">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb2-16" title="16">    loop s <span class="fu">=</span> <span class="kw">case</span> lengthR s <span class="fu">==</span> <span class="dv">0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb2-16" title="16">    loop s <span class="ot">=</span> <span class="kw">case</span> lengthR s <span class="op">==</span> <span class="dv">0</span> <span class="kw">of</span></a>
 <a class="sourceLine" id="cb2-17" title="17">      <span class="dt">True</span>  <span class="ot">-&gt;</span> []</a>
 <a class="sourceLine" id="cb2-18" title="18">      <span class="dt">False</span> <span class="ot">-&gt;</span> choose al s</a>
 <a class="sourceLine" id="cb2-19" title="19"></a>
-<a class="sourceLine" id="cb2-20" title="20">    choose []           _ <span class="fu">=</span> [t_err]</a>
-<a class="sourceLine" id="cb2-21" title="21">    choose ((re,f)<span class="fu">:</span>al&#39;) s <span class="fu">=</span> <span class="kw">case</span> mb_p <span class="kw">of</span></a>
-<a class="sourceLine" id="cb2-22" title="22">        <span class="dt">Just</span> (s&#39;,t) <span class="ot">-&gt;</span> t <span class="fu">:</span> loop s&#39;</a>
+<a class="sourceLine" id="cb2-20" title="20">    choose []           _ <span class="ot">=</span> [t_err]</a>
+<a class="sourceLine" id="cb2-21" title="21">    choose ((re,f)<span class="op">:</span>al&#39;) s <span class="ot">=</span> <span class="kw">case</span> mb_p <span class="kw">of</span></a>
+<a class="sourceLine" id="cb2-22" title="22">        <span class="dt">Just</span> (s&#39;,t) <span class="ot">-&gt;</span> t <span class="op">:</span> loop s&#39;</a>
 <a class="sourceLine" id="cb2-23" title="23">        _           <span class="ot">-&gt;</span> choose al&#39; s</a>
 <a class="sourceLine" id="cb2-24" title="24">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb2-25" title="25">        mb_p <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb2-25" title="25">        mb_p <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb2-26" title="26">          cap <span class="ot">&lt;-</span> matchCapture mtch</a>
-<a class="sourceLine" id="cb2-27" title="27">          <span class="kw">case</span> captureOffset cap <span class="fu">==</span> <span class="dv">0</span> <span class="kw">of</span></a>
-<a class="sourceLine" id="cb2-28" title="28">            <span class="dt">True</span>  <span class="ot">-&gt;</span> (,) (captureSuffix cap) <span class="fu">&lt;$&gt;</span> f mtch</a>
+<a class="sourceLine" id="cb2-27" title="27">          <span class="kw">case</span> captureOffset cap <span class="op">==</span> <span class="dv">0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb2-28" title="28">            <span class="dt">True</span>  <span class="ot">-&gt;</span> (,) (captureSuffix cap) <span class="op">&lt;$&gt;</span> f mtch</a>
 <a class="sourceLine" id="cb2-29" title="29">            <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
 <a class="sourceLine" id="cb2-30" title="30"></a>
-<a class="sourceLine" id="cb2-31" title="31">        mtch <span class="fu">=</span> mo re s</a></code></pre></div>
+<a class="sourceLine" id="cb2-31" title="31">        mtch <span class="ot">=</span> mo re s</a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 </div>
 <div class='litcontent'>
-<header>
+<header id="title-block-header">
 <h1 class="title">examples/re-nginx-log-processor.lhs</h1>
 </header>
 <h1 id="example-nginx-log-processor">Example: NGINX Log Processor</h1>
@@ -141,25 +141,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-38" title="38"><span class="kw">import</span>           <span class="dt">Text.RE.TestBench</span></a>
 <a class="sourceLine" id="cb1-39" title="39"><span class="kw">import</span>           <span class="dt">Text.RE.Tools.Sed</span></a></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb2-2" title="2">main <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb2-2" title="2">main <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb2-3" title="3">  as  <span class="ot">&lt;-</span> getArgs</a>
 <a class="sourceLine" id="cb2-4" title="4">  <span class="kw">case</span> as <span class="kw">of</span></a>
 <a class="sourceLine" id="cb2-5" title="5">    [<span class="st">&quot;--macro&quot;</span>      ] <span class="ot">-&gt;</span> <span class="fu">putStr</span>      lp_macro_table</a>
-<a class="sourceLine" id="cb2-6" title="6">    [<span class="st">&quot;--macro&quot;</span>,mid_s] <span class="ot">-&gt;</span> <span class="fu">putStrLn</span>  <span class="fu">$</span> lp_macro_summary <span class="fu">$</span> <span class="dt">MacroID</span> mid_s</a>
+<a class="sourceLine" id="cb2-6" title="6">    [<span class="st">&quot;--macro&quot;</span>,mid_s] <span class="ot">-&gt;</span> <span class="fu">putStrLn</span>  <span class="op">$</span> lp_macro_summary <span class="op">$</span> <span class="dt">MacroID</span> mid_s</a>
 <a class="sourceLine" id="cb2-7" title="7">    [<span class="st">&quot;--regex&quot;</span>      ] <span class="ot">-&gt;</span> <span class="fu">putStr</span>      lp_macro_sources</a>
-<a class="sourceLine" id="cb2-8" title="8">    [<span class="st">&quot;--regex&quot;</span>,mid_s] <span class="ot">-&gt;</span> <span class="fu">putStrLn</span>  <span class="fu">$</span> lp_macro_source  <span class="fu">$</span> <span class="dt">MacroID</span> mid_s</a>
+<a class="sourceLine" id="cb2-8" title="8">    [<span class="st">&quot;--regex&quot;</span>,mid_s] <span class="ot">-&gt;</span> <span class="fu">putStrLn</span>  <span class="op">$</span> lp_macro_source  <span class="op">$</span> <span class="dt">MacroID</span> mid_s</a>
 <a class="sourceLine" id="cb2-9" title="9">    [<span class="st">&quot;--test&quot;</span>       ] <span class="ot">-&gt;</span> test</a>
 <a class="sourceLine" id="cb2-10" title="10">    []                <span class="ot">-&gt;</span> test</a>
-<a class="sourceLine" id="cb2-11" title="11">    [in_file          ] <span class="fu">|</span> is_file in_file <span class="ot">-&gt;</span> go <span class="dt">True</span>  in_file <span class="st">&quot;-&quot;</span></a>
-<a class="sourceLine" id="cb2-12" title="12">    [in_file,out_file ] <span class="fu">|</span> is_file in_file <span class="ot">-&gt;</span> go <span class="dt">True</span>  in_file out_file</a>
+<a class="sourceLine" id="cb2-11" title="11">    [in_file          ] <span class="op">|</span> is_file in_file <span class="ot">-&gt;</span> go <span class="dt">True</span>  in_file <span class="st">&quot;-&quot;</span></a>
+<a class="sourceLine" id="cb2-12" title="12">    [in_file,out_file ] <span class="op">|</span> is_file in_file <span class="ot">-&gt;</span> go <span class="dt">True</span>  in_file out_file</a>
 <a class="sourceLine" id="cb2-13" title="13">    _                                     <span class="ot">-&gt;</span> usage</a>
 <a class="sourceLine" id="cb2-14" title="14">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb2-15" title="15">    is_file <span class="fu">=</span> <span class="fu">not</span> <span class="fu">.</span> (<span class="fu">==</span> <span class="st">&quot;--&quot;</span>) <span class="fu">.</span> <span class="fu">take</span> <span class="dv">2</span></a>
+<a class="sourceLine" id="cb2-15" title="15">    is_file <span class="ot">=</span> <span class="fu">not</span> <span class="op">.</span> (<span class="op">==</span> <span class="st">&quot;--&quot;</span>) <span class="op">.</span> <span class="fu">take</span> <span class="dv">2</span></a>
 <a class="sourceLine" id="cb2-16" title="16"></a>
-<a class="sourceLine" id="cb2-17" title="17">    usage <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb2-17" title="17">    usage <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb2-18" title="18">      pnm <span class="ot">&lt;-</span> getProgName</a>
-<a class="sourceLine" id="cb2-19" title="19">      <span class="kw">let</span> prg <span class="fu">=</span> ((pnm<span class="fu">++</span><span class="st">&quot; &quot;</span>)<span class="fu">++</span>)</a>
-<a class="sourceLine" id="cb2-20" title="20">      <span class="fu">putStr</span> <span class="fu">$</span> <span class="fu">unlines</span></a>
+<a class="sourceLine" id="cb2-19" title="19">      <span class="kw">let</span> prg <span class="ot">=</span> ((pnm<span class="op">++</span><span class="st">&quot; &quot;</span>)<span class="op">++</span>)</a>
+<a class="sourceLine" id="cb2-20" title="20">      <span class="fu">putStr</span> <span class="op">$</span> <span class="fu">unlines</span></a>
 <a class="sourceLine" id="cb2-21" title="21">        [ <span class="st">&quot;usage:&quot;</span></a>
 <a class="sourceLine" id="cb2-22" title="22">        , prg <span class="st">&quot; --help&quot;</span></a>
 <a class="sourceLine" id="cb2-23" title="23">        , prg <span class="st">&quot; --macro&quot;</span></a>
@@ -175,12 +175,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb3-4" title="4"><span class="co">--</span></a>
 <a class="sourceLine" id="cb3-5" title="5"></a>
 <a class="sourceLine" id="cb3-6" title="6"><span class="ot">test ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb3-7" title="7">test <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb3-7" title="7">test <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb3-8" title="8">    <span class="fu">putStrLn</span> <span class="st">&quot;============================================================&quot;</span></a>
 <a class="sourceLine" id="cb3-9" title="9">    <span class="fu">putStrLn</span> <span class="st">&quot;Testing the macro environment.&quot;</span></a>
 <a class="sourceLine" id="cb3-10" title="10">    <span class="fu">putStrLn</span> <span class="st">&quot;nginx-log-processor&quot;</span></a>
 <a class="sourceLine" id="cb3-11" title="11">    is_docs <span class="ot">&lt;-</span> doesDirectoryExist <span class="st">&quot;docs&quot;</span></a>
-<a class="sourceLine" id="cb3-12" title="12">    when is_docs <span class="fu">$</span></a>
+<a class="sourceLine" id="cb3-12" title="12">    when is_docs <span class="op">$</span></a>
 <a class="sourceLine" id="cb3-13" title="13">      dumpMacroTable  (fp <span class="st">&quot;docs&quot;</span> <span class="st">&quot;.txt&quot;</span>) (fp <span class="st">&quot;docs&quot;</span> <span class="st">&quot;-src.txt&quot;</span>) regexType lp_env</a>
 <a class="sourceLine" id="cb3-14" title="14">    dumpMacroTable    (fp <span class="st">&quot;data&quot;</span> <span class="st">&quot;.txt&quot;</span>) (fp <span class="st">&quot;data&quot;</span> <span class="st">&quot;-src.txt&quot;</span>) regexType lp_env</a>
 <a class="sourceLine" id="cb3-15" title="15">    me_ok <span class="ot">&lt;-</span> testMacroEnv <span class="st">&quot;nginx-log-processor&quot;</span> regexType lp_env</a>
@@ -189,16 +189,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb3-18" title="18">    <span class="fu">putStrLn</span> <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb3-19" title="19">    lp_ok <span class="ot">&lt;-</span> test_log_processor</a>
 <a class="sourceLine" id="cb3-20" title="20">    <span class="fu">putStrLn</span> <span class="st">&quot;============================================================&quot;</span></a>
-<a class="sourceLine" id="cb3-21" title="21">    <span class="kw">case</span> me_ok <span class="fu">&amp;&amp;</span> lp_ok <span class="kw">of</span></a>
+<a class="sourceLine" id="cb3-21" title="21">    <span class="kw">case</span> me_ok <span class="op">&amp;&amp;</span> lp_ok <span class="kw">of</span></a>
 <a class="sourceLine" id="cb3-22" title="22">      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="fu">return</span> ()</a>
-<a class="sourceLine" id="cb3-23" title="23">      <span class="dt">False</span> <span class="ot">-&gt;</span> exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb3-23" title="23">      <span class="dt">False</span> <span class="ot">-&gt;</span> exitWith <span class="op">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a>
 <a class="sourceLine" id="cb3-24" title="24">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb3-25" title="25">    fp dir sfx <span class="fu">=</span> dir <span class="fu">&lt;/&gt;</span> (rty_s <span class="fu">++</span> <span class="st">&quot;-nginx-log-processor&quot;</span> <span class="fu">++</span> sfx)</a>
+<a class="sourceLine" id="cb3-25" title="25">    fp dir sfx <span class="ot">=</span> dir <span class="op">&lt;/&gt;</span> (rty_s <span class="op">++</span> <span class="st">&quot;-nginx-log-processor&quot;</span> <span class="op">++</span> sfx)</a>
 <a class="sourceLine" id="cb3-26" title="26"></a>
-<a class="sourceLine" id="cb3-27" title="27">    rty_s      <span class="fu">=</span> <span class="fu">map</span> <span class="fu">toLower</span> <span class="fu">$</span> presentRegexType regexType</a>
+<a class="sourceLine" id="cb3-27" title="27">    rty_s      <span class="ot">=</span> <span class="fu">map</span> <span class="fu">toLower</span> <span class="op">$</span> presentRegexType regexType</a>
 <a class="sourceLine" id="cb3-28" title="28"></a>
 <a class="sourceLine" id="cb3-29" title="29"><span class="ot">test_log_processor ::</span> <span class="dt">IO</span> <span class="dt">Bool</span></a>
-<a class="sourceLine" id="cb3-30" title="30">test_log_processor <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb3-30" title="30">test_log_processor <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb3-31" title="31">    createDirectoryIfMissing <span class="dt">False</span> <span class="st">&quot;tmp&quot;</span></a>
 <a class="sourceLine" id="cb3-32" title="32">    go <span class="dt">False</span> <span class="st">&quot;data/access-errors.log&quot;</span> <span class="st">&quot;tmp/events.log&quot;</span></a>
 <a class="sourceLine" id="cb3-33" title="33">    cmp <span class="st">&quot;tmp/events.log&quot;</span> <span class="st">&quot;data/events.log&quot;</span></a></code></pre></div>
@@ -208,20 +208,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb4-4" title="4"><span class="co">--</span></a>
 <a class="sourceLine" id="cb4-5" title="5"></a>
 <a class="sourceLine" id="cb4-6" title="6"><span class="ot">go ::</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb4-7" title="7">go rprt_flg in_file out_file <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb4-7" title="7">go rprt_flg in_file out_file <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb4-8" title="8">  ctx <span class="ot">&lt;-</span> setup rprt_flg</a>
 <a class="sourceLine" id="cb4-9" title="9">  sed (script ctx) in_file out_file</a></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="ot">script ::</span> <span class="dt">Ctx</span> <span class="ot">-&gt;</span> <span class="dt">Edits</span> <span class="dt">IO</span> <span class="dt">RE</span> <span class="dt">LBS.ByteString</span></a>
-<a class="sourceLine" id="cb5-2" title="2">script ctx <span class="fu">=</span> <span class="dt">Select</span></a>
+<a class="sourceLine" id="cb5-2" title="2">script ctx <span class="ot">=</span> <span class="dt">Select</span></a>
 <a class="sourceLine" id="cb5-3" title="3">    [ on [re_|@{access}|]     <span class="dt">ACC</span> parse_access</a>
 <a class="sourceLine" id="cb5-4" title="4">    , on [re_|@{access_deg}|] <span class="dt">AQQ</span> parse_deg_access</a>
 <a class="sourceLine" id="cb5-5" title="5">    , on [re_|@{error}|]      <span class="dt">ERR</span> parse_error</a>
 <a class="sourceLine" id="cb5-6" title="6">    , on [re_|.*|]            <span class="dt">QQQ</span> parse_def</a>
 <a class="sourceLine" id="cb5-7" title="7">    ]</a>
 <a class="sourceLine" id="cb5-8" title="8">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb5-9" title="9">    on rex src prs <span class="fu">=</span> <span class="dt">Function</span> (rex lpo) <span class="dt">TOP</span> <span class="fu">$</span> process_line ctx src prs</a>
+<a class="sourceLine" id="cb5-9" title="9">    on rex src prs <span class="ot">=</span> <span class="dt">Function</span> (rex lpo) <span class="dt">TOP</span> <span class="op">$</span> process_line ctx src prs</a>
 <a class="sourceLine" id="cb5-10" title="10"></a>
-<a class="sourceLine" id="cb5-11" title="11">    parse_def      <span class="fu">=</span> <span class="fu">fmap</span> capturedText <span class="fu">.</span> matchCapture</a></code></pre></div>
+<a class="sourceLine" id="cb5-11" title="11">    parse_def      <span class="ot">=</span> <span class="fu">fmap</span> capturedText <span class="op">.</span> matchCapture</a></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="ot">process_line ::</span> <span class="dt">IsEvent</span> a</a>
 <a class="sourceLine" id="cb6-2" title="2">             <span class="ot">=&gt;</span> <span class="dt">Ctx</span></a>
 <a class="sourceLine" id="cb6-3" title="3">             <span class="ot">-&gt;</span> <span class="dt">Source</span></a>
@@ -231,21 +231,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-7" title="7">             <span class="ot">-&gt;</span> <span class="dt">RELocation</span></a>
 <a class="sourceLine" id="cb6-8" title="8">             <span class="ot">-&gt;</span> <span class="dt">Capture</span> <span class="dt">LBS.ByteString</span></a>
 <a class="sourceLine" id="cb6-9" title="9">             <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> <span class="dt">LBS.ByteString</span>)</a>
-<a class="sourceLine" id="cb6-10" title="10">process_line ctx src prs lno cs _ _ <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb6-11" title="11">    when (event_is_notifiable event) <span class="fu">$</span></a>
+<a class="sourceLine" id="cb6-10" title="10">process_line ctx src prs lno cs _ _ <span class="ot">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb6-11" title="11">    when (event_is_notifiable event) <span class="op">$</span></a>
 <a class="sourceLine" id="cb6-12" title="12">      flag_event ctx event</a>
-<a class="sourceLine" id="cb6-13" title="13">    <span class="fu">return</span> <span class="fu">$</span> <span class="dt">Just</span> <span class="fu">$</span> presentEvent event</a>
+<a class="sourceLine" id="cb6-13" title="13">    <span class="fu">return</span> <span class="op">$</span> <span class="dt">Just</span> <span class="op">$</span> presentEvent event</a>
 <a class="sourceLine" id="cb6-14" title="14">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-15" title="15">    event     <span class="fu">=</span> <span class="fu">maybe</span> def_event (mkEvent lno src) <span class="fu">$</span> prs cs</a>
+<a class="sourceLine" id="cb6-15" title="15">    event     <span class="ot">=</span> <span class="fu">maybe</span> def_event (mkEvent lno src) <span class="op">$</span> prs cs</a>
 <a class="sourceLine" id="cb6-16" title="16"></a>
-<a class="sourceLine" id="cb6-17" title="17">    def_event <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-17" title="17">    def_event <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-18" title="18">      <span class="dt">Event</span></a>
-<a class="sourceLine" id="cb6-19" title="19">        { _event_line     <span class="fu">=</span> lno</a>
-<a class="sourceLine" id="cb6-20" title="20">        , _event_source   <span class="fu">=</span> src</a>
-<a class="sourceLine" id="cb6-21" title="21">        , _event_utc      <span class="fu">=</span> <span class="fu">read</span> <span class="st">&quot;1970-01-01 00:00:00&quot;</span></a>
-<a class="sourceLine" id="cb6-22" title="22">        , _event_severity <span class="fu">=</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb6-23" title="23">        , _event_address  <span class="fu">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb6-24" title="24">        , _event_details  <span class="fu">=</span> <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb6-19" title="19">        { _event_line     <span class="ot">=</span> lno</a>
+<a class="sourceLine" id="cb6-20" title="20">        , _event_source   <span class="ot">=</span> src</a>
+<a class="sourceLine" id="cb6-21" title="21">        , _event_utc      <span class="ot">=</span> <span class="fu">read</span> <span class="st">&quot;1970-01-01 00:00:00&quot;</span></a>
+<a class="sourceLine" id="cb6-22" title="22">        , _event_severity <span class="ot">=</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb6-23" title="23">        , _event_address  <span class="ot">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb6-24" title="24">        , _event_details  <span class="ot">=</span> <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb6-25" title="25">        }</a>
 <a class="sourceLine" id="cb6-26" title="26"></a>
 <a class="sourceLine" id="cb6-27" title="27"></a>
@@ -253,25 +253,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-29" title="29"><span class="co">-- Ctx, setup, event_is_notifiable, flag_event</span></a>
 <a class="sourceLine" id="cb6-30" title="30"><span class="co">--</span></a>
 <a class="sourceLine" id="cb6-31" title="31"></a>
-<a class="sourceLine" id="cb6-32" title="32"><span class="kw">type</span> <span class="dt">Ctx</span> <span class="fu">=</span> <span class="dt">Bool</span></a>
+<a class="sourceLine" id="cb6-32" title="32"><span class="kw">type</span> <span class="dt">Ctx</span> <span class="ot">=</span> <span class="dt">Bool</span></a>
 <a class="sourceLine" id="cb6-33" title="33"></a>
 <a class="sourceLine" id="cb6-34" title="34"><span class="ot">setup ::</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Ctx</span></a>
-<a class="sourceLine" id="cb6-35" title="35">setup <span class="fu">=</span> <span class="fu">return</span></a>
+<a class="sourceLine" id="cb6-35" title="35">setup <span class="ot">=</span> <span class="fu">return</span></a>
 <a class="sourceLine" id="cb6-36" title="36"></a>
 <a class="sourceLine" id="cb6-37" title="37"><span class="ot">event_is_notifiable ::</span> <span class="dt">Event</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></a>
-<a class="sourceLine" id="cb6-38" title="38">event_is_notifiable <span class="dt">Event</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
-<a class="sourceLine" id="cb6-39" title="39">  <span class="fu">fromEnum</span> (fromMaybe <span class="dt">Debug</span> _event_severity) <span class="fu">&lt;=</span> <span class="fu">fromEnum</span> <span class="dt">Err</span></a>
+<a class="sourceLine" id="cb6-38" title="38">event_is_notifiable <span class="dt">Event</span>{<span class="op">..</span>} <span class="ot">=</span></a>
+<a class="sourceLine" id="cb6-39" title="39">  <span class="fu">fromEnum</span> (fromMaybe <span class="dt">Debug</span> _event_severity) <span class="op">&lt;=</span> <span class="fu">fromEnum</span> <span class="dt">Err</span></a>
 <a class="sourceLine" id="cb6-40" title="40"></a>
 <a class="sourceLine" id="cb6-41" title="41"><span class="ot">flag_event ::</span> <span class="dt">Ctx</span> <span class="ot">-&gt;</span> <span class="dt">Event</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb6-42" title="42">flag_event <span class="dt">False</span> <span class="fu">=</span> <span class="fu">const</span> <span class="fu">$</span> <span class="fu">return</span> ()</a>
-<a class="sourceLine" id="cb6-43" title="43">flag_event <span class="dt">True</span>  <span class="fu">=</span> LBS.hPutStrLn stderr <span class="fu">.</span> presentEvent</a>
+<a class="sourceLine" id="cb6-42" title="42">flag_event <span class="dt">False</span> <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="fu">return</span> ()</a>
+<a class="sourceLine" id="cb6-43" title="43">flag_event <span class="dt">True</span>  <span class="ot">=</span> LBS.hPutStrLn stderr <span class="op">.</span> presentEvent</a>
 <a class="sourceLine" id="cb6-44" title="44"></a>
 <a class="sourceLine" id="cb6-45" title="45"></a>
 <a class="sourceLine" id="cb6-46" title="46"><span class="co">--</span></a>
 <a class="sourceLine" id="cb6-47" title="47"><span class="co">-- Event, presentEvent, IsEvent</span></a>
 <a class="sourceLine" id="cb6-48" title="48"><span class="co">--</span></a>
 <a class="sourceLine" id="cb6-49" title="49"></a>
-<a class="sourceLine" id="cb6-50" title="50"><span class="kw">data</span> <span class="dt">Event</span> <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-50" title="50"><span class="kw">data</span> <span class="dt">Event</span> <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-51" title="51">  <span class="dt">Event</span></a>
 <a class="sourceLine" id="cb6-52" title="52">    {<span class="ot"> _event_line     ::</span> <span class="dt">LineNo</span></a>
 <a class="sourceLine" id="cb6-53" title="53">    ,<span class="ot"> _event_source   ::</span> <span class="dt">Source</span></a>
@@ -282,11 +282,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-58" title="58">    }</a>
 <a class="sourceLine" id="cb6-59" title="59">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
 <a class="sourceLine" id="cb6-60" title="60"></a>
-<a class="sourceLine" id="cb6-61" title="61"><span class="kw">data</span> <span class="dt">Source</span> <span class="fu">=</span> <span class="dt">ACC</span> <span class="fu">|</span> <span class="dt">AQQ</span> <span class="fu">|</span> <span class="dt">ERR</span> <span class="fu">|</span> <span class="dt">QQQ</span></a>
+<a class="sourceLine" id="cb6-61" title="61"><span class="kw">data</span> <span class="dt">Source</span> <span class="ot">=</span> <span class="dt">ACC</span> <span class="op">|</span> <span class="dt">AQQ</span> <span class="op">|</span> <span class="dt">ERR</span> <span class="op">|</span> <span class="dt">QQQ</span></a>
 <a class="sourceLine" id="cb6-62" title="62">  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Read</span>)</a>
 <a class="sourceLine" id="cb6-63" title="63"></a>
 <a class="sourceLine" id="cb6-64" title="64"><span class="ot">presentEvent ::</span> <span class="dt">Event</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></a>
-<a class="sourceLine" id="cb6-65" title="65">presentEvent <span class="dt">Event</span>{<span class="fu">..</span>} <span class="fu">=</span> LBS.pack <span class="fu">$</span></a>
+<a class="sourceLine" id="cb6-65" title="65">presentEvent <span class="dt">Event</span>{<span class="op">..</span>} <span class="ot">=</span> LBS.pack <span class="op">$</span></a>
 <a class="sourceLine" id="cb6-66" title="66">  printf <span class="st">&quot;%04d %s %s %-7s %3d.%3d.%3d.%3d [%s]&quot;</span></a>
 <a class="sourceLine" id="cb6-67" title="67">    (getLineNo                _event_line    )</a>
 <a class="sourceLine" id="cb6-68" title="68">    (<span class="fu">show</span>                     _event_source  )</a>
@@ -295,22 +295,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-71" title="71">                              a b c d</a>
 <a class="sourceLine" id="cb6-72" title="72">    (LBS.unpack               _event_details )</a>
 <a class="sourceLine" id="cb6-73" title="73">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-74" title="74">    (a,b,c,d) <span class="fu">=</span> _event_address</a>
+<a class="sourceLine" id="cb6-74" title="74">    (a,b,c,d) <span class="ot">=</span> _event_address</a>
 <a class="sourceLine" id="cb6-75" title="75"></a>
-<a class="sourceLine" id="cb6-76" title="76">    svrty_kw  <span class="fu">=</span> T.unpack <span class="fu">.</span> <span class="fu">fst</span> <span class="fu">.</span> severityKeywords</a>
+<a class="sourceLine" id="cb6-76" title="76">    svrty_kw  <span class="ot">=</span> T.unpack <span class="op">.</span> <span class="fu">fst</span> <span class="op">.</span> severityKeywords</a>
 <a class="sourceLine" id="cb6-77" title="77"></a>
 <a class="sourceLine" id="cb6-78" title="78"><span class="kw">class</span> <span class="dt">IsEvent</span> a <span class="kw">where</span></a>
 <a class="sourceLine" id="cb6-79" title="79"><span class="ot">  mkEvent ::</span> <span class="dt">LineNo</span> <span class="ot">-&gt;</span> <span class="dt">Source</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Event</span></a>
 <a class="sourceLine" id="cb6-80" title="80"></a>
 <a class="sourceLine" id="cb6-81" title="81"><span class="kw">instance</span> <span class="dt">IsEvent</span> <span class="dt">Access</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-82" title="82">  mkEvent lno src <span class="dt">Access</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-82" title="82">  mkEvent lno src <span class="dt">Access</span>{<span class="op">..</span>} <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-83" title="83">    <span class="dt">Event</span></a>
-<a class="sourceLine" id="cb6-84" title="84">      { _event_line     <span class="fu">=</span> lno</a>
-<a class="sourceLine" id="cb6-85" title="85">      , _event_source   <span class="fu">=</span> src</a>
-<a class="sourceLine" id="cb6-86" title="86">      , _event_utc      <span class="fu">=</span> _a_time_local</a>
-<a class="sourceLine" id="cb6-87" title="87">      , _event_severity <span class="fu">=</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb6-88" title="88">      , _event_address  <span class="fu">=</span> _a_remote_addr</a>
-<a class="sourceLine" id="cb6-89" title="89">      , _event_details  <span class="fu">=</span> LBS.pack <span class="fu">$</span></a>
+<a class="sourceLine" id="cb6-84" title="84">      { _event_line     <span class="ot">=</span> lno</a>
+<a class="sourceLine" id="cb6-85" title="85">      , _event_source   <span class="ot">=</span> src</a>
+<a class="sourceLine" id="cb6-86" title="86">      , _event_utc      <span class="ot">=</span> _a_time_local</a>
+<a class="sourceLine" id="cb6-87" title="87">      , _event_severity <span class="ot">=</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb6-88" title="88">      , _event_address  <span class="ot">=</span> _a_remote_addr</a>
+<a class="sourceLine" id="cb6-89" title="89">      , _event_details  <span class="ot">=</span> LBS.pack <span class="op">$</span></a>
 <a class="sourceLine" id="cb6-90" title="90">          printf <span class="st">&quot;%s %d %d %s %s %s&quot;</span></a>
 <a class="sourceLine" id="cb6-91" title="91">            (T.unpack _a_request        )</a>
 <a class="sourceLine" id="cb6-92" title="92">                      _a_status</a>
@@ -321,27 +321,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-97" title="97">      }</a>
 <a class="sourceLine" id="cb6-98" title="98"></a>
 <a class="sourceLine" id="cb6-99" title="99"><span class="kw">instance</span> <span class="dt">IsEvent</span> <span class="dt">Error</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-100" title="100">  mkEvent lno src <span class="dt">ERROR</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-100" title="100">  mkEvent lno src <span class="dt">ERROR</span>{<span class="op">..</span>} <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-101" title="101">    <span class="dt">Event</span></a>
-<a class="sourceLine" id="cb6-102" title="102">      { _event_line     <span class="fu">=</span> lno</a>
-<a class="sourceLine" id="cb6-103" title="103">      , _event_source   <span class="fu">=</span> src</a>
-<a class="sourceLine" id="cb6-104" title="104">      , _event_utc      <span class="fu">=</span> <span class="dt">UTCTime</span> _e_date <span class="fu">$</span> timeOfDayToTime _e_time</a>
-<a class="sourceLine" id="cb6-105" title="105">      , _event_severity <span class="fu">=</span> <span class="dt">Just</span> _e_severity</a>
-<a class="sourceLine" id="cb6-106" title="106">      , _event_address  <span class="fu">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb6-107" title="107">      , _event_details  <span class="fu">=</span> LBS.pack <span class="fu">$</span> printf <span class="st">&quot;%d#%d: %s&quot;</span> pid tid <span class="fu">$</span> LBS.unpack _e_other</a>
+<a class="sourceLine" id="cb6-102" title="102">      { _event_line     <span class="ot">=</span> lno</a>
+<a class="sourceLine" id="cb6-103" title="103">      , _event_source   <span class="ot">=</span> src</a>
+<a class="sourceLine" id="cb6-104" title="104">      , _event_utc      <span class="ot">=</span> <span class="dt">UTCTime</span> _e_date <span class="op">$</span> timeOfDayToTime _e_time</a>
+<a class="sourceLine" id="cb6-105" title="105">      , _event_severity <span class="ot">=</span> <span class="dt">Just</span> _e_severity</a>
+<a class="sourceLine" id="cb6-106" title="106">      , _event_address  <span class="ot">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb6-107" title="107">      , _event_details  <span class="ot">=</span> LBS.pack <span class="op">$</span> printf <span class="st">&quot;%d#%d: %s&quot;</span> pid tid <span class="op">$</span> LBS.unpack _e_other</a>
 <a class="sourceLine" id="cb6-108" title="108">      }</a>
 <a class="sourceLine" id="cb6-109" title="109">    <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-110" title="110">      (pid,tid) <span class="fu">=</span> _e_pid_tid</a>
+<a class="sourceLine" id="cb6-110" title="110">      (pid,tid) <span class="ot">=</span> _e_pid_tid</a>
 <a class="sourceLine" id="cb6-111" title="111"></a>
 <a class="sourceLine" id="cb6-112" title="112"><span class="kw">instance</span> <span class="dt">IsEvent</span> <span class="dt">LBS.ByteString</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-113" title="113">  mkEvent lno src lbs <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-113" title="113">  mkEvent lno src lbs <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-114" title="114">    <span class="dt">Event</span></a>
-<a class="sourceLine" id="cb6-115" title="115">      { _event_line     <span class="fu">=</span> lno</a>
-<a class="sourceLine" id="cb6-116" title="116">      , _event_source   <span class="fu">=</span> src</a>
-<a class="sourceLine" id="cb6-117" title="117">      , _event_utc      <span class="fu">=</span> <span class="fu">read</span> <span class="st">&quot;1970-01-01 00:00:00&quot;</span></a>
-<a class="sourceLine" id="cb6-118" title="118">      , _event_severity <span class="fu">=</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb6-119" title="119">      , _event_address  <span class="fu">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb6-120" title="120">      , _event_details  <span class="fu">=</span> lbs</a>
+<a class="sourceLine" id="cb6-115" title="115">      { _event_line     <span class="ot">=</span> lno</a>
+<a class="sourceLine" id="cb6-116" title="116">      , _event_source   <span class="ot">=</span> src</a>
+<a class="sourceLine" id="cb6-117" title="117">      , _event_utc      <span class="ot">=</span> <span class="fu">read</span> <span class="st">&quot;1970-01-01 00:00:00Z&quot;</span></a>
+<a class="sourceLine" id="cb6-118" title="118">      , _event_severity <span class="ot">=</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb6-119" title="119">      , _event_address  <span class="ot">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb6-120" title="120">      , _event_details  <span class="ot">=</span> lbs</a>
 <a class="sourceLine" id="cb6-121" title="121">      }</a>
 <a class="sourceLine" id="cb6-122" title="122"></a>
 <a class="sourceLine" id="cb6-123" title="123"></a>
@@ -350,29 +350,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-126" title="126"><span class="co">--</span></a>
 <a class="sourceLine" id="cb6-127" title="127"></a>
 <a class="sourceLine" id="cb6-128" title="128"><span class="ot">lpo ::</span> <span class="dt">PCRE.REOptions</span></a>
-<a class="sourceLine" id="cb6-129" title="129">lpo <span class="fu">=</span> PCRE.makeREOptions lp_prelude</a>
+<a class="sourceLine" id="cb6-129" title="129">lpo <span class="ot">=</span> PCRE.makeREOptions lp_prelude</a>
 <a class="sourceLine" id="cb6-130" title="130"></a>
 <a class="sourceLine" id="cb6-131" title="131"><span class="ot">lp_prelude ::</span> <span class="dt">Macros</span> <span class="dt">RE</span></a>
-<a class="sourceLine" id="cb6-132" title="132">lp_prelude <span class="fu">=</span> runIdentity <span class="fu">$</span> mkMacros mk regexType <span class="dt">ExclCaptures</span> lp_env</a>
+<a class="sourceLine" id="cb6-132" title="132">lp_prelude <span class="ot">=</span> runIdentity <span class="op">$</span> mkMacros mk regexType <span class="dt">ExclCaptures</span> lp_env</a>
 <a class="sourceLine" id="cb6-133" title="133">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-134" title="134">    mk   <span class="fu">=</span> <span class="fu">maybe</span> oops <span class="dt">Identity</span> <span class="fu">.</span> PCRE.compileRegexWithOptions PCRE.noPreludeREOptions</a>
+<a class="sourceLine" id="cb6-134" title="134">    mk   <span class="ot">=</span> <span class="fu">maybe</span> oops <span class="dt">Identity</span> <span class="op">.</span> PCRE.compileRegexWithOptions PCRE.noPreludeREOptions</a>
 <a class="sourceLine" id="cb6-135" title="135"></a>
-<a class="sourceLine" id="cb6-136" title="136">    oops <span class="fu">=</span> <span class="fu">error</span> <span class="st">&quot;lp_prelude&quot;</span></a>
+<a class="sourceLine" id="cb6-136" title="136">    oops <span class="ot">=</span> <span class="fu">error</span> <span class="st">&quot;lp_prelude&quot;</span></a>
 <a class="sourceLine" id="cb6-137" title="137"></a>
 <a class="sourceLine" id="cb6-138" title="138"><span class="ot">lp_macro_table ::</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb6-139" title="139">lp_macro_table <span class="fu">=</span> formatMacroTable regexType lp_env</a>
+<a class="sourceLine" id="cb6-139" title="139">lp_macro_table <span class="ot">=</span> formatMacroTable regexType lp_env</a>
 <a class="sourceLine" id="cb6-140" title="140"></a>
 <a class="sourceLine" id="cb6-141" title="141"><span class="ot">lp_macro_summary ::</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb6-142" title="142">lp_macro_summary <span class="fu">=</span> formatMacroSummary regexType lp_env</a>
+<a class="sourceLine" id="cb6-142" title="142">lp_macro_summary <span class="ot">=</span> formatMacroSummary regexType lp_env</a>
 <a class="sourceLine" id="cb6-143" title="143"></a>
 <a class="sourceLine" id="cb6-144" title="144"><span class="ot">lp_macro_sources ::</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb6-145" title="145">lp_macro_sources <span class="fu">=</span> formatMacroSources regexType <span class="dt">ExclCaptures</span> lp_env</a>
+<a class="sourceLine" id="cb6-145" title="145">lp_macro_sources <span class="ot">=</span> formatMacroSources regexType <span class="dt">ExclCaptures</span> lp_env</a>
 <a class="sourceLine" id="cb6-146" title="146"></a>
 <a class="sourceLine" id="cb6-147" title="147"><span class="ot">lp_macro_source ::</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb6-148" title="148">lp_macro_source <span class="fu">=</span> formatMacroSource regexType <span class="dt">ExclCaptures</span> lp_env</a>
+<a class="sourceLine" id="cb6-148" title="148">lp_macro_source <span class="ot">=</span> formatMacroSource regexType <span class="dt">ExclCaptures</span> lp_env</a>
 <a class="sourceLine" id="cb6-149" title="149"></a>
 <a class="sourceLine" id="cb6-150" title="150"><span class="ot">lp_env ::</span> <span class="dt">MacroEnv</span></a>
-<a class="sourceLine" id="cb6-151" title="151">lp_env <span class="fu">=</span> PCRE.preludeEnv <span class="ot">`HML.union`</span> HML.fromList</a>
+<a class="sourceLine" id="cb6-151" title="151">lp_env <span class="ot">=</span> PCRE.preludeEnv <span class="ot">`HML.union`</span> HML.fromList</a>
 <a class="sourceLine" id="cb6-152" title="152">    [ f <span class="st">&quot;user&quot;</span>        user_macro</a>
 <a class="sourceLine" id="cb6-153" title="153">    , f <span class="st">&quot;pid#tid:&quot;</span>    pid_tid_macro</a>
 <a class="sourceLine" id="cb6-154" title="154">    , f <span class="st">&quot;access&quot;</span>      access_macro</a>
@@ -380,7 +380,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-156" title="156">    , f <span class="st">&quot;error&quot;</span>       error_macro</a>
 <a class="sourceLine" id="cb6-157" title="157">    ]</a>
 <a class="sourceLine" id="cb6-158" title="158">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-159" title="159">    f mid mk <span class="fu">=</span> (mid, mk lp_env mid)</a>
+<a class="sourceLine" id="cb6-159" title="159">    f mid mk <span class="ot">=</span> (mid, mk lp_env mid)</a>
 <a class="sourceLine" id="cb6-160" title="160"></a>
 <a class="sourceLine" id="cb6-161" title="161"></a>
 <a class="sourceLine" id="cb6-162" title="162"><span class="co">--</span></a>
@@ -388,141 +388,141 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-164" title="164"><span class="co">--</span></a>
 <a class="sourceLine" id="cb6-165" title="165"></a>
 <a class="sourceLine" id="cb6-166" title="166"><span class="ot">user_macro ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-167" title="167">user_macro env mid <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-167" title="167">user_macro env mid <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-168" title="168">  runTests regexType parse_user samples env mid</a>
 <a class="sourceLine" id="cb6-169" title="169">    <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-170" title="170">      { macroSource          <span class="fu">=</span> <span class="st">&quot;(?:-|[^[:space:]]+)&quot;</span></a>
-<a class="sourceLine" id="cb6-171" title="171">      , macroSamples         <span class="fu">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
-<a class="sourceLine" id="cb6-172" title="172">      , macroCounterSamples <span class="fu">=</span> counter_samples</a>
-<a class="sourceLine" id="cb6-173" title="173">      , macroTestResults    <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb6-174" title="174">      , macroParser          <span class="fu">=</span> <span class="dt">Just</span> <span class="st">&quot;parse_user&quot;</span></a>
-<a class="sourceLine" id="cb6-175" title="175">      , macroDescription     <span class="fu">=</span> <span class="st">&quot;a user ident (per RFC1413)&quot;</span></a>
+<a class="sourceLine" id="cb6-170" title="170">      { macroSource          <span class="ot">=</span> <span class="st">&quot;(?:-|[^[:space:]]+)&quot;</span></a>
+<a class="sourceLine" id="cb6-171" title="171">      , macroSamples         <span class="ot">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
+<a class="sourceLine" id="cb6-172" title="172">      , macroCounterSamples <span class="ot">=</span> counter_samples</a>
+<a class="sourceLine" id="cb6-173" title="173">      , macroTestResults    <span class="ot">=</span> []</a>
+<a class="sourceLine" id="cb6-174" title="174">      , macroParser          <span class="ot">=</span> <span class="dt">Just</span> <span class="st">&quot;parse_user&quot;</span></a>
+<a class="sourceLine" id="cb6-175" title="175">      , macroDescription     <span class="ot">=</span> <span class="st">&quot;a user ident (per RFC1413)&quot;</span></a>
 <a class="sourceLine" id="cb6-176" title="176">      }</a>
 <a class="sourceLine" id="cb6-177" title="177">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb6-178" title="178"><span class="ot">    samples ::</span> [(<span class="dt">String</span>,<span class="dt">User</span>)]</a>
-<a class="sourceLine" id="cb6-179" title="179">    samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-179" title="179">    samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-180" title="180">        [ f <span class="st">&quot;joe&quot;</span></a>
 <a class="sourceLine" id="cb6-181" title="181">        ]</a>
 <a class="sourceLine" id="cb6-182" title="182">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-183" title="183">        f nm <span class="fu">=</span> (nm,<span class="dt">User</span> <span class="fu">$</span> LBS.pack nm)</a>
+<a class="sourceLine" id="cb6-183" title="183">        f nm <span class="ot">=</span> (nm,<span class="dt">User</span> <span class="op">$</span> LBS.pack nm)</a>
 <a class="sourceLine" id="cb6-184" title="184"></a>
-<a class="sourceLine" id="cb6-185" title="185">    counter_samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-185" title="185">    counter_samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-186" title="186">        [ <span class="st">&quot;joe user&quot;</span></a>
 <a class="sourceLine" id="cb6-187" title="187">        ]</a>
 <a class="sourceLine" id="cb6-188" title="188"></a>
 <a class="sourceLine" id="cb6-189" title="189"><span class="ot">pid_tid_macro ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-190" title="190">pid_tid_macro env mid <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-190" title="190">pid_tid_macro env mid <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-191" title="191">  runTests regexType parse_pid_tid samples env mid</a>
 <a class="sourceLine" id="cb6-192" title="192">    <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-193" title="193">      { macroSource          <span class="fu">=</span> <span class="st">&quot;(?:@{%nat})#(?:@{%nat}):&quot;</span></a>
-<a class="sourceLine" id="cb6-194" title="194">      , macroSamples         <span class="fu">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
-<a class="sourceLine" id="cb6-195" title="195">      , macroCounterSamples <span class="fu">=</span> counter_samples</a>
-<a class="sourceLine" id="cb6-196" title="196">      , macroTestResults    <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb6-197" title="197">      , macroParser          <span class="fu">=</span> <span class="dt">Just</span> <span class="st">&quot;parse_pid_tid&quot;</span></a>
-<a class="sourceLine" id="cb6-198" title="198">      , macroDescription     <span class="fu">=</span> <span class="st">&quot;&lt;PID&gt;#&lt;TID&gt;:&quot;</span></a>
+<a class="sourceLine" id="cb6-193" title="193">      { macroSource          <span class="ot">=</span> <span class="st">&quot;(?:@{%nat})#(?:@{%nat}):&quot;</span></a>
+<a class="sourceLine" id="cb6-194" title="194">      , macroSamples         <span class="ot">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
+<a class="sourceLine" id="cb6-195" title="195">      , macroCounterSamples <span class="ot">=</span> counter_samples</a>
+<a class="sourceLine" id="cb6-196" title="196">      , macroTestResults    <span class="ot">=</span> []</a>
+<a class="sourceLine" id="cb6-197" title="197">      , macroParser          <span class="ot">=</span> <span class="dt">Just</span> <span class="st">&quot;parse_pid_tid&quot;</span></a>
+<a class="sourceLine" id="cb6-198" title="198">      , macroDescription     <span class="ot">=</span> <span class="st">&quot;&lt;PID&gt;#&lt;TID&gt;:&quot;</span></a>
 <a class="sourceLine" id="cb6-199" title="199">      }</a>
 <a class="sourceLine" id="cb6-200" title="200">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb6-201" title="201"><span class="ot">    samples ::</span> [(<span class="dt">String</span>,(<span class="dt">Int</span>,<span class="dt">Int</span>))]</a>
-<a class="sourceLine" id="cb6-202" title="202">    samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-202" title="202">    samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-203" title="203">        [ f <span class="st">&quot;1378#0:&quot;</span> (<span class="dv">1378</span>,<span class="dv">0</span>)</a>
 <a class="sourceLine" id="cb6-204" title="204">        ]</a>
 <a class="sourceLine" id="cb6-205" title="205">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-206" title="206">        f <span class="fu">=</span> (,)</a>
+<a class="sourceLine" id="cb6-206" title="206">        f <span class="ot">=</span> (,)</a>
 <a class="sourceLine" id="cb6-207" title="207"></a>
-<a class="sourceLine" id="cb6-208" title="208">    counter_samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-208" title="208">    counter_samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-209" title="209">        [ <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb6-210" title="210">        , <span class="st">&quot;24#:&quot;</span></a>
 <a class="sourceLine" id="cb6-211" title="211">        , <span class="st">&quot;24.365:&quot;</span></a>
 <a class="sourceLine" id="cb6-212" title="212">        ]</a>
 <a class="sourceLine" id="cb6-213" title="213"></a>
 <a class="sourceLine" id="cb6-214" title="214"><span class="ot">access_macro ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-215" title="215">access_macro env mid <span class="fu">=</span></a>
-<a class="sourceLine" id="cb6-216" title="216">  runTests&#39; regexType (parse_access <span class="fu">.</span> <span class="fu">fmap</span> LBS.pack) samples env mid</a>
+<a class="sourceLine" id="cb6-215" title="215">access_macro env mid <span class="ot">=</span></a>
+<a class="sourceLine" id="cb6-216" title="216">  runTests&#39; regexType (parse_access <span class="op">.</span> <span class="fu">fmap</span> LBS.pack) samples env mid</a>
 <a class="sourceLine" id="cb6-217" title="217">    <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-218" title="218">      { macroSource          <span class="fu">=</span> access_re</a>
-<a class="sourceLine" id="cb6-219" title="219">      , macroSamples         <span class="fu">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
-<a class="sourceLine" id="cb6-220" title="220">      , macroCounterSamples <span class="fu">=</span> counter_samples</a>
-<a class="sourceLine" id="cb6-221" title="221">      , macroTestResults    <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb6-222" title="222">      , macroParser          <span class="fu">=</span> <span class="dt">Just</span> <span class="st">&quot;parse_a&quot;</span></a>
-<a class="sourceLine" id="cb6-223" title="223">      , macroDescription     <span class="fu">=</span> <span class="st">&quot;an Nginx access log file line&quot;</span></a>
+<a class="sourceLine" id="cb6-218" title="218">      { macroSource          <span class="ot">=</span> access_re</a>
+<a class="sourceLine" id="cb6-219" title="219">      , macroSamples         <span class="ot">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
+<a class="sourceLine" id="cb6-220" title="220">      , macroCounterSamples <span class="ot">=</span> counter_samples</a>
+<a class="sourceLine" id="cb6-221" title="221">      , macroTestResults    <span class="ot">=</span> []</a>
+<a class="sourceLine" id="cb6-222" title="222">      , macroParser          <span class="ot">=</span> <span class="dt">Just</span> <span class="st">&quot;parse_a&quot;</span></a>
+<a class="sourceLine" id="cb6-223" title="223">      , macroDescription     <span class="ot">=</span> <span class="st">&quot;an Nginx access log file line&quot;</span></a>
 <a class="sourceLine" id="cb6-224" title="224">      }</a>
 <a class="sourceLine" id="cb6-225" title="225">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb6-226" title="226"><span class="ot">    samples ::</span> [(<span class="dt">String</span>,<span class="dt">Access</span>)]</a>
-<a class="sourceLine" id="cb6-227" title="227">    samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-227" title="227">    samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-228" title="228">        [ (,) <span class="st">&quot;192.168.100.200 - - [12/Jan/2016:12:08:36 +0000] \&quot;GET / HTTP/1.1\&quot; 200 3700 \&quot;-\&quot; \&quot;My Agent\&quot; \&quot;-\&quot;&quot;</span></a>
 <a class="sourceLine" id="cb6-229" title="229">            <span class="dt">Access</span></a>
-<a class="sourceLine" id="cb6-230" title="230">              { _a_remote_addr      <span class="fu">=</span> (<span class="dv">192</span>,<span class="dv">168</span>,<span class="dv">100</span>,<span class="dv">200</span>)</a>
-<a class="sourceLine" id="cb6-231" title="231">              , _a_remote_user      <span class="fu">=</span> <span class="st">&quot;-&quot;</span></a>
-<a class="sourceLine" id="cb6-232" title="232">              , _a_time_local       <span class="fu">=</span> <span class="fu">read</span> <span class="st">&quot;2016-01-12 12:08:36 UTC&quot;</span></a>
-<a class="sourceLine" id="cb6-233" title="233">              , _a_request          <span class="fu">=</span> <span class="st">&quot;GET / HTTP/1.1&quot;</span></a>
-<a class="sourceLine" id="cb6-234" title="234">              , _a_status           <span class="fu">=</span> <span class="dv">200</span></a>
-<a class="sourceLine" id="cb6-235" title="235">              , _a_body_bytes       <span class="fu">=</span> <span class="dv">3700</span></a>
-<a class="sourceLine" id="cb6-236" title="236">              , _a_http_referrer    <span class="fu">=</span> <span class="st">&quot;-&quot;</span></a>
-<a class="sourceLine" id="cb6-237" title="237">              , _a_http_user_agent  <span class="fu">=</span> <span class="st">&quot;My Agent&quot;</span></a>
-<a class="sourceLine" id="cb6-238" title="238">              , _a_other            <span class="fu">=</span> <span class="st">&quot;-&quot;</span></a>
+<a class="sourceLine" id="cb6-230" title="230">              { _a_remote_addr      <span class="ot">=</span> (<span class="dv">192</span>,<span class="dv">168</span>,<span class="dv">100</span>,<span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb6-231" title="231">              , _a_remote_user      <span class="ot">=</span> <span class="st">&quot;-&quot;</span></a>
+<a class="sourceLine" id="cb6-232" title="232">              , _a_time_local       <span class="ot">=</span> <span class="fu">read</span> <span class="st">&quot;2016-01-12 12:08:36 UTC&quot;</span></a>
+<a class="sourceLine" id="cb6-233" title="233">              , _a_request          <span class="ot">=</span> <span class="st">&quot;GET / HTTP/1.1&quot;</span></a>
+<a class="sourceLine" id="cb6-234" title="234">              , _a_status           <span class="ot">=</span> <span class="dv">200</span></a>
+<a class="sourceLine" id="cb6-235" title="235">              , _a_body_bytes       <span class="ot">=</span> <span class="dv">3700</span></a>
+<a class="sourceLine" id="cb6-236" title="236">              , _a_http_referrer    <span class="ot">=</span> <span class="st">&quot;-&quot;</span></a>
+<a class="sourceLine" id="cb6-237" title="237">              , _a_http_user_agent  <span class="ot">=</span> <span class="st">&quot;My Agent&quot;</span></a>
+<a class="sourceLine" id="cb6-238" title="238">              , _a_other            <span class="ot">=</span> <span class="st">&quot;-&quot;</span></a>
 <a class="sourceLine" id="cb6-239" title="239">              }</a>
 <a class="sourceLine" id="cb6-240" title="240">        ]</a>
 <a class="sourceLine" id="cb6-241" title="241"></a>
-<a class="sourceLine" id="cb6-242" title="242">    counter_samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-242" title="242">    counter_samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-243" title="243">        [ <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb6-244" title="244">        , <span class="st">&quot; -  [] \&quot;\&quot;   \&quot;\&quot; \&quot;\&quot; \&quot;\&quot;&quot;</span></a>
 <a class="sourceLine" id="cb6-245" title="245">        ]</a>
 <a class="sourceLine" id="cb6-246" title="246"></a>
 <a class="sourceLine" id="cb6-247" title="247"><span class="ot">access_deg_macro ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-248" title="248">access_deg_macro env mid <span class="fu">=</span></a>
-<a class="sourceLine" id="cb6-249" title="249">  runTests&#39; regexType (parse_deg_access <span class="fu">.</span> <span class="fu">fmap</span> LBS.pack) samples env mid</a>
+<a class="sourceLine" id="cb6-248" title="248">access_deg_macro env mid <span class="ot">=</span></a>
+<a class="sourceLine" id="cb6-249" title="249">  runTests&#39; regexType (parse_deg_access <span class="op">.</span> <span class="fu">fmap</span> LBS.pack) samples env mid</a>
 <a class="sourceLine" id="cb6-250" title="250">    <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-251" title="251">      { macroSource          <span class="fu">=</span> <span class="st">&quot; -  \\[\\] \&quot;\&quot;   \&quot;\&quot; \&quot;\&quot; \&quot;\&quot;&quot;</span></a>
-<a class="sourceLine" id="cb6-252" title="252">      , macroSamples         <span class="fu">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
-<a class="sourceLine" id="cb6-253" title="253">      , macroCounterSamples <span class="fu">=</span> counter_samples</a>
-<a class="sourceLine" id="cb6-254" title="254">      , macroTestResults    <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb6-255" title="255">      , macroParser          <span class="fu">=</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb6-256" title="256">      , macroDescription     <span class="fu">=</span> <span class="st">&quot;a degenerate Nginx access log file line&quot;</span></a>
+<a class="sourceLine" id="cb6-251" title="251">      { macroSource          <span class="ot">=</span> <span class="st">&quot; -  \\[\\] \&quot;\&quot;   \&quot;\&quot; \&quot;\&quot; \&quot;\&quot;&quot;</span></a>
+<a class="sourceLine" id="cb6-252" title="252">      , macroSamples         <span class="ot">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
+<a class="sourceLine" id="cb6-253" title="253">      , macroCounterSamples <span class="ot">=</span> counter_samples</a>
+<a class="sourceLine" id="cb6-254" title="254">      , macroTestResults    <span class="ot">=</span> []</a>
+<a class="sourceLine" id="cb6-255" title="255">      , macroParser          <span class="ot">=</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb6-256" title="256">      , macroDescription     <span class="ot">=</span> <span class="st">&quot;a degenerate Nginx access log file line&quot;</span></a>
 <a class="sourceLine" id="cb6-257" title="257">      }</a>
 <a class="sourceLine" id="cb6-258" title="258">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb6-259" title="259"><span class="ot">    samples ::</span> [(<span class="dt">String</span>,<span class="dt">Access</span>)]</a>
-<a class="sourceLine" id="cb6-260" title="260">    samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-260" title="260">    samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-261" title="261">        [ (,) <span class="st">&quot; -  [] \&quot;\&quot;   \&quot;\&quot; \&quot;\&quot; \&quot;\&quot;&quot;</span> deg_access</a>
 <a class="sourceLine" id="cb6-262" title="262">        ]</a>
 <a class="sourceLine" id="cb6-263" title="263"></a>
-<a class="sourceLine" id="cb6-264" title="264">    counter_samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-264" title="264">    counter_samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-265" title="265">        [ <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb6-266" title="266">        , <span class="st">&quot;foo&quot;</span></a>
 <a class="sourceLine" id="cb6-267" title="267">        ]</a>
 <a class="sourceLine" id="cb6-268" title="268"></a>
 <a class="sourceLine" id="cb6-269" title="269"><span class="ot">error_macro ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-270" title="270">error_macro env mid <span class="fu">=</span></a>
-<a class="sourceLine" id="cb6-271" title="271">  runTests&#39; regexType (parse_error <span class="fu">.</span> <span class="fu">fmap</span> LBS.pack) samples env mid</a>
+<a class="sourceLine" id="cb6-270" title="270">error_macro env mid <span class="ot">=</span></a>
+<a class="sourceLine" id="cb6-271" title="271">  runTests&#39; regexType (parse_error <span class="op">.</span> <span class="fu">fmap</span> LBS.pack) samples env mid</a>
 <a class="sourceLine" id="cb6-272" title="272">    <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb6-273" title="273">      { macroSource          <span class="fu">=</span> error_re</a>
-<a class="sourceLine" id="cb6-274" title="274">      , macroSamples         <span class="fu">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
-<a class="sourceLine" id="cb6-275" title="275">      , macroCounterSamples <span class="fu">=</span> counter_samples</a>
-<a class="sourceLine" id="cb6-276" title="276">      , macroTestResults    <span class="fu">=</span> []</a>
-<a class="sourceLine" id="cb6-277" title="277">      , macroParser          <span class="fu">=</span> <span class="dt">Just</span> <span class="st">&quot;parse_e&quot;</span></a>
-<a class="sourceLine" id="cb6-278" title="278">      , macroDescription     <span class="fu">=</span> <span class="st">&quot;an Nginx error log file line&quot;</span></a>
+<a class="sourceLine" id="cb6-273" title="273">      { macroSource          <span class="ot">=</span> error_re</a>
+<a class="sourceLine" id="cb6-274" title="274">      , macroSamples         <span class="ot">=</span> <span class="fu">map</span> <span class="fu">fst</span> samples</a>
+<a class="sourceLine" id="cb6-275" title="275">      , macroCounterSamples <span class="ot">=</span> counter_samples</a>
+<a class="sourceLine" id="cb6-276" title="276">      , macroTestResults    <span class="ot">=</span> []</a>
+<a class="sourceLine" id="cb6-277" title="277">      , macroParser          <span class="ot">=</span> <span class="dt">Just</span> <span class="st">&quot;parse_e&quot;</span></a>
+<a class="sourceLine" id="cb6-278" title="278">      , macroDescription     <span class="ot">=</span> <span class="st">&quot;an Nginx error log file line&quot;</span></a>
 <a class="sourceLine" id="cb6-279" title="279">      }</a>
 <a class="sourceLine" id="cb6-280" title="280">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb6-281" title="281"><span class="ot">    samples ::</span> [(<span class="dt">String</span>,<span class="dt">Error</span>)]</a>
-<a class="sourceLine" id="cb6-282" title="282">    samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-282" title="282">    samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-283" title="283">        [ (,) <span class="st">&quot;2016/12/21 11:53:35 [emerg] 1378#0: foo&quot;</span></a>
 <a class="sourceLine" id="cb6-284" title="284">            <span class="dt">ERROR</span></a>
-<a class="sourceLine" id="cb6-285" title="285">              { _e_date     <span class="fu">=</span> <span class="fu">read</span> <span class="st">&quot;2016-12-21&quot;</span></a>
-<a class="sourceLine" id="cb6-286" title="286">              , _e_time     <span class="fu">=</span> <span class="fu">read</span> <span class="st">&quot;11:53:35&quot;</span></a>
-<a class="sourceLine" id="cb6-287" title="287">              , _e_severity <span class="fu">=</span> <span class="dt">Emerg</span></a>
-<a class="sourceLine" id="cb6-288" title="288">              , _e_pid_tid  <span class="fu">=</span> (<span class="dv">1378</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb6-289" title="289">              , _e_other    <span class="fu">=</span> <span class="st">&quot; foo&quot;</span></a>
+<a class="sourceLine" id="cb6-285" title="285">              { _e_date     <span class="ot">=</span> <span class="fu">read</span> <span class="st">&quot;2016-12-21&quot;</span></a>
+<a class="sourceLine" id="cb6-286" title="286">              , _e_time     <span class="ot">=</span> <span class="fu">read</span> <span class="st">&quot;11:53:35&quot;</span></a>
+<a class="sourceLine" id="cb6-287" title="287">              , _e_severity <span class="ot">=</span> <span class="dt">Emerg</span></a>
+<a class="sourceLine" id="cb6-288" title="288">              , _e_pid_tid  <span class="ot">=</span> (<span class="dv">1378</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb6-289" title="289">              , _e_other    <span class="ot">=</span> <span class="st">&quot; foo&quot;</span></a>
 <a class="sourceLine" id="cb6-290" title="290">              }</a>
 <a class="sourceLine" id="cb6-291" title="291">        , (,) <span class="st">&quot;2017/01/04 05:40:19 [error] 31623#0: *1861296 no \&quot;ssl_certificate\&quot; is defined in server listening on SSL port while SSL handshaking, client: 192.168.31.38, server: 0.0.0.0:80&quot;</span></a>
 <a class="sourceLine" id="cb6-292" title="292">            <span class="dt">ERROR</span></a>
-<a class="sourceLine" id="cb6-293" title="293">              { _e_date     <span class="fu">=</span> <span class="fu">read</span> <span class="st">&quot;2017-01-04&quot;</span></a>
-<a class="sourceLine" id="cb6-294" title="294">              , _e_time     <span class="fu">=</span> <span class="fu">read</span> <span class="st">&quot;05:40:19&quot;</span></a>
-<a class="sourceLine" id="cb6-295" title="295">              , _e_severity <span class="fu">=</span> <span class="dt">Err</span></a>
-<a class="sourceLine" id="cb6-296" title="296">              , _e_pid_tid  <span class="fu">=</span> (<span class="dv">31623</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb6-297" title="297">              , _e_other    <span class="fu">=</span> <span class="st">&quot; *1861296 no \&quot;ssl_certificate\&quot; is defined in server listening on SSL port while SSL handshaking, client: 192.168.31.38, server: 0.0.0.0:80&quot;</span></a>
+<a class="sourceLine" id="cb6-293" title="293">              { _e_date     <span class="ot">=</span> <span class="fu">read</span> <span class="st">&quot;2017-01-04&quot;</span></a>
+<a class="sourceLine" id="cb6-294" title="294">              , _e_time     <span class="ot">=</span> <span class="fu">read</span> <span class="st">&quot;05:40:19&quot;</span></a>
+<a class="sourceLine" id="cb6-295" title="295">              , _e_severity <span class="ot">=</span> <span class="dt">Err</span></a>
+<a class="sourceLine" id="cb6-296" title="296">              , _e_pid_tid  <span class="ot">=</span> (<span class="dv">31623</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb6-297" title="297">              , _e_other    <span class="ot">=</span> <span class="st">&quot; *1861296 no \&quot;ssl_certificate\&quot; is defined in server listening on SSL port while SSL handshaking, client: 192.168.31.38, server: 0.0.0.0:80&quot;</span></a>
 <a class="sourceLine" id="cb6-298" title="298">              }</a>
 <a class="sourceLine" id="cb6-299" title="299">        ]</a>
 <a class="sourceLine" id="cb6-300" title="300"></a>
-<a class="sourceLine" id="cb6-301" title="301">    counter_samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-301" title="301">    counter_samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-302" title="302">        [ <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb6-303" title="303">        , <span class="st">&quot;foo&quot;</span></a>
 <a class="sourceLine" id="cb6-304" title="304">        ]</a></code></pre></div>
@@ -531,21 +531,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb7-3" title="3"><span class="co">-- Access, access_re, deg_access, parse_deg_access, parse_access</span></a>
 <a class="sourceLine" id="cb7-4" title="4"><span class="co">--</span></a>
 <a class="sourceLine" id="cb7-5" title="5"></a>
-<a class="sourceLine" id="cb7-6" title="6"><span class="kw">data</span> <span class="dt">Access</span> <span class="fu">=</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="kw">data</span> <span class="dt">Access</span> <span class="ot">=</span></a>
 <a class="sourceLine" id="cb7-7" title="7">  <span class="dt">Access</span></a>
-<a class="sourceLine" id="cb7-8" title="8">    {<span class="ot"> _a_remote_addr      ::</span> <span class="fu">!</span><span class="dt">IPV4Address</span></a>
-<a class="sourceLine" id="cb7-9" title="9">    ,<span class="ot"> _a_remote_user      ::</span> <span class="fu">!</span><span class="dt">User</span></a>
-<a class="sourceLine" id="cb7-10" title="10">    ,<span class="ot"> _a_time_local       ::</span> <span class="fu">!</span><span class="dt">UTCTime</span></a>
-<a class="sourceLine" id="cb7-11" title="11">    ,<span class="ot"> _a_request          ::</span> <span class="fu">!</span><span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb7-12" title="12">    ,<span class="ot"> _a_status           ::</span> <span class="fu">!</span><span class="dt">Int</span></a>
-<a class="sourceLine" id="cb7-13" title="13">    ,<span class="ot"> _a_body_bytes       ::</span> <span class="fu">!</span><span class="dt">Int</span></a>
-<a class="sourceLine" id="cb7-14" title="14">    ,<span class="ot"> _a_http_referrer    ::</span> <span class="fu">!</span><span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb7-15" title="15">    ,<span class="ot"> _a_http_user_agent  ::</span> <span class="fu">!</span><span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb7-16" title="16">    ,<span class="ot"> _a_other            ::</span> <span class="fu">!</span><span class="dt">T.Text</span></a>
+<a class="sourceLine" id="cb7-8" title="8">    {<span class="ot"> _a_remote_addr      ::</span> <span class="op">!</span><span class="dt">IPV4Address</span></a>
+<a class="sourceLine" id="cb7-9" title="9">    ,<span class="ot"> _a_remote_user      ::</span> <span class="op">!</span><span class="dt">User</span></a>
+<a class="sourceLine" id="cb7-10" title="10">    ,<span class="ot"> _a_time_local       ::</span> <span class="op">!</span><span class="dt">UTCTime</span></a>
+<a class="sourceLine" id="cb7-11" title="11">    ,<span class="ot"> _a_request          ::</span> <span class="op">!</span><span class="dt">T.Text</span></a>
+<a class="sourceLine" id="cb7-12" title="12">    ,<span class="ot"> _a_status           ::</span> <span class="op">!</span><span class="dt">Int</span></a>
+<a class="sourceLine" id="cb7-13" title="13">    ,<span class="ot"> _a_body_bytes       ::</span> <span class="op">!</span><span class="dt">Int</span></a>
+<a class="sourceLine" id="cb7-14" title="14">    ,<span class="ot"> _a_http_referrer    ::</span> <span class="op">!</span><span class="dt">T.Text</span></a>
+<a class="sourceLine" id="cb7-15" title="15">    ,<span class="ot"> _a_http_user_agent  ::</span> <span class="op">!</span><span class="dt">T.Text</span></a>
+<a class="sourceLine" id="cb7-16" title="16">    ,<span class="ot"> _a_other            ::</span> <span class="op">!</span><span class="dt">T.Text</span></a>
 <a class="sourceLine" id="cb7-17" title="17">    }</a>
 <a class="sourceLine" id="cb7-18" title="18">  <span class="kw">deriving</span> (<span class="dt">Eq</span>,<span class="dt">Show</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1"><span class="ot">access_re ::</span> <span class="dt">RegexSource</span></a>
-<a class="sourceLine" id="cb8-2" title="2">access_re <span class="fu">=</span> <span class="dt">RegexSource</span> <span class="fu">$</span> <span class="fu">unwords</span></a>
+<a class="sourceLine" id="cb8-2" title="2">access_re <span class="ot">=</span> <span class="dt">RegexSource</span> <span class="op">$</span> <span class="fu">unwords</span></a>
 <a class="sourceLine" id="cb8-3" title="3">  [ <span class="st">&quot;(@{%address.ipv4})&quot;</span></a>
 <a class="sourceLine" id="cb8-4" title="4">  , <span class="st">&quot;-&quot;</span></a>
 <a class="sourceLine" id="cb8-5" title="5">  , <span class="st">&quot;(@{user})&quot;</span></a>
@@ -558,49 +558,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb8-12" title="12">  , <span class="st">&quot;(@{%string.simple})&quot;</span></a>
 <a class="sourceLine" id="cb8-13" title="13">  ]</a></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1"><span class="ot">deg_access ::</span> <span class="dt">Access</span></a>
-<a class="sourceLine" id="cb9-2" title="2">deg_access <span class="fu">=</span></a>
+<a class="sourceLine" id="cb9-2" title="2">deg_access <span class="ot">=</span></a>
 <a class="sourceLine" id="cb9-3" title="3">  <span class="dt">Access</span></a>
-<a class="sourceLine" id="cb9-4" title="4">    { _a_remote_addr      <span class="fu">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb9-5" title="5">    , _a_remote_user      <span class="fu">=</span> <span class="st">&quot;-&quot;</span></a>
-<a class="sourceLine" id="cb9-6" title="6">    , _a_time_local       <span class="fu">=</span> <span class="fu">read</span> <span class="st">&quot;1970-01-01 00:00:00&quot;</span></a>
-<a class="sourceLine" id="cb9-7" title="7">    , _a_request          <span class="fu">=</span> <span class="st">&quot;&quot;</span></a>
-<a class="sourceLine" id="cb9-8" title="8">    , _a_status           <span class="fu">=</span> <span class="dv">0</span></a>
-<a class="sourceLine" id="cb9-9" title="9">    , _a_body_bytes       <span class="fu">=</span> <span class="dv">0</span></a>
-<a class="sourceLine" id="cb9-10" title="10">    , _a_http_referrer    <span class="fu">=</span> <span class="st">&quot;&quot;</span></a>
-<a class="sourceLine" id="cb9-11" title="11">    , _a_http_user_agent  <span class="fu">=</span> <span class="st">&quot;&quot;</span></a>
-<a class="sourceLine" id="cb9-12" title="12">    , _a_other            <span class="fu">=</span> <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb9-4" title="4">    { _a_remote_addr      <span class="ot">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb9-5" title="5">    , _a_remote_user      <span class="ot">=</span> <span class="st">&quot;-&quot;</span></a>
+<a class="sourceLine" id="cb9-6" title="6">    , _a_time_local       <span class="ot">=</span> <span class="fu">read</span> <span class="st">&quot;1970-01-01 00:00:00Z&quot;</span></a>
+<a class="sourceLine" id="cb9-7" title="7">    , _a_request          <span class="ot">=</span> <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb9-8" title="8">    , _a_status           <span class="ot">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb9-9" title="9">    , _a_body_bytes       <span class="ot">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb9-10" title="10">    , _a_http_referrer    <span class="ot">=</span> <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb9-11" title="11">    , _a_http_user_agent  <span class="ot">=</span> <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb9-12" title="12">    , _a_other            <span class="ot">=</span> <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb9-13" title="13">    }</a>
 <a class="sourceLine" id="cb9-14" title="14"></a>
 <a class="sourceLine" id="cb9-15" title="15"><span class="ot">parse_deg_access ::</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Access</span></a>
-<a class="sourceLine" id="cb9-16" title="16">parse_deg_access <span class="dt">Match</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
-<a class="sourceLine" id="cb9-17" title="17">  <span class="kw">case</span> matchSource <span class="fu">==</span> <span class="st">&quot; -  [] \&quot;\&quot;   \&quot;\&quot; \&quot;\&quot; \&quot;\&quot;&quot;</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb9-16" title="16">parse_deg_access <span class="dt">Match</span>{<span class="op">..</span>} <span class="ot">=</span></a>
+<a class="sourceLine" id="cb9-17" title="17">  <span class="kw">case</span> matchSource <span class="op">==</span> <span class="st">&quot; -  [] \&quot;\&quot;   \&quot;\&quot; \&quot;\&quot; \&quot;\&quot;&quot;</span> <span class="kw">of</span></a>
 <a class="sourceLine" id="cb9-18" title="18">    <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dt">Just</span> deg_access</a>
 <a class="sourceLine" id="cb9-19" title="19">    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
 <a class="sourceLine" id="cb9-20" title="20"></a>
 <a class="sourceLine" id="cb9-21" title="21"><span class="ot">parse_a ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Access</span></a>
-<a class="sourceLine" id="cb9-22" title="22">parse_a lbs <span class="fu">=</span> parse_access <span class="fu">$</span> lbs <span class="fu">?=~</span> [re_|@{access}|] lpo</a>
+<a class="sourceLine" id="cb9-22" title="22">parse_a lbs <span class="ot">=</span> parse_access <span class="op">$</span> lbs <span class="op">?=~</span> [re_|@{access}|] lpo</a>
 <a class="sourceLine" id="cb9-23" title="23"></a>
 <a class="sourceLine" id="cb9-24" title="24"><span class="ot">parse_access ::</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Access</span></a>
-<a class="sourceLine" id="cb9-25" title="25">parse_access cs <span class="fu">=</span></a>
+<a class="sourceLine" id="cb9-25" title="25">parse_access cs <span class="ot">=</span></a>
 <a class="sourceLine" id="cb9-26" title="26">  <span class="dt">Access</span></a>
-<a class="sourceLine" id="cb9-27" title="27">    <span class="fu">&lt;$&gt;</span> f parseIPv4Address  [cp|1|]</a>
-<a class="sourceLine" id="cb9-28" title="28">    <span class="fu">&lt;*&gt;</span> f parse_user        [cp|2|]</a>
-<a class="sourceLine" id="cb9-29" title="29">    <span class="fu">&lt;*&gt;</span> f parseDateTimeCLF  [cp|3|]</a>
-<a class="sourceLine" id="cb9-30" title="30">    <span class="fu">&lt;*&gt;</span> f parseSimpleString [cp|4|]</a>
-<a class="sourceLine" id="cb9-31" title="31">    <span class="fu">&lt;*&gt;</span> f parseInteger      [cp|5|]</a>
-<a class="sourceLine" id="cb9-32" title="32">    <span class="fu">&lt;*&gt;</span> f parseInteger      [cp|6|]</a>
-<a class="sourceLine" id="cb9-33" title="33">    <span class="fu">&lt;*&gt;</span> f parseSimpleString [cp|7|]</a>
-<a class="sourceLine" id="cb9-34" title="34">    <span class="fu">&lt;*&gt;</span> f parseSimpleString [cp|8|]</a>
-<a class="sourceLine" id="cb9-35" title="35">    <span class="fu">&lt;*&gt;</span> f parseSimpleString [cp|9|]</a>
+<a class="sourceLine" id="cb9-27" title="27">    <span class="op">&lt;$&gt;</span> f parseIPv4Address  [cp|1|]</a>
+<a class="sourceLine" id="cb9-28" title="28">    <span class="op">&lt;*&gt;</span> f parse_user        [cp|2|]</a>
+<a class="sourceLine" id="cb9-29" title="29">    <span class="op">&lt;*&gt;</span> f parseDateTimeCLF  [cp|3|]</a>
+<a class="sourceLine" id="cb9-30" title="30">    <span class="op">&lt;*&gt;</span> f parseSimpleString [cp|4|]</a>
+<a class="sourceLine" id="cb9-31" title="31">    <span class="op">&lt;*&gt;</span> f parseInteger      [cp|5|]</a>
+<a class="sourceLine" id="cb9-32" title="32">    <span class="op">&lt;*&gt;</span> f parseInteger      [cp|6|]</a>
+<a class="sourceLine" id="cb9-33" title="33">    <span class="op">&lt;*&gt;</span> f parseSimpleString [cp|7|]</a>
+<a class="sourceLine" id="cb9-34" title="34">    <span class="op">&lt;*&gt;</span> f parseSimpleString [cp|8|]</a>
+<a class="sourceLine" id="cb9-35" title="35">    <span class="op">&lt;*&gt;</span> f parseSimpleString [cp|9|]</a>
 <a class="sourceLine" id="cb9-36" title="36">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb9-37" title="37">    f psr i <span class="fu">=</span> psr <span class="fu">$</span> capturedText <span class="fu">$</span> capture i cs</a>
+<a class="sourceLine" id="cb9-37" title="37">    f psr i <span class="ot">=</span> psr <span class="op">$</span> capturedText <span class="op">$</span> capture i cs</a>
 <a class="sourceLine" id="cb9-38" title="38"></a>
 <a class="sourceLine" id="cb9-39" title="39"></a>
 <a class="sourceLine" id="cb9-40" title="40"><span class="co">--</span></a>
 <a class="sourceLine" id="cb9-41" title="41"><span class="co">-- Error, error_re, parse_error</span></a>
 <a class="sourceLine" id="cb9-42" title="42"><span class="co">--</span></a>
 <a class="sourceLine" id="cb9-43" title="43"></a>
-<a class="sourceLine" id="cb9-44" title="44"><span class="kw">data</span> <span class="dt">Error</span> <span class="fu">=</span></a>
+<a class="sourceLine" id="cb9-44" title="44"><span class="kw">data</span> <span class="dt">Error</span> <span class="ot">=</span></a>
 <a class="sourceLine" id="cb9-45" title="45">  <span class="dt">ERROR</span></a>
 <a class="sourceLine" id="cb9-46" title="46">    {<span class="ot"> _e_date     ::</span> <span class="dt">Day</span></a>
 <a class="sourceLine" id="cb9-47" title="47">    ,<span class="ot"> _e_time     ::</span> <span class="dt">TimeOfDay</span></a>
@@ -611,7 +611,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb9-52" title="52">  <span class="kw">deriving</span> (<span class="dt">Eq</span>,<span class="dt">Show</span>)</a>
 <a class="sourceLine" id="cb9-53" title="53"></a>
 <a class="sourceLine" id="cb9-54" title="54"><span class="ot">error_re ::</span> <span class="dt">RegexSource</span></a>
-<a class="sourceLine" id="cb9-55" title="55">error_re <span class="fu">=</span> <span class="dt">RegexSource</span> <span class="fu">$</span> <span class="fu">unwords</span></a>
+<a class="sourceLine" id="cb9-55" title="55">error_re <span class="ot">=</span> <span class="dt">RegexSource</span> <span class="op">$</span> <span class="fu">unwords</span></a>
 <a class="sourceLine" id="cb9-56" title="56">  [ <span class="st">&quot;(@{%date.slashes})&quot;</span></a>
 <a class="sourceLine" id="cb9-57" title="57">  , <span class="st">&quot;(@{%time})&quot;</span></a>
 <a class="sourceLine" id="cb9-58" title="58">  , <span class="st">&quot;\\[(@{%syslog.severity})\\]&quot;</span></a>
@@ -619,30 +619,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb9-60" title="60">  ]</a>
 <a class="sourceLine" id="cb9-61" title="61"></a>
 <a class="sourceLine" id="cb9-62" title="62"><span class="ot">parse_e ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Error</span></a>
-<a class="sourceLine" id="cb9-63" title="63">parse_e lbs <span class="fu">=</span> parse_error <span class="fu">$</span> lbs <span class="fu">?=~</span> [re_|@{error}|] lpo</a>
+<a class="sourceLine" id="cb9-63" title="63">parse_e lbs <span class="ot">=</span> parse_error <span class="op">$</span> lbs <span class="op">?=~</span> [re_|@{error}|] lpo</a>
 <a class="sourceLine" id="cb9-64" title="64"></a>
 <a class="sourceLine" id="cb9-65" title="65"><span class="ot">parse_error ::</span> <span class="dt">Match</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Error</span></a>
-<a class="sourceLine" id="cb9-66" title="66">parse_error cs <span class="fu">=</span></a>
+<a class="sourceLine" id="cb9-66" title="66">parse_error cs <span class="ot">=</span></a>
 <a class="sourceLine" id="cb9-67" title="67">  <span class="dt">ERROR</span></a>
-<a class="sourceLine" id="cb9-68" title="68">    <span class="fu">&lt;$&gt;</span> f parseSlashesDate    [cp|1|]</a>
-<a class="sourceLine" id="cb9-69" title="69">    <span class="fu">&lt;*&gt;</span> f parseTimeOfDay      [cp|2|]</a>
-<a class="sourceLine" id="cb9-70" title="70">    <span class="fu">&lt;*&gt;</span> f parseSeverity [cp|3|]</a>
-<a class="sourceLine" id="cb9-71" title="71">    <span class="fu">&lt;*&gt;</span> f parse_pid_tid       [cp|4|]</a>
-<a class="sourceLine" id="cb9-72" title="72">    <span class="fu">&lt;*&gt;</span> f <span class="dt">Just</span>                [cp|5|]</a>
+<a class="sourceLine" id="cb9-68" title="68">    <span class="op">&lt;$&gt;</span> f parseSlashesDate    [cp|1|]</a>
+<a class="sourceLine" id="cb9-69" title="69">    <span class="op">&lt;*&gt;</span> f parseTimeOfDay      [cp|2|]</a>
+<a class="sourceLine" id="cb9-70" title="70">    <span class="op">&lt;*&gt;</span> f parseSeverity [cp|3|]</a>
+<a class="sourceLine" id="cb9-71" title="71">    <span class="op">&lt;*&gt;</span> f parse_pid_tid       [cp|4|]</a>
+<a class="sourceLine" id="cb9-72" title="72">    <span class="op">&lt;*&gt;</span> f <span class="dt">Just</span>                [cp|5|]</a>
 <a class="sourceLine" id="cb9-73" title="73">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb9-74" title="74">    f psr i <span class="fu">=</span> psr <span class="fu">$</span> capturedText <span class="fu">$</span> capture i cs</a>
+<a class="sourceLine" id="cb9-74" title="74">    f psr i <span class="ot">=</span> psr <span class="op">$</span> capturedText <span class="op">$</span> capture i cs</a>
 <a class="sourceLine" id="cb9-75" title="75"></a>
 <a class="sourceLine" id="cb9-76" title="76"></a>
 <a class="sourceLine" id="cb9-77" title="77"><span class="co">--</span></a>
 <a class="sourceLine" id="cb9-78" title="78"><span class="co">-- User, parseUser</span></a>
 <a class="sourceLine" id="cb9-79" title="79"><span class="co">--</span></a>
 <a class="sourceLine" id="cb9-80" title="80"></a>
-<a class="sourceLine" id="cb9-81" title="81"><span class="kw">newtype</span> <span class="dt">User</span> <span class="fu">=</span></a>
+<a class="sourceLine" id="cb9-81" title="81"><span class="kw">newtype</span> <span class="dt">User</span> <span class="ot">=</span></a>
 <a class="sourceLine" id="cb9-82" title="82">    <span class="dt">User</span> {<span class="ot"> _User ::</span> <span class="dt">LBS.ByteString</span> }</a>
 <a class="sourceLine" id="cb9-83" title="83">  <span class="kw">deriving</span> (<span class="dt">IsString</span>,<span class="dt">Ord</span>,<span class="dt">Eq</span>,<span class="dt">Show</span>)</a>
 <a class="sourceLine" id="cb9-84" title="84"></a>
 <a class="sourceLine" id="cb9-85" title="85"><span class="ot">parse_user ::</span> <span class="dt">Replace</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">User</span></a>
-<a class="sourceLine" id="cb9-86" title="86">parse_user <span class="fu">=</span> <span class="dt">Just</span> <span class="fu">.</span> <span class="dt">User</span> <span class="fu">.</span> LBS.pack <span class="fu">.</span> unpackR</a>
+<a class="sourceLine" id="cb9-86" title="86">parse_user <span class="ot">=</span> <span class="dt">Just</span> <span class="op">.</span> <span class="dt">User</span> <span class="op">.</span> LBS.pack <span class="op">.</span> unpackR</a>
 <a class="sourceLine" id="cb9-87" title="87"></a>
 <a class="sourceLine" id="cb9-88" title="88"></a>
 <a class="sourceLine" id="cb9-89" title="89"><span class="co">--</span></a>
@@ -650,14 +650,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb9-91" title="91"><span class="co">--</span></a>
 <a class="sourceLine" id="cb9-92" title="92"></a>
 <a class="sourceLine" id="cb9-93" title="93"><span class="ot">parse_pid_tid ::</span> <span class="dt">Replace</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Int</span>,<span class="dt">Int</span>)</a>
-<a class="sourceLine" id="cb9-94" title="94">parse_pid_tid x <span class="fu">=</span> <span class="kw">case</span> allMatches <span class="fu">$</span> unpackR x <span class="fu">S.*=~</span> [re|@{%nat}|] <span class="kw">of</span></a>
-<a class="sourceLine" id="cb9-95" title="95">    [cs,cs&#39;] <span class="ot">-&gt;</span> (,) <span class="fu">&lt;$&gt;</span> p cs <span class="fu">&lt;*&gt;</span> p cs&#39;</a>
+<a class="sourceLine" id="cb9-94" title="94">parse_pid_tid x <span class="ot">=</span> <span class="kw">case</span> allMatches <span class="op">$</span> unpackR x <span class="op">S.*=~</span> [re|@{%nat}|] <span class="kw">of</span></a>
+<a class="sourceLine" id="cb9-95" title="95">    [cs,cs&#39;] <span class="ot">-&gt;</span> (,) <span class="op">&lt;$&gt;</span> p cs <span class="op">&lt;*&gt;</span> p cs&#39;</a>
 <a class="sourceLine" id="cb9-96" title="96">    _        <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
 <a class="sourceLine" id="cb9-97" title="97">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb9-98" title="98">    p cs <span class="fu">=</span> matchCapture cs <span class="fu">&gt;&gt;=</span> parseInteger <span class="fu">.</span> capturedText</a>
+<a class="sourceLine" id="cb9-98" title="98">    p cs <span class="ot">=</span> matchCapture cs <span class="op">&gt;&gt;=</span> parseInteger <span class="op">.</span> capturedText</a>
 <a class="sourceLine" id="cb9-99" title="99"></a>
 <a class="sourceLine" id="cb9-100" title="100"><span class="ot">regexType ::</span> <span class="dt">RegexType</span></a>
-<a class="sourceLine" id="cb9-101" title="101">regexType <span class="fu">=</span> PCRE.regexType</a></code></pre></div>
+<a class="sourceLine" id="cb9-101" title="101">regexType <span class="ot">=</span> PCRE.regexType</a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

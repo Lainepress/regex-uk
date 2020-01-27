@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 </div>
 <div class='litcontent'>
-<header>
+<header id="title-block-header">
 <h1 class="title">re-tutorial-options.lhs</h1>
 </header>
 <h1 id="the-regex-options-tutorial">The regex Options Tutorial</h1>
@@ -112,7 +112,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-5" title="5"><span class="kw">import</span>           <span class="dt">Text.Regex.PCRE</span></a></code></pre></div>
 <h2 id="compiling-res-with-the-complete-reoptions">Compiling REs with the Complete REOptions</h2>
 Each <code>regex-tools</code> back end — TDFA and PCRE — has it own complile-time options and execution-time options, called in each case <code>CompOption</code> and <code>ExecOption</code>. The SimpleREOptions selected with the RE parser, e.g.,
-<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [reBlockInsensitive|[0-9a-f]{2}$|]</a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="op">*=~</span> [reBlockInsensitive|[0-9a-f]{2}$|]</a>
 <a class="sourceLine" id="cb3-2" title="2"><span class="dv">1</span></a></code></pre></div>
 configures the RE back end accordingly so that you don’t have to, but you may need full access to your chosen back end’s options, in which case you will need to know about the <code>REOptions</code> type, defined by each of the back ends in terms of the <code>REOptions_</code> type of <code>Text.RE.REOptions</code> as follows.
 <div class="inlinecodeblock">
@@ -127,11 +127,11 @@ configures the RE back end accordingly so that you don’t have to, but you may 
 <a class="sourceLine" id="cb5-4" title="4"><span class="co">-- execution time options, respectively); each back end will define an</span></a>
 <a class="sourceLine" id="cb5-5" title="5"><span class="co">-- @REOptions@ type that fills out these three type parameters with the</span></a>
 <a class="sourceLine" id="cb5-6" title="6"><span class="co">-- apropriate types (see, for example, &quot;Text.RE.TDFA&quot;)</span></a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="kw">data</span> <span class="dt">REOptions_</span> r c e <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="kw">data</span> <span class="dt">REOptions_</span> r c e <span class="ot">=</span></a>
 <a class="sourceLine" id="cb5-8" title="8">  <span class="dt">REOptions</span></a>
-<a class="sourceLine" id="cb5-9" title="9">    {<span class="ot"> optionsMacs ::</span> <span class="fu">!</span>(<span class="dt">Macros</span> r)    <span class="co">-- ^ the available TestBench RE macros</span></a>
-<a class="sourceLine" id="cb5-10" title="10">    ,<span class="ot"> optionsComp ::</span> <span class="fu">!</span>c             <span class="co">-- ^ the back end compile-time options</span></a>
-<a class="sourceLine" id="cb5-11" title="11">    ,<span class="ot"> optionsExec ::</span> <span class="fu">!</span>e             <span class="co">-- ^ the back end execution-time options</span></a>
+<a class="sourceLine" id="cb5-9" title="9">    {<span class="ot"> optionsMacs ::</span> <span class="op">!</span>(<span class="dt">Macros</span> r)    <span class="co">-- ^ the available TestBench RE macros</span></a>
+<a class="sourceLine" id="cb5-10" title="10">    ,<span class="ot"> optionsComp ::</span> <span class="op">!</span>c             <span class="co">-- ^ the back end compile-time options</span></a>
+<a class="sourceLine" id="cb5-11" title="11">    ,<span class="ot"> optionsExec ::</span> <span class="op">!</span>e             <span class="co">-- ^ the back end execution-time options</span></a>
 <a class="sourceLine" id="cb5-12" title="12">    }</a>
 <a class="sourceLine" id="cb5-13" title="13">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a></code></pre></div>
 </div>
@@ -158,9 +158,9 @@ Each back end provides a function to compile REs from some options and a string 
 <li><p><code>REOptions</code> to specify all together, the back-end options and the macro table to use.</p></li>
 </ul>
 The compilation takes place in a monad to allow for failure. In the following examples we will use this helper, which will extract the compiled RE using error to deal with any failures.
-<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="ot">check ::</span> <span class="dt">Either</span> <span class="dt">String</span> a <span class="ot">-&gt;</span> a</a>
-<a class="sourceLine" id="cb7-2" title="2">check <span class="fu">=</span> <span class="fu">either</span> <span class="fu">error</span> <span class="fu">id</span></a></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> check (compileRegexWith <span class="dt">BlockInsensitive</span> <span class="st">&quot;[0-9a-f]{2}$&quot;</span>)</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="ot">check ::</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> a</a>
+<a class="sourceLine" id="cb7-2" title="2">check <span class="ot">=</span> <span class="fu">maybe</span> (<span class="fu">error</span> <span class="st">&quot;booyah&quot;</span>) <span class="fu">id</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="op">*=~</span> check (compileRegexWith <span class="dt">BlockInsensitive</span> <span class="st">&quot;[0-9a-f]{2}$&quot;</span>)</a>
 <a class="sourceLine" id="cb8-2" title="2"><span class="dv">1</span></a></code></pre></div>
 <p>This will allow you to compile regular expressions when the either the text to be compiled or the options have been dynamically determined.</p>
 <p>If you need to build <code>SearchReplace</code> templates then there is an analagous compilation function for that:</p>
@@ -171,26 +171,26 @@ The compilation takes place in a monad to allow for failure. In the following ex
                                 -&gt; m (SearchReplace RE s)</code></pre>
 <h2 id="specifying-reoptions-with-re_-and-ed_">Specifying REOptions with <code>re_</code> and <code>ed_</code></h2>
 If you just need to specify some non-standard options with a static RE, you can use the <code>re_</code> quasi quoter, which yields a function takes an option type and returns the RE compiled with the given options:
-<div class="sourceCode" id="cb10"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [re_|[0-9a-f]{2}$|] <span class="dt">BlockInsensitive</span></a>
+<div class="sourceCode" id="cb10"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="op">*=~</span> [re_|[0-9a-f]{2}$|] <span class="dt">BlockInsensitive</span></a>
 <a class="sourceLine" id="cb10-2" title="2"><span class="dv">1</span></a></code></pre></div>
 <p>Any option <code>o</code> such that <code>IsOption o RE CompOption ExecOption</code> (i.e., any option type accepted by <code>compileRegex</code> above) can be used with <code>[re_</code> … <code>|]</code>.</p>
 <p>The <code>[ed_</code> … <code>///</code> … <code>|]</code> for compiling <code>SearchReplace</code> templates works analagously, yielding a function that takes an option type and returns the <code>SearchReplace</code> template comoiled with those RE options.</p>
 <h2 id="configuring-native-pcre-options">Configuring Native (PCRE) Options</h2>
 <p>The function <code>unpackSimpleREOptions</code>, used to generate PCRE native options from the generic <code>SimpleREOptions</code> is defined like this. (We have made some minor organizational changes for this presentaion, but this is equivalent to the library code used for <code>PCRE.unpackSimpleREOptions</code>.)</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" title="1"><span class="ot">unpackSimpleREOptions ::</span> <span class="dt">SimpleREOptions</span> <span class="ot">-&gt;</span> <span class="dt">PCRE.REOptions</span></a>
-<a class="sourceLine" id="cb11-2" title="2">unpackSimpleREOptions sro <span class="fu">=</span></a>
+<a class="sourceLine" id="cb11-2" title="2">unpackSimpleREOptions sro <span class="ot">=</span></a>
 <a class="sourceLine" id="cb11-3" title="3">  <span class="dt">REOptions</span></a>
-<a class="sourceLine" id="cb11-4" title="4">    { optionsMacs <span class="fu">=</span> PCRE.prelude      <span class="co">-- the standard &#39;prelude&#39; macro environment</span></a>
-<a class="sourceLine" id="cb11-5" title="5">    , optionsComp <span class="fu">=</span> comp              <span class="co">-- our calculated PCRE compile options</span></a>
-<a class="sourceLine" id="cb11-6" title="6">    , optionsExec <span class="fu">=</span> defaultExecOpt    <span class="co">-- the default PCRE run-time options</span></a>
+<a class="sourceLine" id="cb11-4" title="4">    { optionsMacs <span class="ot">=</span> PCRE.prelude      <span class="co">-- the standard &#39;prelude&#39; macro environment</span></a>
+<a class="sourceLine" id="cb11-5" title="5">    , optionsComp <span class="ot">=</span> comp              <span class="co">-- our calculated PCRE compile options</span></a>
+<a class="sourceLine" id="cb11-6" title="6">    , optionsExec <span class="ot">=</span> defaultExecOpt    <span class="co">-- the default PCRE run-time options</span></a>
 <a class="sourceLine" id="cb11-7" title="7">    }</a>
 <a class="sourceLine" id="cb11-8" title="8">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb11-9" title="9">    comp <span class="fu">=</span></a>
-<a class="sourceLine" id="cb11-10" title="10">      wiggle ml compMultiline <span class="fu">$</span></a>
+<a class="sourceLine" id="cb11-9" title="9">    comp <span class="ot">=</span></a>
+<a class="sourceLine" id="cb11-10" title="10">      wiggle ml compMultiline <span class="op">$</span></a>
 <a class="sourceLine" id="cb11-11" title="11">      wiggle ci compCaseless</a>
 <a class="sourceLine" id="cb11-12" title="12">        defaultCompOpt</a>
 <a class="sourceLine" id="cb11-13" title="13"></a>
-<a class="sourceLine" id="cb11-14" title="14">    (ml,ci) <span class="fu">=</span> <span class="kw">case</span> sro <span class="kw">of</span></a>
+<a class="sourceLine" id="cb11-14" title="14">    (ml,ci) <span class="ot">=</span> <span class="kw">case</span> sro <span class="kw">of</span></a>
 <a class="sourceLine" id="cb11-15" title="15">        <span class="dt">MultilineSensitive</span>    <span class="ot">-&gt;</span> (,) <span class="dt">True</span>  <span class="dt">False</span></a>
 <a class="sourceLine" id="cb11-16" title="16">        <span class="dt">MultilineInsensitive</span>  <span class="ot">-&gt;</span> (,) <span class="dt">True</span>  <span class="dt">True</span></a>
 <a class="sourceLine" id="cb11-17" title="17">        <span class="dt">BlockSensitive</span>        <span class="ot">-&gt;</span> (,) <span class="dt">False</span> <span class="dt">False</span></a>
@@ -200,22 +200,22 @@ If you just need to specify some non-standard options with a static RE, you can 
 <a class="sourceLine" id="cb11-21" title="21"><span class="co">-- Bool in its first argument using the bit mask</span></a>
 <a class="sourceLine" id="cb11-22" title="22"><span class="co">-- passed in the second argument</span></a>
 <a class="sourceLine" id="cb11-23" title="23"><span class="ot">wiggle ::</span> <span class="dt">Bits</span> a <span class="ot">=&gt;</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a</a>
-<a class="sourceLine" id="cb11-24" title="24">wiggle <span class="dt">True</span>  m v <span class="fu">=</span> v <span class="fu">.|.</span>            m</a>
-<a class="sourceLine" id="cb11-25" title="25">wiggle <span class="dt">False</span> m v <span class="fu">=</span> v <span class="fu">.&amp;.</span> complement m</a></code></pre></div>
+<a class="sourceLine" id="cb11-24" title="24">wiggle <span class="dt">True</span>  m v <span class="ot">=</span> v <span class="op">.|.</span>            m</a>
+<a class="sourceLine" id="cb11-25" title="25">wiggle <span class="dt">False</span> m v <span class="ot">=</span> v <span class="op">.&amp;.</span> complement m</a></code></pre></div>
 <p>Now we will set up a apecial set of PCRE options based on <code>BlockInsensitive</code>, but with the <a href="http://pcre.org/pcre.txt">PCRE <code>DOTALL</code> option bit</a> set.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" title="1"><span class="ot">myOptions ::</span> <span class="dt">PCRE.REOptions</span></a>
-<a class="sourceLine" id="cb12-2" title="2">myOptions <span class="fu">=</span></a>
+<a class="sourceLine" id="cb12-2" title="2">myOptions <span class="ot">=</span></a>
 <a class="sourceLine" id="cb12-3" title="3">  PCRE.defaultREOptions</a>
-<a class="sourceLine" id="cb12-4" title="4">    { optionsComp <span class="fu">=</span> wiggle <span class="dt">True</span> compDotAll <span class="fu">$</span> optionsComp biOptions</a>
+<a class="sourceLine" id="cb12-4" title="4">    { optionsComp <span class="ot">=</span> wiggle <span class="dt">True</span> compDotAll <span class="op">$</span> optionsComp biOptions</a>
 <a class="sourceLine" id="cb12-5" title="5">    }</a>
 <a class="sourceLine" id="cb12-6" title="6"></a>
 <a class="sourceLine" id="cb12-7" title="7"><span class="ot">biOptions ::</span> <span class="dt">PCRE.REOptions</span></a>
-<a class="sourceLine" id="cb12-8" title="8">biOptions <span class="fu">=</span> unpackSimpleREOptions <span class="dt">BlockInsensitive</span></a></code></pre></div>
+<a class="sourceLine" id="cb12-8" title="8">biOptions <span class="ot">=</span> unpackSimpleREOptions <span class="dt">BlockInsensitive</span></a></code></pre></div>
 <p>Now we can test <code>myOptions</code> with the <code>[re_| ... |]</code> quasi quoter as follows.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" title="1">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;0a\nbbxFe&amp;A5 &quot;</span> <span class="fu">?=~</span> [re_|^([0-9a-f]{2}.){4}$|] myOptions</a>
+<div class="sourceCode" id="cb13"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" title="1">ghci<span class="op">&gt;</span> matched <span class="op">$</span> <span class="st">&quot;0a\nbbxFe&amp;A5 &quot;</span> <span class="op">?=~</span> [re_|^([0-9a-f]{2}.){4}$|] myOptions</a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="dt">True</span></a></code></pre></div>
 <p>That test matched, but if we provide just <code>BlockInsensitive</code> options set up in <code>biOptions</code> above,</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" title="1">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;0a\nbbxFe&amp;A5 &quot;</span> <span class="fu">?=~</span> [re_|^([0-9a-f]{2}.){4}$|] biOptions</a>
+<div class="sourceCode" id="cb14"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" title="1">ghci<span class="op">&gt;</span> matched <span class="op">$</span> <span class="st">&quot;0a\nbbxFe&amp;A5 &quot;</span> <span class="op">?=~</span> [re_|^([0-9a-f]{2}.){4}$|] biOptions</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="dt">False</span></a></code></pre></div>
 <p>the match fails.</p>
 </div>    <script>

@@ -94,24 +94,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 </div>
 <div class='litcontent'>
-<header>
+<header id="title-block-header">
 <h1 class="title">Text.RE.ZeInternals.NamedCaptures</h1>
 </header>
 <div class="sourceCode" id="cb1"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">{-# LANGUAGE DeriveGeneric              #-}</span></a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span></a>
 <a class="sourceLine" id="cb1-3" title="3"><span class="ot">{-# LANGUAGE CPP                        #-}</span></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="ot">#if __GLASGOW_HASKELL__ &gt;= 800</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="pp">#if __GLASGOW_HASKELL__ &gt;= 800</span></a>
 <a class="sourceLine" id="cb1-5" title="5"><span class="ot">{-# LANGUAGE TemplateHaskellQuotes      #-}</span></a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="ot">#else</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="pp">#else</span></a>
 <a class="sourceLine" id="cb1-7" title="7"><span class="ot">{-# LANGUAGE QuasiQuotes                #-}</span></a>
 <a class="sourceLine" id="cb1-8" title="8"><span class="ot">{-# LANGUAGE TemplateHaskell            #-}</span></a>
-<a class="sourceLine" id="cb1-9" title="9"><span class="ot">#endif</span></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="pp">#endif</span></a>
 <a class="sourceLine" id="cb1-10" title="10"></a>
 <a class="sourceLine" id="cb1-11" title="11"><span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.NamedCaptures</span></a>
 <a class="sourceLine" id="cb1-12" title="12">  ( cp</a>
 <a class="sourceLine" id="cb1-13" title="13">  , extractNamedCaptures</a>
 <a class="sourceLine" id="cb1-14" title="14">  , idFormatTokenREOptions</a>
-<a class="sourceLine" id="cb1-15" title="15">  , <span class="dt">Token</span>(<span class="fu">..</span>)</a>
+<a class="sourceLine" id="cb1-15" title="15">  , <span class="dt">Token</span>(<span class="op">..</span>)</a>
 <a class="sourceLine" id="cb1-16" title="16">  , validToken</a>
 <a class="sourceLine" id="cb1-17" title="17">  , formatTokens</a>
 <a class="sourceLine" id="cb1-18" title="18">  , formatTokens&#39;</a>
@@ -131,39 +131,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-32" title="32"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Tools.Lex</span></a>
 <a class="sourceLine" id="cb1-33" title="33"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.CaptureID</span></a>
 <a class="sourceLine" id="cb1-34" title="34"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.Match</span></a>
-<a class="sourceLine" id="cb1-35" title="35"><span class="kw">import</span>           <span class="dt">Text.Regex.TDFA</span></a>
-<a class="sourceLine" id="cb1-36" title="36"></a>
+<a class="sourceLine" id="cb1-35" title="35"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.Poss</span></a>
+<a class="sourceLine" id="cb1-36" title="36"><span class="kw">import</span>           <span class="dt">Text.Regex.TDFA</span></a>
 <a class="sourceLine" id="cb1-37" title="37"></a>
-<a class="sourceLine" id="cb1-38" title="38"><span class="co">-- | quasi quoter for CaptureID: @[cp|0|]@, @[cp|0|]@, etc.,</span></a>
-<a class="sourceLine" id="cb1-39" title="39"><span class="co">-- indexing captures by classic positional numbers, and @[cp|foo|]@,</span></a>
-<a class="sourceLine" id="cb1-40" title="40"><span class="co">-- etc., referencing a named capture @[re| ... ${foo}( ... ) ... |]@.</span></a>
-<a class="sourceLine" id="cb1-41" title="41"><span class="ot">cp ::</span> <span class="dt">QuasiQuoter</span></a>
-<a class="sourceLine" id="cb1-42" title="42">cp <span class="fu">=</span></a>
-<a class="sourceLine" id="cb1-43" title="43">    (qq0 <span class="st">&quot;cp&quot;</span>)</a>
-<a class="sourceLine" id="cb1-44" title="44">      { quoteExp <span class="fu">=</span> parse_capture</a>
-<a class="sourceLine" id="cb1-45" title="45">      }</a>
-<a class="sourceLine" id="cb1-46" title="46"></a>
-<a class="sourceLine" id="cb1-47" title="47"><span class="co">-- | extract the CaptureNames from an RE or return an error diagnostic</span></a>
-<a class="sourceLine" id="cb1-48" title="48"><span class="co">-- if the RE is not well formed; also returs the total number of captures</span></a>
-<a class="sourceLine" id="cb1-49" title="49"><span class="co">-- in the RE</span></a>
-<a class="sourceLine" id="cb1-50" title="50"><span class="ot">extractNamedCaptures ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> ((<span class="dt">Int</span>,<span class="dt">CaptureNames</span>),<span class="dt">String</span>)</a>
-<a class="sourceLine" id="cb1-51" title="51">extractNamedCaptures s <span class="fu">=</span> <span class="dt">Right</span> (analyseTokens tks,formatTokens tks)</a>
-<a class="sourceLine" id="cb1-52" title="52">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb1-53" title="53">    tks <span class="fu">=</span> scan s</a></code></pre></div>
+<a class="sourceLine" id="cb1-38" title="38"></a>
+<a class="sourceLine" id="cb1-39" title="39"><span class="co">-- | quasi quoter for CaptureID: @[cp|0|]@, @[cp|0|]@, etc.,</span></a>
+<a class="sourceLine" id="cb1-40" title="40"><span class="co">-- indexing captures by classic positional numbers, and @[cp|foo|]@,</span></a>
+<a class="sourceLine" id="cb1-41" title="41"><span class="co">-- etc., referencing a named capture @[re| ... ${foo}( ... ) ... |]@.</span></a>
+<a class="sourceLine" id="cb1-42" title="42"><span class="ot">cp ::</span> <span class="dt">QuasiQuoter</span></a>
+<a class="sourceLine" id="cb1-43" title="43">cp <span class="ot">=</span></a>
+<a class="sourceLine" id="cb1-44" title="44">    (qq0 <span class="st">&quot;cp&quot;</span>)</a>
+<a class="sourceLine" id="cb1-45" title="45">      { quoteExp <span class="ot">=</span> parse_capture</a>
+<a class="sourceLine" id="cb1-46" title="46">      }</a>
+<a class="sourceLine" id="cb1-47" title="47"></a>
+<a class="sourceLine" id="cb1-48" title="48"><span class="co">-- | extract the CaptureNames from an RE or return an error diagnostic</span></a>
+<a class="sourceLine" id="cb1-49" title="49"><span class="co">-- if the RE is not well formed; also returs the total number of captures</span></a>
+<a class="sourceLine" id="cb1-50" title="50"><span class="co">-- in the RE</span></a>
+<a class="sourceLine" id="cb1-51" title="51"><span class="ot">extractNamedCaptures ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> ((<span class="dt">Int</span>,<span class="dt">CaptureNames</span>),<span class="dt">String</span>)</a>
+<a class="sourceLine" id="cb1-52" title="52">extractNamedCaptures s <span class="ot">=</span> <span class="dt">Right</span> (analyseTokens tks,formatTokens tks)</a>
+<a class="sourceLine" id="cb1-53" title="53">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb1-54" title="54">    tks <span class="ot">=</span> scan s</a></code></pre></div>
 <h2 id="token">Token</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="co">-- | our RE scanner returns a list of these tokens</span></a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="kw">data</span> <span class="dt">Token</span></a>
-<a class="sourceLine" id="cb2-3" title="3">  <span class="fu">=</span> <span class="dt">ECap</span> (<span class="dt">Maybe</span> <span class="dt">String</span>)</a>
-<a class="sourceLine" id="cb2-4" title="4">  <span class="fu">|</span> <span class="dt">PGrp</span></a>
-<a class="sourceLine" id="cb2-5" title="5">  <span class="fu">|</span> <span class="dt">PCap</span></a>
-<a class="sourceLine" id="cb2-6" title="6">  <span class="fu">|</span> <span class="dt">Bra</span></a>
-<a class="sourceLine" id="cb2-7" title="7">  <span class="fu">|</span> <span class="dt">BS</span>          <span class="dt">Char</span></a>
-<a class="sourceLine" id="cb2-8" title="8">  <span class="fu">|</span> <span class="dt">Other</span>       <span class="dt">Char</span></a>
+<a class="sourceLine" id="cb2-3" title="3">  <span class="ot">=</span> <span class="dt">ECap</span> (<span class="dt">Maybe</span> <span class="dt">String</span>)</a>
+<a class="sourceLine" id="cb2-4" title="4">  <span class="op">|</span> <span class="dt">PGrp</span></a>
+<a class="sourceLine" id="cb2-5" title="5">  <span class="op">|</span> <span class="dt">PCap</span></a>
+<a class="sourceLine" id="cb2-6" title="6">  <span class="op">|</span> <span class="dt">Bra</span></a>
+<a class="sourceLine" id="cb2-7" title="7">  <span class="op">|</span> <span class="dt">BS</span>          <span class="dt">Char</span></a>
+<a class="sourceLine" id="cb2-8" title="8">  <span class="op">|</span> <span class="dt">Other</span>       <span class="dt">Char</span></a>
 <a class="sourceLine" id="cb2-9" title="9">  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Generic</span>,<span class="dt">Eq</span>)</a>
 <a class="sourceLine" id="cb2-10" title="10"></a>
 <a class="sourceLine" id="cb2-11" title="11"><span class="co">-- | check that a token is well formed</span></a>
 <a class="sourceLine" id="cb2-12" title="12"><span class="ot">validToken ::</span> <span class="dt">Token</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></a>
-<a class="sourceLine" id="cb2-13" title="13">validToken tkn <span class="fu">=</span> <span class="kw">case</span> tkn <span class="kw">of</span></a>
+<a class="sourceLine" id="cb2-13" title="13">validToken tkn <span class="ot">=</span> <span class="kw">case</span> tkn <span class="kw">of</span></a>
 <a class="sourceLine" id="cb2-14" title="14">    <span class="dt">ECap</span>  mb <span class="ot">-&gt;</span> <span class="fu">maybe</span> <span class="dt">True</span> check_ecap mb</a>
 <a class="sourceLine" id="cb2-15" title="15">    <span class="dt">PGrp</span>     <span class="ot">-&gt;</span> <span class="dt">True</span></a>
 <a class="sourceLine" id="cb2-16" title="16">    <span class="dt">PCap</span>     <span class="ot">-&gt;</span> <span class="dt">True</span></a>
@@ -171,22 +172,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-18" title="18">    <span class="dt">BS</span>    c  <span class="ot">-&gt;</span> is_dot c</a>
 <a class="sourceLine" id="cb2-19" title="19">    <span class="dt">Other</span> c  <span class="ot">-&gt;</span> is_dot c</a>
 <a class="sourceLine" id="cb2-20" title="20">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb2-21" title="21">    check_ecap s <span class="fu">=</span> <span class="fu">not</span> (<span class="fu">null</span> s) <span class="fu">&amp;&amp;</span> <span class="fu">all</span> not_br s</a>
-<a class="sourceLine" id="cb2-22" title="22">    is_dot     c <span class="fu">=</span> c<span class="fu">/=</span><span class="ch">&#39;\n&#39;</span></a>
-<a class="sourceLine" id="cb2-23" title="23">    not_br     c <span class="fu">=</span> <span class="fu">not</span> <span class="fu">$</span> c <span class="ot">`elem`</span> <span class="st">&quot;{}\n&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-21" title="21">    check_ecap s <span class="ot">=</span> <span class="fu">not</span> (<span class="fu">null</span> s) <span class="op">&amp;&amp;</span> <span class="fu">all</span> not_br s</a>
+<a class="sourceLine" id="cb2-22" title="22">    is_dot     c <span class="ot">=</span> c<span class="op">/=</span><span class="ch">&#39;\n&#39;</span></a>
+<a class="sourceLine" id="cb2-23" title="23">    not_br     c <span class="ot">=</span> <span class="fu">not</span> <span class="op">$</span> c <span class="ot">`elem`</span> <span class="st">&quot;{}\n&quot;</span></a></code></pre></div>
 <h2 id="analysing-token---capturenames">Analysing <a href="#token">Token</a> -&gt; CaptureNames</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="co">-- | analyse a token stream, returning the number of captures and the</span></a>
 <a class="sourceLine" id="cb3-2" title="2"><span class="co">-- &#39;CaptureNames&#39;</span></a>
 <a class="sourceLine" id="cb3-3" title="3"><span class="ot">analyseTokens ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> (<span class="dt">Int</span>,<span class="dt">CaptureNames</span>)</a>
-<a class="sourceLine" id="cb3-4" title="4">analyseTokens tks0 <span class="fu">=</span> <span class="kw">case</span> count_em <span class="dv">1</span> tks0 <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-5" title="5">    (n,as) <span class="ot">-&gt;</span> (n<span class="fu">-</span><span class="dv">1</span>, HM.fromList as)</a>
+<a class="sourceLine" id="cb3-4" title="4">analyseTokens tks0 <span class="ot">=</span> <span class="kw">case</span> count_em <span class="dv">1</span> tks0 <span class="kw">of</span></a>
+<a class="sourceLine" id="cb3-5" title="5">    (n,as) <span class="ot">-&gt;</span> (n<span class="op">-</span><span class="dv">1</span>, HM.fromList as)</a>
 <a class="sourceLine" id="cb3-6" title="6">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb3-7" title="7">    count_em n []       <span class="fu">=</span> (n,[])</a>
-<a class="sourceLine" id="cb3-8" title="8">    count_em n (tk<span class="fu">:</span>tks) <span class="fu">=</span> <span class="kw">case</span> count_em (n <span class="ot">`seq`</span> n<span class="fu">+</span>d) tks <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-9" title="9">        (n&#39;,as) <span class="ot">-&gt;</span> (n&#39;,bd<span class="fu">++</span>as)</a>
+<a class="sourceLine" id="cb3-7" title="7">    count_em n []       <span class="ot">=</span> (n,[])</a>
+<a class="sourceLine" id="cb3-8" title="8">    count_em n (tk<span class="op">:</span>tks) <span class="ot">=</span> <span class="kw">case</span> count_em (n <span class="ot">`seq`</span> n<span class="op">+</span>d) tks <span class="kw">of</span></a>
+<a class="sourceLine" id="cb3-9" title="9">        (n&#39;,as) <span class="ot">-&gt;</span> (n&#39;,bd<span class="op">++</span>as)</a>
 <a class="sourceLine" id="cb3-10" title="10">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb3-11" title="11">        (d,bd) <span class="fu">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-12" title="12">          <span class="dt">ECap</span> (<span class="dt">Just</span> nm) <span class="ot">-&gt;</span> (,) <span class="dv">1</span> [(<span class="dt">CaptureName</span> <span class="fu">$</span> T.pack nm,<span class="dt">CaptureOrdinal</span> n)]</a>
+<a class="sourceLine" id="cb3-11" title="11">        (d,bd) <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
+<a class="sourceLine" id="cb3-12" title="12">          <span class="dt">ECap</span> (<span class="dt">Just</span> nm) <span class="ot">-&gt;</span> (,) <span class="dv">1</span> [(<span class="dt">CaptureName</span> <span class="op">$</span> T.pack nm,<span class="dt">CaptureOrdinal</span> n)]</a>
 <a class="sourceLine" id="cb3-13" title="13">          <span class="dt">ECap</span>  <span class="dt">Nothing</span>  <span class="ot">-&gt;</span> (,) <span class="dv">1</span> []</a>
 <a class="sourceLine" id="cb3-14" title="14">          <span class="dt">PGrp</span>           <span class="ot">-&gt;</span> (,) <span class="dv">0</span> []</a>
 <a class="sourceLine" id="cb3-15" title="15">          <span class="dt">PCap</span>           <span class="ot">-&gt;</span> (,) <span class="dv">1</span> []</a>
@@ -196,39 +197,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 id="scanning-regex-strings">Scanning Regex Strings</h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="co">-- | scan a RE string into a list of RE Token</span></a>
 <a class="sourceLine" id="cb4-2" title="2"><span class="ot">scan ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [<span class="dt">Token</span>]</a>
-<a class="sourceLine" id="cb4-3" title="3">scan <span class="fu">=</span> alex&#39; match al <span class="fu">$</span> oops <span class="st">&quot;top&quot;</span></a>
+<a class="sourceLine" id="cb4-3" title="3">scan <span class="ot">=</span> alex&#39; match al <span class="op">$</span> oops <span class="st">&quot;top&quot;</span></a>
 <a class="sourceLine" id="cb4-4" title="4">  <span class="kw">where</span></a>
 <a class="sourceLine" id="cb4-5" title="5"><span class="ot">    al ::</span> [(<span class="dt">Regex</span>,<span class="dt">Match</span> <span class="dt">String</span><span class="ot">-&gt;</span><span class="dt">Maybe</span> <span class="dt">Token</span>)]</a>
-<a class="sourceLine" id="cb4-6" title="6">    al <span class="fu">=</span></a>
-<a class="sourceLine" id="cb4-7" title="7">      [ mk <span class="st">&quot;\\$\\{([^{}]+)\\}\\(&quot;</span> <span class="fu">$</span>         <span class="dt">ECap</span> <span class="fu">.</span> <span class="dt">Just</span> <span class="fu">.</span> x_1</a>
-<a class="sourceLine" id="cb4-8" title="8">      , mk <span class="st">&quot;\\$\\(&quot;</span>               <span class="fu">$</span> <span class="fu">const</span> <span class="fu">$</span> <span class="dt">ECap</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb4-9" title="9">      , mk <span class="st">&quot;\\(\\?:&quot;</span>              <span class="fu">$</span> <span class="fu">const</span>   <span class="dt">PGrp</span></a>
-<a class="sourceLine" id="cb4-10" title="10">      , mk <span class="st">&quot;\\(\\?&quot;</span>               <span class="fu">$</span> <span class="fu">const</span>   <span class="dt">PCap</span></a>
-<a class="sourceLine" id="cb4-11" title="11">      , mk <span class="st">&quot;\\(&quot;</span>                  <span class="fu">$</span> <span class="fu">const</span>   <span class="dt">Bra</span></a>
-<a class="sourceLine" id="cb4-12" title="12">      , mk <span class="st">&quot;\\\\(.)&quot;</span>              <span class="fu">$</span>         <span class="dt">BS</span>    <span class="fu">.</span> s2c <span class="fu">.</span> x_1</a>
-<a class="sourceLine" id="cb4-13" title="13">      , mk <span class="st">&quot;(.|\n)&quot;</span>               <span class="fu">$</span>         <span class="dt">Other</span> <span class="fu">.</span> s2c <span class="fu">.</span> x_1</a>
+<a class="sourceLine" id="cb4-6" title="6">    al <span class="ot">=</span></a>
+<a class="sourceLine" id="cb4-7" title="7">      [ mk <span class="st">&quot;\\$\\{([^{}]+)\\}\\(&quot;</span> <span class="op">$</span>         <span class="dt">ECap</span> <span class="op">.</span> <span class="dt">Just</span> <span class="op">.</span> x_1</a>
+<a class="sourceLine" id="cb4-8" title="8">      , mk <span class="st">&quot;\\$\\(&quot;</span>               <span class="op">$</span> <span class="fu">const</span> <span class="op">$</span> <span class="dt">ECap</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb4-9" title="9">      , mk <span class="st">&quot;\\(\\?:&quot;</span>              <span class="op">$</span> <span class="fu">const</span>   <span class="dt">PGrp</span></a>
+<a class="sourceLine" id="cb4-10" title="10">      , mk <span class="st">&quot;\\(\\?&quot;</span>               <span class="op">$</span> <span class="fu">const</span>   <span class="dt">PCap</span></a>
+<a class="sourceLine" id="cb4-11" title="11">      , mk <span class="st">&quot;\\(&quot;</span>                  <span class="op">$</span> <span class="fu">const</span>   <span class="dt">Bra</span></a>
+<a class="sourceLine" id="cb4-12" title="12">      , mk <span class="st">&quot;\\\\(.)&quot;</span>              <span class="op">$</span>         <span class="dt">BS</span>    <span class="op">.</span> s2c <span class="op">.</span> x_1</a>
+<a class="sourceLine" id="cb4-13" title="13">      , mk <span class="st">&quot;(.|\n)&quot;</span>               <span class="op">$</span>         <span class="dt">Other</span> <span class="op">.</span> s2c <span class="op">.</span> x_1</a>
 <a class="sourceLine" id="cb4-14" title="14">      ]</a>
 <a class="sourceLine" id="cb4-15" title="15"></a>
-<a class="sourceLine" id="cb4-16" title="16">    x_1     <span class="fu">=</span> captureText <span class="fu">$</span> <span class="dt">IsCaptureOrdinal</span> <span class="fu">$</span> <span class="dt">CaptureOrdinal</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb4-16" title="16">    x_1     <span class="ot">=</span> captureText <span class="op">$</span> <span class="dt">IsCaptureOrdinal</span> <span class="op">$</span> <span class="dt">CaptureOrdinal</span> <span class="dv">1</span></a>
 <a class="sourceLine" id="cb4-17" title="17"></a>
-<a class="sourceLine" id="cb4-18" title="18">    s2c [c] <span class="fu">=</span> c</a>
-<a class="sourceLine" id="cb4-19" title="19">    s2c _   <span class="fu">=</span> oops <span class="st">&quot;s2c&quot;</span></a>
+<a class="sourceLine" id="cb4-18" title="18">    s2c [c] <span class="ot">=</span> c</a>
+<a class="sourceLine" id="cb4-19" title="19">    s2c _   <span class="ot">=</span> oops <span class="st">&quot;s2c&quot;</span></a>
 <a class="sourceLine" id="cb4-20" title="20"></a>
-<a class="sourceLine" id="cb4-21" title="21">    mk s f  <span class="fu">=</span> (<span class="fu">either</span> <span class="fu">error</span> <span class="fu">id</span> <span class="fu">$</span> makeRegexM s,<span class="dt">Just</span> <span class="fu">.</span> f)</a>
+<a class="sourceLine" id="cb4-21" title="21">    mk s f  <span class="ot">=</span> (poss <span class="fu">error</span> <span class="fu">id</span> <span class="op">$</span> makeRegexM s,<span class="dt">Just</span> <span class="op">.</span> f)</a>
 <a class="sourceLine" id="cb4-22" title="22"></a>
-<a class="sourceLine" id="cb4-23" title="23">    oops  m <span class="fu">=</span> <span class="fu">error</span> <span class="fu">$</span> <span class="st">&quot;NamedCaptures.scan: &quot;</span> <span class="fu">++</span> m</a></code></pre></div>
+<a class="sourceLine" id="cb4-23" title="23">    oops  m <span class="ot">=</span> <span class="fu">error</span> <span class="op">$</span> <span class="st">&quot;NamedCaptures.scan: &quot;</span> <span class="op">++</span> m</a></code></pre></div>
 <h2 id="parsing-captures">Parsing captures</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="ot">parse_capture ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">TH.Q</span> <span class="dt">TH.Exp</span></a>
-<a class="sourceLine" id="cb5-2" title="2">parse_capture s <span class="fu">=</span> <span class="kw">case</span> <span class="fu">all</span> <span class="fu">isDigit</span> s <span class="kw">of</span></a>
-<a class="sourceLine" id="cb5-3" title="3">  <span class="dt">True</span>  <span class="ot">-&gt;</span> [<span class="fu">|</span><span class="dt">IsCaptureOrdinal</span> <span class="fu">$</span> <span class="dt">CaptureOrdinal</span> <span class="fu">$</span> <span class="fu">read</span> s<span class="fu">|</span>]</a>
-<a class="sourceLine" id="cb5-4" title="4">  <span class="dt">False</span> <span class="ot">-&gt;</span> [<span class="fu">|</span><span class="dt">IsCaptureName</span>    <span class="fu">$</span> <span class="dt">CaptureName</span> <span class="fu">$</span> T.pack  s<span class="fu">|</span>]</a></code></pre></div>
+<a class="sourceLine" id="cb5-2" title="2">parse_capture s <span class="ot">=</span> <span class="kw">case</span> <span class="fu">all</span> <span class="fu">isDigit</span> s <span class="kw">of</span></a>
+<a class="sourceLine" id="cb5-3" title="3">  <span class="dt">True</span>  <span class="ot">-&gt;</span> [<span class="op">|</span><span class="dt">IsCaptureOrdinal</span> <span class="op">$</span> <span class="dt">CaptureOrdinal</span> <span class="op">$</span> <span class="fu">read</span> s<span class="op">|</span>]</a>
+<a class="sourceLine" id="cb5-4" title="4">  <span class="dt">False</span> <span class="ot">-&gt;</span> [<span class="op">|</span><span class="dt">IsCaptureName</span>    <span class="op">$</span> <span class="dt">CaptureName</span> <span class="op">$</span> T.pack  s<span class="op">|</span>]</a></code></pre></div>
 <h2 id="formatting-token">Formatting <a href="#token">Token</a></h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="co">-- | format [Token] into an RE string</span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="ot">formatTokens ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb6-3" title="3">formatTokens <span class="fu">=</span> formatTokens&#39; defFormatTokenREOptions</a>
+<a class="sourceLine" id="cb6-3" title="3">formatTokens <span class="ot">=</span> formatTokens&#39; defFormatTokenREOptions</a>
 <a class="sourceLine" id="cb6-4" title="4"></a>
 <a class="sourceLine" id="cb6-5" title="5"><span class="co">-- | options for the general Token formatter below</span></a>
-<a class="sourceLine" id="cb6-6" title="6"><span class="kw">data</span> <span class="dt">FormatTokenREOptions</span> <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="kw">data</span> <span class="dt">FormatTokenREOptions</span> <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-7" title="7">  <span class="dt">FormatTokenREOptions</span></a>
 <a class="sourceLine" id="cb6-8" title="8">    {<span class="ot"> _fto_regex_type ::</span> <span class="dt">Maybe</span> <span class="dt">RegexType</span>    <span class="co">-- ^ Posix, PCRE or indeterminate REs?</span></a>
 <a class="sourceLine" id="cb6-9" title="9">    ,<span class="ot"> _fto_min_caps   ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ remove captures where possible</span></a>
@@ -238,59 +239,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-13" title="13"></a>
 <a class="sourceLine" id="cb6-14" title="14"><span class="co">-- | the default configuration for the Token formatter</span></a>
 <a class="sourceLine" id="cb6-15" title="15"><span class="ot">defFormatTokenREOptions ::</span> <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-16" title="16">defFormatTokenREOptions <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-16" title="16">defFormatTokenREOptions <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-17" title="17">  <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-18" title="18">    { _fto_regex_type <span class="fu">=</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb6-19" title="19">    , _fto_min_caps   <span class="fu">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb6-20" title="20">    , _fto_incl_caps  <span class="fu">=</span> <span class="dt">False</span></a>
+<a class="sourceLine" id="cb6-18" title="18">    { _fto_regex_type <span class="ot">=</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb6-19" title="19">    , _fto_min_caps   <span class="ot">=</span> <span class="dt">False</span></a>
+<a class="sourceLine" id="cb6-20" title="20">    , _fto_incl_caps  <span class="ot">=</span> <span class="dt">False</span></a>
 <a class="sourceLine" id="cb6-21" title="21">    }</a>
 <a class="sourceLine" id="cb6-22" title="22"></a>
 <a class="sourceLine" id="cb6-23" title="23"><span class="co">-- | a configuration that will preserve the parsed regular expression</span></a>
 <a class="sourceLine" id="cb6-24" title="24"><span class="co">-- in the output</span></a>
 <a class="sourceLine" id="cb6-25" title="25"><span class="ot">idFormatTokenREOptions ::</span> <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-26" title="26">idFormatTokenREOptions <span class="fu">=</span></a>
+<a class="sourceLine" id="cb6-26" title="26">idFormatTokenREOptions <span class="ot">=</span></a>
 <a class="sourceLine" id="cb6-27" title="27">  <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-28" title="28">    { _fto_regex_type <span class="fu">=</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb6-29" title="29">    , _fto_min_caps   <span class="fu">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb6-30" title="30">    , _fto_incl_caps  <span class="fu">=</span> <span class="dt">True</span></a>
+<a class="sourceLine" id="cb6-28" title="28">    { _fto_regex_type <span class="ot">=</span> <span class="dt">Nothing</span></a>
+<a class="sourceLine" id="cb6-29" title="29">    , _fto_min_caps   <span class="ot">=</span> <span class="dt">False</span></a>
+<a class="sourceLine" id="cb6-30" title="30">    , _fto_incl_caps  <span class="ot">=</span> <span class="dt">True</span></a>
 <a class="sourceLine" id="cb6-31" title="31">    }</a>
 <a class="sourceLine" id="cb6-32" title="32"></a>
 <a class="sourceLine" id="cb6-33" title="33"><span class="co">-- | the general Token formatter, generating REs according to the options</span></a>
 <a class="sourceLine" id="cb6-34" title="34"><span class="ot">formatTokens&#39; ::</span> <span class="dt">FormatTokenREOptions</span> <span class="ot">-&gt;</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb6-35" title="35">formatTokens&#39; <span class="dt">FormatTokenREOptions</span>{<span class="fu">..</span>} <span class="fu">=</span> <span class="fu">foldr</span> f <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb6-35" title="35">formatTokens&#39; <span class="dt">FormatTokenREOptions</span>{<span class="op">..</span>} <span class="ot">=</span> <span class="fu">foldr</span> f <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb6-36" title="36">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-37" title="37">    f tk tl <span class="fu">=</span> t_s <span class="fu">++</span> tl</a>
+<a class="sourceLine" id="cb6-37" title="37">    f tk tl <span class="ot">=</span> t_s <span class="op">++</span> tl</a>
 <a class="sourceLine" id="cb6-38" title="38">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-39" title="39">        t_s <span class="fu">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
+<a class="sourceLine" id="cb6-39" title="39">        t_s <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
 <a class="sourceLine" id="cb6-40" title="40">          <span class="dt">ECap</span>  mb <span class="ot">-&gt;</span> ecap mb</a>
 <a class="sourceLine" id="cb6-41" title="41">          <span class="dt">PGrp</span>     <span class="ot">-&gt;</span> <span class="kw">if</span> <span class="fu">maybe</span> <span class="dt">False</span> isTDFA _fto_regex_type <span class="kw">then</span> <span class="st">&quot;(&quot;</span> <span class="kw">else</span> <span class="st">&quot;(?:&quot;</span></a>
 <a class="sourceLine" id="cb6-42" title="42">          <span class="dt">PCap</span>     <span class="ot">-&gt;</span> <span class="st">&quot;(?&quot;</span></a>
 <a class="sourceLine" id="cb6-43" title="43">          <span class="dt">Bra</span>      <span class="ot">-&gt;</span> bra _fto_min_caps</a>
-<a class="sourceLine" id="cb6-44" title="44">          <span class="dt">BS</span>    c  <span class="ot">-&gt;</span> <span class="st">&quot;\\&quot;</span> <span class="fu">++</span> [c]</a>
+<a class="sourceLine" id="cb6-44" title="44">          <span class="dt">BS</span>    c  <span class="ot">-&gt;</span> <span class="st">&quot;\\&quot;</span> <span class="op">++</span> [c]</a>
 <a class="sourceLine" id="cb6-45" title="45">          <span class="dt">Other</span> c  <span class="ot">-&gt;</span> [c]</a>
 <a class="sourceLine" id="cb6-46" title="46"></a>
-<a class="sourceLine" id="cb6-47" title="47">    ecap mb <span class="fu">=</span> <span class="kw">case</span> _fto_incl_caps <span class="kw">of</span></a>
+<a class="sourceLine" id="cb6-47" title="47">    ecap mb <span class="ot">=</span> <span class="kw">case</span> _fto_incl_caps <span class="kw">of</span></a>
 <a class="sourceLine" id="cb6-48" title="48">      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="kw">case</span> mb <span class="kw">of</span></a>
 <a class="sourceLine" id="cb6-49" title="49">        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="st">&quot;$(&quot;</span></a>
-<a class="sourceLine" id="cb6-50" title="50">        <span class="dt">Just</span> nm <span class="ot">-&gt;</span> <span class="st">&quot;${&quot;</span><span class="fu">++</span>nm<span class="fu">++</span><span class="st">&quot;}(&quot;</span></a>
+<a class="sourceLine" id="cb6-50" title="50">        <span class="dt">Just</span> nm <span class="ot">-&gt;</span> <span class="st">&quot;${&quot;</span><span class="op">++</span>nm<span class="op">++</span><span class="st">&quot;}(&quot;</span></a>
 <a class="sourceLine" id="cb6-51" title="51">      <span class="dt">False</span> <span class="ot">-&gt;</span> bra _fto_min_caps</a>
 <a class="sourceLine" id="cb6-52" title="52"></a>
-<a class="sourceLine" id="cb6-53" title="53">    bra mc  <span class="fu">=</span> <span class="kw">case</span> mc <span class="fu">&amp;&amp;</span> <span class="fu">maybe</span> <span class="dt">False</span> isPCRE _fto_regex_type <span class="kw">of</span></a>
+<a class="sourceLine" id="cb6-53" title="53">    bra mc  <span class="ot">=</span> <span class="kw">case</span> mc <span class="op">&amp;&amp;</span> <span class="fu">maybe</span> <span class="dt">False</span> isPCRE _fto_regex_type <span class="kw">of</span></a>
 <a class="sourceLine" id="cb6-54" title="54">      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="st">&quot;(?:&quot;</span></a>
 <a class="sourceLine" id="cb6-55" title="55">      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></a></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="co">-- this is a reference of formatTokens defFormatTokenREOptions,</span></a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="co">-- used for testing the latter</span></a>
 <a class="sourceLine" id="cb7-3" title="3"><span class="ot">formatTokens0 ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb7-4" title="4">formatTokens0 <span class="fu">=</span> <span class="fu">foldr</span> f <span class="st">&quot;&quot;</span></a>
+<a class="sourceLine" id="cb7-4" title="4">formatTokens0 <span class="ot">=</span> <span class="fu">foldr</span> f <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb7-5" title="5">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb7-6" title="6">    f tk tl <span class="fu">=</span> t_s <span class="fu">++</span> tl</a>
+<a class="sourceLine" id="cb7-6" title="6">    f tk tl <span class="ot">=</span> t_s <span class="op">++</span> tl</a>
 <a class="sourceLine" id="cb7-7" title="7">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb7-8" title="8">        t_s <span class="fu">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-8" title="8">        t_s <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
 <a class="sourceLine" id="cb7-9" title="9">          <span class="dt">ECap</span>  _ <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></a>
 <a class="sourceLine" id="cb7-10" title="10">          <span class="dt">PGrp</span>    <span class="ot">-&gt;</span> <span class="st">&quot;(?:&quot;</span></a>
 <a class="sourceLine" id="cb7-11" title="11">          <span class="dt">PCap</span>    <span class="ot">-&gt;</span> <span class="st">&quot;(?&quot;</span></a>
 <a class="sourceLine" id="cb7-12" title="12">          <span class="dt">Bra</span>     <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></a>
-<a class="sourceLine" id="cb7-13" title="13">          <span class="dt">BS</span>    c <span class="ot">-&gt;</span> <span class="st">&quot;\\&quot;</span> <span class="fu">++</span> [c]</a>
+<a class="sourceLine" id="cb7-13" title="13">          <span class="dt">BS</span>    c <span class="ot">-&gt;</span> <span class="st">&quot;\\&quot;</span> <span class="op">++</span> [c]</a>
 <a class="sourceLine" id="cb7-14" title="14">          <span class="dt">Other</span> c <span class="ot">-&gt;</span> [c]</a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

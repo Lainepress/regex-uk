@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 </div>
 <div class='litcontent'>
-<header>
+<header id="title-block-header">
 <h1 class="title">examples/re-top.lhs</h1>
 </header>
 <h1 id="top-calculating-league-table-variations-for-the-premier-league">top: Calculating league table variations for the Premier League</h1>
@@ -132,10 +132,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-30" title="30"><span class="kw">import</span>           <span class="dt">Text.Read</span></a></code></pre></div>
 <p>The CLI parser yields a list of jobs to generate or check various league tables.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb2-2" title="2">main <span class="fu">=</span> parseCLI <span class="fu">&gt;&gt;=</span> <span class="fu">mapM_</span> job</a></code></pre></div>
+<a class="sourceLine" id="cb2-2" title="2">main <span class="ot">=</span> parseCLI <span class="op">&gt;&gt;=</span> <span class="fu">mapM_</span> job</a></code></pre></div>
 <h2 id="data-types">Data Types</h2>
 <p>A Job contains everything we need to generate a league table, and what to do with it.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">data</span> <span class="dt">Job</span> <span class="fu">=</span></a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">data</span> <span class="dt">Job</span> <span class="ot">=</span></a>
 <a class="sourceLine" id="cb3-2" title="2">  <span class="dt">Job</span></a>
 <a class="sourceLine" id="cb3-3" title="3">    {<span class="ot"> jobTitle  ::</span> <span class="dt">T.Text</span>     <span class="co">-- ^ title for the table</span></a>
 <a class="sourceLine" id="cb3-4" title="4">    ,<span class="ot"> jobSize   ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>  <span class="co">-- ^ a full table or a top-n table</span></a>
@@ -147,15 +147,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb3-10" title="10">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a></code></pre></div>
 <p>A match result lists the data in the usual order:</p>
 <pre><code>&lt;home-team&gt; &lt;home-score&gt; &lt;away-score&gt; &lt;away-team&gt;</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">data</span> <span class="dt">Game</span> <span class="fu">=</span> <span class="dt">Game</span> <span class="dt">Team</span> <span class="dt">Int</span> <span class="dt">Int</span> <span class="dt">Team</span></a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">data</span> <span class="dt">Game</span> <span class="ot">=</span> <span class="dt">Game</span> <span class="dt">Team</span> <span class="dt">Int</span> <span class="dt">Int</span> <span class="dt">Team</span></a>
 <a class="sourceLine" id="cb5-2" title="2">  <span class="kw">deriving</span> (<span class="dt">Eq</span>,<span class="dt">Ord</span>,<span class="dt">Read</span>,<span class="dt">Show</span>)</a></code></pre></div>
 <p>A league table is a list of teams and their results with the ordering on everything is arranged so that the list can be sorted with the default <code>Ord</code> ordering to arrange the table according to PL conventions.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">newtype</span> <span class="dt">Table</span> <span class="fu">=</span> <span class="dt">Table</span> {<span class="ot"> getTable ::</span> [(<span class="dt">Results</span>,<span class="dt">Team</span>)] }</a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">newtype</span> <span class="dt">Table</span> <span class="ot">=</span> <span class="dt">Table</span> {<span class="ot"> getTable ::</span> [(<span class="dt">Results</span>,<span class="dt">Team</span>)] }</a>
 <a class="sourceLine" id="cb6-2" title="2">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a></code></pre></div>
 <p>Teams are just Text containing the names used by the openfootball data.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">type</span> <span class="dt">Team</span> <span class="fu">=</span> <span class="dt">T.Text</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">type</span> <span class="dt">Team</span> <span class="ot">=</span> <span class="dt">T.Text</span></a></code></pre></div>
 <p>Results contain everything we need to generate a league table.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">data</span> <span class="dt">Results</span> <span class="fu">=</span></a>
+<div class="sourceCode" id="cb8"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">data</span> <span class="dt">Results</span> <span class="ot">=</span></a>
 <a class="sourceLine" id="cb8-2" title="2">  <span class="dt">Results</span></a>
 <a class="sourceLine" id="cb8-3" title="3">    {<span class="ot"> resultsGamesPlayed  ::</span> <span class="dt">Int</span></a>
 <a class="sourceLine" id="cb8-4" title="4">    ,<span class="ot"> resultsGamesWon     ::</span> <span class="dt">Int</span></a>
@@ -165,112 +165,112 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb8-8" title="8">    }</a>
 <a class="sourceLine" id="cb8-9" title="9">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a></code></pre></div>
 <p>These vectors have expected zeros and sums.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1"><span class="ot">#if __GLASGOW_HASKELL__ &gt;= 804</span></a>
+<div class="sourceCode" id="cb9"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1"><span class="pp">#if __GLASGOW_HASKELL__ &gt;= 804</span></a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="kw">instance</span> <span class="dt">Semigroup</span> <span class="dt">Results</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb9-3" title="3">  (<span class="fu">&lt;&gt;</span>) <span class="fu">=</span> mappend_r</a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="ot">#endif</span></a>
+<a class="sourceLine" id="cb9-3" title="3">  (<span class="op">&lt;&gt;</span>) <span class="ot">=</span> mappend_r</a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="pp">#endif</span></a>
 <a class="sourceLine" id="cb9-5" title="5"></a>
 <a class="sourceLine" id="cb9-6" title="6"><span class="kw">instance</span> <span class="dt">Monoid</span> <span class="dt">Results</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb9-7" title="7">  <span class="fu">mempty</span>  <span class="fu">=</span> mempty_r</a>
-<a class="sourceLine" id="cb9-8" title="8">  <span class="fu">mappend</span> <span class="fu">=</span> mappend_r</a></code></pre></div>
+<a class="sourceLine" id="cb9-7" title="7">  <span class="fu">mempty</span>  <span class="ot">=</span> mempty_r</a>
+<a class="sourceLine" id="cb9-8" title="8">  <span class="fu">mappend</span> <span class="ot">=</span> mappend_r</a></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" title="1"><span class="ot">mappend_r ::</span> <span class="dt">Results</span> <span class="ot">-&gt;</span> <span class="dt">Results</span> <span class="ot">-&gt;</span> <span class="dt">Results</span></a>
 <a class="sourceLine" id="cb10-2" title="2">mappend_r (<span class="dt">Results</span> gp1 gw1 gf1 ga1 ps1)</a>
-<a class="sourceLine" id="cb10-3" title="3">          (<span class="dt">Results</span> gp2 gw2 gf2 ga2 ps2) <span class="fu">=</span></a>
-<a class="sourceLine" id="cb10-4" title="4">       <span class="dt">Results</span> (gp1<span class="fu">+</span>gp2)</a>
-<a class="sourceLine" id="cb10-5" title="5">               (gw1<span class="fu">+</span>gw2)</a>
-<a class="sourceLine" id="cb10-6" title="6">               (gf1<span class="fu">+</span>gf2)</a>
-<a class="sourceLine" id="cb10-7" title="7">               (ga1<span class="fu">+</span>ga2)</a>
-<a class="sourceLine" id="cb10-8" title="8">               (ps1<span class="fu">+</span>ps2)</a>
+<a class="sourceLine" id="cb10-3" title="3">          (<span class="dt">Results</span> gp2 gw2 gf2 ga2 ps2) <span class="ot">=</span></a>
+<a class="sourceLine" id="cb10-4" title="4">       <span class="dt">Results</span> (gp1<span class="op">+</span>gp2)</a>
+<a class="sourceLine" id="cb10-5" title="5">               (gw1<span class="op">+</span>gw2)</a>
+<a class="sourceLine" id="cb10-6" title="6">               (gf1<span class="op">+</span>gf2)</a>
+<a class="sourceLine" id="cb10-7" title="7">               (ga1<span class="op">+</span>ga2)</a>
+<a class="sourceLine" id="cb10-8" title="8">               (ps1<span class="op">+</span>ps2)</a>
 <a class="sourceLine" id="cb10-9" title="9"></a>
 <a class="sourceLine" id="cb10-10" title="10"><span class="ot">mempty_r ::</span> <span class="dt">Results</span></a>
-<a class="sourceLine" id="cb10-11" title="11">mempty_r  <span class="fu">=</span> <span class="dt">Results</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span></a></code></pre></div>
+<a class="sourceLine" id="cb10-11" title="11">mempty_r  <span class="ot">=</span> <span class="dt">Results</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span></a></code></pre></div>
 <p>PL results are ordered by (points,goal-difference,goals-scored).</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">instance</span> <span class="dt">Ord</span> <span class="dt">Results</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb11-2" title="2">  <span class="fu">compare</span> <span class="fu">=</span> comparing <span class="fu">$</span> \<span class="dt">Results</span>{<span class="fu">..</span>} <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb11-2" title="2">  <span class="fu">compare</span> <span class="ot">=</span> comparing <span class="op">$</span> \<span class="dt">Results</span>{<span class="op">..</span>} <span class="ot">-&gt;</span></a>
 <a class="sourceLine" id="cb11-3" title="3">      ( resultsPointsScored</a>
-<a class="sourceLine" id="cb11-4" title="4">      , resultsGoalsFor <span class="fu">-</span> resultsGoalsAgainst</a>
+<a class="sourceLine" id="cb11-4" title="4">      , resultsGoalsFor <span class="op">-</span> resultsGoalsAgainst</a>
 <a class="sourceLine" id="cb11-5" title="5">      , resultsGoalsFor</a>
 <a class="sourceLine" id="cb11-6" title="6">      )</a>
 <a class="sourceLine" id="cb11-7" title="7"></a>
 <a class="sourceLine" id="cb11-8" title="8"><span class="kw">instance</span> <span class="dt">Eq</span> <span class="dt">Results</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb11-9" title="9">  (<span class="fu">==</span>) x y <span class="fu">=</span> <span class="fu">compare</span> x y <span class="fu">==</span> <span class="dt">EQ</span></a></code></pre></div>
+<a class="sourceLine" id="cb11-9" title="9">  (<span class="op">==</span>) x y <span class="ot">=</span> <span class="fu">compare</span> x y <span class="op">==</span> <span class="dt">EQ</span></a></code></pre></div>
 <h2 id="executing-jobs">Executing Jobs</h2>
 <div class="sourceCode" id="cb12"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" title="1"><span class="ot">job ::</span> <span class="dt">Job</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb12-2" title="2">job jb <span class="fu">=</span> top jb <span class="fu">&lt;$&gt;</span> input jb <span class="fu">&gt;&gt;=</span> output jb</a></code></pre></div>
+<a class="sourceLine" id="cb12-2" title="2">job jb <span class="ot">=</span> top jb <span class="op">&lt;$&gt;</span> input jb <span class="op">&gt;&gt;=</span> output jb</a></code></pre></div>
 Compute a Table from Game data according to the jobSize parameter.
 <div class="sourceCode" id="cb13"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" title="1"><span class="ot">top ::</span> <span class="dt">Job</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>] <span class="ot">-&gt;</span> <span class="dt">Table</span></a>
-<a class="sourceLine" id="cb13-2" title="2">top <span class="dt">Job</span>{<span class="fu">..</span>} mtchs <span class="fu">=</span> <span class="kw">case</span> jobSize <span class="kw">of</span></a>
+<a class="sourceLine" id="cb13-2" title="2">top <span class="dt">Job</span>{<span class="op">..</span>} mtchs <span class="ot">=</span> <span class="kw">case</span> jobSize <span class="kw">of</span></a>
 <a class="sourceLine" id="cb13-3" title="3">    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> full_tbl</a>
-<a class="sourceLine" id="cb13-4" title="4">    <span class="dt">Just</span> n  <span class="ot">-&gt;</span> aggregate <span class="fu">$</span></a>
+<a class="sourceLine" id="cb13-4" title="4">    <span class="dt">Just</span> n  <span class="ot">-&gt;</span> aggregate <span class="op">$</span></a>
 <a class="sourceLine" id="cb13-5" title="5">      filterGames (topTeams n full_tbl) mtchs</a>
 <a class="sourceLine" id="cb13-6" title="6">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb13-7" title="7">    full_tbl <span class="fu">=</span> aggregate mtchs</a></code></pre></div>
+<a class="sourceLine" id="cb13-7" title="7">    full_tbl <span class="ot">=</span> aggregate mtchs</a></code></pre></div>
 <p>Calculate the top n teams in a table.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" title="1"><span class="ot">topTeams ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Table</span> <span class="ot">-&gt;</span> [<span class="dt">Team</span>]</a>
-<a class="sourceLine" id="cb14-2" title="2">topTeams n <span class="fu">=</span> <span class="fu">map</span> <span class="fu">snd</span> <span class="fu">.</span> <span class="fu">take</span> n <span class="fu">.</span> getTable</a></code></pre></div>
+<a class="sourceLine" id="cb14-2" title="2">topTeams n <span class="ot">=</span> <span class="fu">map</span> <span class="fu">snd</span> <span class="op">.</span> <span class="fu">take</span> n <span class="op">.</span> getTable</a></code></pre></div>
 <p>Filter game data to only include games between the listed teams.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" title="1"><span class="ot">filterGames ::</span> [<span class="dt">Team</span>] <span class="ot">-&gt;</span> [<span class="dt">Game</span>] <span class="ot">-&gt;</span> [<span class="dt">Game</span>]</a>
-<a class="sourceLine" id="cb15-2" title="2">filterGames tms <span class="fu">=</span> <span class="fu">filter</span> <span class="fu">$</span> \(<span class="dt">Game</span> h _ _ a) <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb15-3" title="3">    h <span class="ot">`elem`</span> tms <span class="fu">&amp;&amp;</span> a <span class="ot">`elem`</span> tms</a></code></pre></div>
+<a class="sourceLine" id="cb15-2" title="2">filterGames tms <span class="ot">=</span> <span class="fu">filter</span> <span class="op">$</span> \(<span class="dt">Game</span> h _ _ a) <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb15-3" title="3">    h <span class="ot">`elem`</span> tms <span class="op">&amp;&amp;</span> a <span class="ot">`elem`</span> tms</a></code></pre></div>
 <p>Aggregate game data into a table.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" title="1"><span class="ot">aggregate ::</span> [<span class="dt">Game</span>] <span class="ot">-&gt;</span> <span class="dt">Table</span></a>
-<a class="sourceLine" id="cb16-2" title="2">aggregate mtchs <span class="fu">=</span> sortResults <span class="fu">$</span></a>
-<a class="sourceLine" id="cb16-3" title="3">    <span class="fu">map</span> homeResults mtchs <span class="fu">++</span> <span class="fu">map</span> awayResults mtchs</a></code></pre></div>
+<a class="sourceLine" id="cb16-2" title="2">aggregate mtchs <span class="ot">=</span> sortResults <span class="op">$</span></a>
+<a class="sourceLine" id="cb16-3" title="3">    <span class="fu">map</span> homeResults mtchs <span class="op">++</span> <span class="fu">map</span> awayResults mtchs</a></code></pre></div>
 <p>Generate the results for the home team from a Game result.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" title="1"><span class="ot">homeResults ::</span> <span class="dt">Game</span> <span class="ot">-&gt;</span> (<span class="dt">Results</span>,<span class="dt">Team</span>)</a>
-<a class="sourceLine" id="cb17-2" title="2">homeResults (<span class="dt">Game</span> h hs as _) <span class="fu">=</span> <span class="fu">flip</span> (,) h</a>
+<a class="sourceLine" id="cb17-2" title="2">homeResults (<span class="dt">Game</span> h hs as _) <span class="ot">=</span> <span class="fu">flip</span> (,) h</a>
 <a class="sourceLine" id="cb17-3" title="3">    <span class="dt">Results</span></a>
-<a class="sourceLine" id="cb17-4" title="4">      { resultsGamesPlayed  <span class="fu">=</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb17-5" title="5">      , resultsGamesWon     <span class="fu">=</span> wins   <span class="fu">$</span> hs <span class="fu">-</span> as</a>
-<a class="sourceLine" id="cb17-6" title="6">      , resultsGoalsFor     <span class="fu">=</span> hs</a>
-<a class="sourceLine" id="cb17-7" title="7">      , resultsGoalsAgainst <span class="fu">=</span> as</a>
-<a class="sourceLine" id="cb17-8" title="8">      , resultsPointsScored <span class="fu">=</span> points <span class="fu">$</span> hs <span class="fu">-</span> as</a>
+<a class="sourceLine" id="cb17-4" title="4">      { resultsGamesPlayed  <span class="ot">=</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb17-5" title="5">      , resultsGamesWon     <span class="ot">=</span> wins   <span class="op">$</span> hs <span class="op">-</span> as</a>
+<a class="sourceLine" id="cb17-6" title="6">      , resultsGoalsFor     <span class="ot">=</span> hs</a>
+<a class="sourceLine" id="cb17-7" title="7">      , resultsGoalsAgainst <span class="ot">=</span> as</a>
+<a class="sourceLine" id="cb17-8" title="8">      , resultsPointsScored <span class="ot">=</span> points <span class="op">$</span> hs <span class="op">-</span> as</a>
 <a class="sourceLine" id="cb17-9" title="9">      }</a></code></pre></div>
 <p>Generate the results for the away team from a Game result.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" title="1"><span class="ot">awayResults ::</span> <span class="dt">Game</span> <span class="ot">-&gt;</span> (<span class="dt">Results</span>,<span class="dt">Team</span>)</a>
-<a class="sourceLine" id="cb18-2" title="2">awayResults (<span class="dt">Game</span> _ hs as a) <span class="fu">=</span> <span class="fu">flip</span> (,) a</a>
+<a class="sourceLine" id="cb18-2" title="2">awayResults (<span class="dt">Game</span> _ hs as a) <span class="ot">=</span> <span class="fu">flip</span> (,) a</a>
 <a class="sourceLine" id="cb18-3" title="3">    <span class="dt">Results</span></a>
-<a class="sourceLine" id="cb18-4" title="4">      { resultsGamesPlayed  <span class="fu">=</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb18-5" title="5">      , resultsGamesWon     <span class="fu">=</span> wins   <span class="fu">$</span> as <span class="fu">-</span> hs</a>
-<a class="sourceLine" id="cb18-6" title="6">      , resultsGoalsFor     <span class="fu">=</span> as</a>
-<a class="sourceLine" id="cb18-7" title="7">      , resultsGoalsAgainst <span class="fu">=</span> hs</a>
-<a class="sourceLine" id="cb18-8" title="8">      , resultsPointsScored <span class="fu">=</span> points <span class="fu">$</span> as <span class="fu">-</span> hs</a>
+<a class="sourceLine" id="cb18-4" title="4">      { resultsGamesPlayed  <span class="ot">=</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb18-5" title="5">      , resultsGamesWon     <span class="ot">=</span> wins   <span class="op">$</span> as <span class="op">-</span> hs</a>
+<a class="sourceLine" id="cb18-6" title="6">      , resultsGoalsFor     <span class="ot">=</span> as</a>
+<a class="sourceLine" id="cb18-7" title="7">      , resultsGoalsAgainst <span class="ot">=</span> hs</a>
+<a class="sourceLine" id="cb18-8" title="8">      , resultsPointsScored <span class="ot">=</span> points <span class="op">$</span> as <span class="op">-</span> hs</a>
 <a class="sourceLine" id="cb18-9" title="9">      }</a></code></pre></div>
 <p>Calculate the points accruing to a team from their goal difference for a game.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" title="1"><span class="ot">points ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb19-2" title="2">points gd <span class="fu">=</span> <span class="kw">case</span> <span class="fu">compare</span> gd <span class="dv">0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb19-2" title="2">points gd <span class="ot">=</span> <span class="kw">case</span> <span class="fu">compare</span> gd <span class="dv">0</span> <span class="kw">of</span></a>
 <a class="sourceLine" id="cb19-3" title="3">  <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="dv">0</span></a>
 <a class="sourceLine" id="cb19-4" title="4">  <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dv">1</span></a>
 <a class="sourceLine" id="cb19-5" title="5">  <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="dv">3</span></a></code></pre></div>
 <p>Calculate the number of wins accruing to a team (0 or 1) from their goal for a game.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" title="1"><span class="ot">wins ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb20-2" title="2">wins gd <span class="fu">=</span> <span class="kw">case</span> gd<span class="fu">&gt;</span><span class="dv">0</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb20-2" title="2">wins gd <span class="ot">=</span> <span class="kw">case</span> gd<span class="op">&gt;</span><span class="dv">0</span> <span class="kw">of</span></a>
 <a class="sourceLine" id="cb20-3" title="3">  <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="dv">1</span></a>
 <a class="sourceLine" id="cb20-4" title="4">  <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="dv">0</span></a></code></pre></div>
 <p>Collate a list of results into a table.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" title="1"><span class="ot">sortResults ::</span> [(<span class="dt">Results</span>,<span class="dt">Team</span>)] <span class="ot">-&gt;</span> <span class="dt">Table</span></a>
-<a class="sourceLine" id="cb21-2" title="2">sortResults <span class="fu">=</span></a>
+<a class="sourceLine" id="cb21-2" title="2">sortResults <span class="ot">=</span></a>
 <a class="sourceLine" id="cb21-3" title="3">    <span class="dt">Table</span></a>
-<a class="sourceLine" id="cb21-4" title="4">      <span class="fu">.</span> L.sortBy (<span class="fu">flip</span> <span class="fu">$</span> comparing <span class="fu">fst</span>)</a>
-<a class="sourceLine" id="cb21-5" title="5">      <span class="fu">.</span> groupSortBy (comparing <span class="fu">snd</span>) grp</a>
+<a class="sourceLine" id="cb21-4" title="4">      <span class="op">.</span> L.sortBy (<span class="fu">flip</span> <span class="op">$</span> comparing <span class="fu">fst</span>)</a>
+<a class="sourceLine" id="cb21-5" title="5">      <span class="op">.</span> groupSortBy (comparing <span class="fu">snd</span>) grp</a>
 <a class="sourceLine" id="cb21-6" title="6">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb21-7" title="7">    grp (r,t) ps <span class="fu">=</span> (r&#39;,t)</a>
+<a class="sourceLine" id="cb21-7" title="7">    grp (r,t) ps <span class="ot">=</span> (r&#39;,t)</a>
 <a class="sourceLine" id="cb21-8" title="8">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb21-9" title="9">        r&#39; <span class="fu">=</span> <span class="fu">mconcat</span> <span class="fu">$</span> r <span class="fu">:</span> <span class="fu">map</span> <span class="fu">fst</span> ps</a></code></pre></div>
+<a class="sourceLine" id="cb21-9" title="9">        r&#39; <span class="ot">=</span> <span class="fu">mconcat</span> <span class="op">$</span> r <span class="op">:</span> <span class="fu">map</span> <span class="fu">fst</span> ps</a></code></pre></div>
 <h2 id="input">input</h2>
 <p>Parse openfootball data into Game data, eliminating duplicate results. (For <code>g1</code> and <code>g2</code> to be recognised as a duplicate, it must be true that <code>g1==g2</code>.)</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" title="1"><span class="ot">input ::</span> <span class="dt">Job</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> [<span class="dt">Game</span>]</a>
-<a class="sourceLine" id="cb22-2" title="2">input <span class="dt">Job</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
-<a class="sourceLine" id="cb22-3" title="3">  groupSort <span class="fu">const</span> <span class="fu">.</span> parseGames <span class="fu">.</span> T.concat <span class="fu">&lt;$&gt;</span> <span class="fu">mapM</span> T.readFile jobInputs</a></code></pre></div>
+<a class="sourceLine" id="cb22-2" title="2">input <span class="dt">Job</span>{<span class="op">..</span>} <span class="ot">=</span></a>
+<a class="sourceLine" id="cb22-3" title="3">  groupSort <span class="fu">const</span> <span class="op">.</span> parseGames <span class="op">.</span> T.concat <span class="op">&lt;$&gt;</span> <span class="fu">mapM</span> T.readFile jobInputs</a></code></pre></div>
 <h2 id="parsegames">parseGames</h2>
 <p>The Game parser has three variants that should all be equivalent.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb23-1" title="1"><span class="ot">parseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]</a>
-<a class="sourceLine" id="cb23-2" title="2">parseGames <span class="fu">=</span> <span class="kw">case</span> <span class="dt">PrimParseGames</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb23-2" title="2">parseGames <span class="ot">=</span> <span class="kw">case</span> <span class="dt">PrimParseGames</span> <span class="kw">of</span></a>
 <a class="sourceLine" id="cb23-3" title="3">  <span class="dt">SimpleParseGames</span> <span class="ot">-&gt;</span> simpleParseGames</a>
 <a class="sourceLine" id="cb23-4" title="4">  <span class="dt">FunParseGames</span>    <span class="ot">-&gt;</span> funParseGames</a>
 <a class="sourceLine" id="cb23-5" title="5">  <span class="dt">PrimParseGames</span>   <span class="ot">-&gt;</span> primParseGames</a>
 <a class="sourceLine" id="cb23-6" title="6"></a>
-<a class="sourceLine" id="cb23-7" title="7"><span class="kw">data</span> <span class="dt">ParseGames</span> <span class="fu">=</span> <span class="dt">SimpleParseGames</span> <span class="fu">|</span> <span class="dt">FunParseGames</span> <span class="fu">|</span> <span class="dt">PrimParseGames</span></a></code></pre></div>
+<a class="sourceLine" id="cb23-7" title="7"><span class="kw">data</span> <span class="dt">ParseGames</span> <span class="ot">=</span> <span class="dt">SimpleParseGames</span> <span class="op">|</span> <span class="dt">FunParseGames</span> <span class="op">|</span> <span class="dt">PrimParseGames</span></a></code></pre></div>
 <h3>
 simpleParseGames
 </h3>
@@ -281,44 +281,44 @@ simpleParseGames
 </ol>
 <p>The <code>edit</code> function is a simple specialisation of the <code>regex</code> <code>sed'</code> function (defined below) that deletes every line in the file that edits every line in the file according to the given <code>SearchReplace</code>, deleting all other lies.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" title="1"><span class="ot">simpleParseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]</a>
-<a class="sourceLine" id="cb24-2" title="2">simpleParseGames <span class="fu">=</span> <span class="fu">map</span> readText <span class="fu">.</span> T.lines <span class="fu">.</span> edit gameEdit</a></code></pre></div>
+<a class="sourceLine" id="cb24-2" title="2">simpleParseGames <span class="ot">=</span> <span class="fu">map</span> readText <span class="op">.</span> T.lines <span class="op">.</span> edit gameEdit</a></code></pre></div>
 <p>The <code>[ed|</code> … <code>///</code> … <code>|]</code> <code>SearchReplace</code> editors for recognizing line containing matchresults and converting them to Haskell-format <code>Game</code> data come in two variants that should be equivalent.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" title="1"><span class="ot">gameEdit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb25-2" title="2">gameEdit <span class="fu">=</span> <span class="kw">case</span> <span class="dt">MacrosGameEdit</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb25-2" title="2">gameEdit <span class="ot">=</span> <span class="kw">case</span> <span class="dt">MacrosGameEdit</span> <span class="kw">of</span></a>
 <a class="sourceLine" id="cb25-3" title="3">  <span class="dt">SimpleGameEdit</span> <span class="ot">-&gt;</span> simpleGameEdit</a>
 <a class="sourceLine" id="cb25-4" title="4">  <span class="dt">MacrosGameEdit</span> <span class="ot">-&gt;</span> macrosGameEdit</a>
 <a class="sourceLine" id="cb25-5" title="5"></a>
-<a class="sourceLine" id="cb25-6" title="6"><span class="kw">data</span> <span class="dt">GameEdit</span> <span class="fu">=</span> <span class="dt">SimpleGameEdit</span> <span class="fu">|</span> <span class="dt">MacrosGameEdit</span></a></code></pre></div>
+<a class="sourceLine" id="cb25-6" title="6"><span class="kw">data</span> <span class="dt">GameEdit</span> <span class="ot">=</span> <span class="dt">SimpleGameEdit</span> <span class="op">|</span> <span class="dt">MacrosGameEdit</span></a></code></pre></div>
 <h4>
 simpleGameEdit
 </h4>
 <div class="sourceCode" id="cb26"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" title="1"><span class="ot">simpleGameEdit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb26-2" title="2">simpleGameEdit <span class="fu">=</span></a>
+<a class="sourceLine" id="cb26-2" title="2">simpleGameEdit <span class="ot">=</span></a>
 <a class="sourceLine" id="cb26-3" title="3">  [ed|^ *${ht}([A-Za-z][a-zA-Z ]*[A-Za-z]) +${hs}([0-9]+)-${as}([0-9]+) +(\([^)]+\) *)?${at}([A-Za-z][a-zA-Z ]*[A-Za-z]) *(@.*)?$///Game &quot;${ht}&quot; ${hs} ${as} &quot;${at}&quot;|]</a></code></pre></div>
 <h4>
 simpleGameEdit
 </h4>
 <div class="sourceCode" id="cb27"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" title="1"><span class="ot">macrosGameEdit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb27-2" title="2">macrosGameEdit <span class="fu">=</span></a>
+<a class="sourceLine" id="cb27-2" title="2">macrosGameEdit <span class="ot">=</span></a>
 <a class="sourceLine" id="cb27-3" title="3">  [ed_|^ *${ht}(@{team}) +${hs}([0-9]+)-${as}([0-9]+) +(\([0-9]+-[0-9]+\) *)?${at}(@{team}) *(@.*)?$///Game &quot;${ht}&quot; ${hs} ${as} &quot;${at}&quot;|] macs</a></code></pre></div>
 <div class="sourceCode" id="cb28"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" title="1"><span class="ot">macs ::</span> <span class="dt">Macros</span> <span class="dt">RE</span></a>
-<a class="sourceLine" id="cb28-2" title="2">macs <span class="fu">=</span> makeMacros env</a>
+<a class="sourceLine" id="cb28-2" title="2">macs <span class="ot">=</span> makeMacros env</a>
 <a class="sourceLine" id="cb28-3" title="3"></a>
 <a class="sourceLine" id="cb28-4" title="4"><span class="ot">env ::</span> <span class="dt">MacroEnv</span></a>
-<a class="sourceLine" id="cb28-5" title="5">env <span class="fu">=</span> makeEnv [(,) <span class="st">&quot;team&quot;</span> teamMacro] TDFA.preludeEnv</a></code></pre></div>
+<a class="sourceLine" id="cb28-5" title="5">env <span class="ot">=</span> makeEnv [(,) <span class="st">&quot;team&quot;</span> teamMacro] TDFA.preludeEnv</a></code></pre></div>
 <div class="sourceCode" id="cb29"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb29-1" title="1"><span class="ot">teamMacro ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb29-2" title="2">teamMacro ev mid <span class="fu">=</span></a>
+<a class="sourceLine" id="cb29-2" title="2">teamMacro ev mid <span class="ot">=</span></a>
 <a class="sourceLine" id="cb29-3" title="3">  runTests TDFA.regexType <span class="dt">Just</span> (<span class="fu">map</span> dup samples) ev mid</a>
 <a class="sourceLine" id="cb29-4" title="4">    <span class="dt">MacroDescriptor</span></a>
-<a class="sourceLine" id="cb29-5" title="5">      { macroSource          <span class="fu">=</span> <span class="dt">RegexSource</span> <span class="st">&quot;([a-zA-Z]+ ?)*[A-Za-z]&quot;</span> <span class="co">-- the RE to be substituted for the macro</span></a>
-<a class="sourceLine" id="cb29-6" title="6">      , macroSamples         <span class="fu">=</span> samples                              <span class="co">-- list of strings that should match the above macro RE</span></a>
-<a class="sourceLine" id="cb29-7" title="7">      , macroCounterSamples  <span class="fu">=</span> counter_samples                      <span class="co">-- list of strings that should **not** match the above macro RE</span></a>
-<a class="sourceLine" id="cb29-8" title="8">      , macroTestResults     <span class="fu">=</span> []                                   <span class="co">-- for bookkeeping</span></a>
-<a class="sourceLine" id="cb29-9" title="9">      , macroParser          <span class="fu">=</span> <span class="dt">Nothing</span>                              <span class="co">-- no parser needed for this one!</span></a>
-<a class="sourceLine" id="cb29-10" title="10">      , macroDescription     <span class="fu">=</span> <span class="st">&quot;team names: alphabetic characters interspersed with spaces&quot;</span></a>
+<a class="sourceLine" id="cb29-5" title="5">      { macroSource          <span class="ot">=</span> <span class="dt">RegexSource</span> <span class="st">&quot;([a-zA-Z]+ ?)*[A-Za-z]&quot;</span> <span class="co">-- the RE to be substituted for the macro</span></a>
+<a class="sourceLine" id="cb29-6" title="6">      , macroSamples         <span class="ot">=</span> samples                              <span class="co">-- list of strings that should match the above macro RE</span></a>
+<a class="sourceLine" id="cb29-7" title="7">      , macroCounterSamples  <span class="ot">=</span> counter_samples                      <span class="co">-- list of strings that should **not** match the above macro RE</span></a>
+<a class="sourceLine" id="cb29-8" title="8">      , macroTestResults     <span class="ot">=</span> []                                   <span class="co">-- for bookkeeping</span></a>
+<a class="sourceLine" id="cb29-9" title="9">      , macroParser          <span class="ot">=</span> <span class="dt">Nothing</span>                              <span class="co">-- no parser needed for this one!</span></a>
+<a class="sourceLine" id="cb29-10" title="10">      , macroDescription     <span class="ot">=</span> <span class="st">&quot;team names: alphabetic characters interspersed with spaces&quot;</span></a>
 <a class="sourceLine" id="cb29-11" title="11">      }</a>
 <a class="sourceLine" id="cb29-12" title="12">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb29-13" title="13">    samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb29-13" title="13">    samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb29-14" title="14">        [ <span class="st">&quot;Chelsea FC&quot;</span></a>
 <a class="sourceLine" id="cb29-15" title="15">        , <span class="st">&quot;West Bromwich Albion&quot;</span></a>
 <a class="sourceLine" id="cb29-16" title="16">        , <span class="st">&quot;AFC Bournemouth&quot;</span></a>
@@ -328,7 +328,7 @@ simpleGameEdit
 <a class="sourceLine" id="cb29-20" title="20">        , <span class="st">&quot;AA B&quot;</span></a>
 <a class="sourceLine" id="cb29-21" title="21">        ]</a>
 <a class="sourceLine" id="cb29-22" title="22"></a>
-<a class="sourceLine" id="cb29-23" title="23">    counter_samples <span class="fu">=</span></a>
+<a class="sourceLine" id="cb29-23" title="23">    counter_samples <span class="ot">=</span></a>
 <a class="sourceLine" id="cb29-24" title="24">        [ <span class="st">&quot;Arsenal FC &quot;</span></a>
 <a class="sourceLine" id="cb29-25" title="25">        , <span class="st">&quot; Liverpool FC&quot;</span></a>
 <a class="sourceLine" id="cb29-26" title="26">        , <span class="st">&quot;West Bromwich  Albion&quot;</span></a>
@@ -336,241 +336,241 @@ simpleGameEdit
 <a class="sourceLine" id="cb29-28" title="28">        , <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb29-29" title="29">        ]</a>
 <a class="sourceLine" id="cb29-30" title="30"></a>
-<a class="sourceLine" id="cb29-31" title="31">    dup x <span class="fu">=</span> (x,x)</a></code></pre></div>
+<a class="sourceLine" id="cb29-31" title="31">    dup x <span class="ot">=</span> (x,x)</a></code></pre></div>
 <div class="sourceCode" id="cb30"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb30-1" title="1"><span class="ot">listMacros ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb30-2" title="2">listMacros <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb30-3" title="3">    hPutStr stderr <span class="fu">$</span> formatMacroTable TDFA.regexType env</a>
+<a class="sourceLine" id="cb30-2" title="2">listMacros <span class="ot">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb30-3" title="3">    hPutStr stderr <span class="op">$</span> formatMacroTable TDFA.regexType env</a>
 <a class="sourceLine" id="cb30-4" title="4">    ok <span class="ot">&lt;-</span> testMacroEnv <span class="st">&quot;macros&quot;</span> TDFA.regexType env</a>
-<a class="sourceLine" id="cb30-5" title="5">    M.when (<span class="fu">not</span> ok) <span class="fu">$</span> exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a></code></pre></div>
+<a class="sourceLine" id="cb30-5" title="5">    M.when (<span class="fu">not</span> ok) <span class="op">$</span> exitWith <span class="op">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a></code></pre></div>
 <h3>
 funParseGames
 </h3>
 <p>Here we use the <code>regex</code> <code>grepFilter</code> to extract all of the lines that match our <code>rex</code> RE for detecting match-result data and assemble the <code>Game</code> data directly by extracting the <code>ht</code>, <code>hs</code>, <code>as</code> and <code>at</code> fields from the matched result.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb31-1" title="1"><span class="ot">funParseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]</a>
-<a class="sourceLine" id="cb31-2" title="2">funParseGames txt <span class="fu">=</span></a>
-<a class="sourceLine" id="cb31-3" title="3">    [ <span class="dt">Game</span> (           mtch <span class="fu">!$$</span> [cp|ht|])</a>
-<a class="sourceLine" id="cb31-4" title="4">           (readText <span class="fu">$</span> mtch <span class="fu">!$$</span> [cp|hs|])</a>
-<a class="sourceLine" id="cb31-5" title="5">           (readText <span class="fu">$</span> mtch <span class="fu">!$$</span> [cp|as|])</a>
-<a class="sourceLine" id="cb31-6" title="6">           (           mtch <span class="fu">!$$</span> [cp|at|])</a>
-<a class="sourceLine" id="cb31-7" title="7">        <span class="fu">|</span> <span class="dt">Line</span>{<span class="fu">..</span>} <span class="ot">&lt;-</span> grepFilter rex txt</a>
+<a class="sourceLine" id="cb31-2" title="2">funParseGames txt <span class="ot">=</span></a>
+<a class="sourceLine" id="cb31-3" title="3">    [ <span class="dt">Game</span> (           mtch <span class="op">!$$</span> [cp|ht|])</a>
+<a class="sourceLine" id="cb31-4" title="4">           (readText <span class="op">$</span> mtch <span class="op">!$$</span> [cp|hs|])</a>
+<a class="sourceLine" id="cb31-5" title="5">           (readText <span class="op">$</span> mtch <span class="op">!$$</span> [cp|as|])</a>
+<a class="sourceLine" id="cb31-6" title="6">           (           mtch <span class="op">!$$</span> [cp|at|])</a>
+<a class="sourceLine" id="cb31-7" title="7">        <span class="op">|</span> <span class="dt">Line</span>{<span class="op">..</span>} <span class="ot">&lt;-</span> grepFilter rex txt</a>
 <a class="sourceLine" id="cb31-8" title="8">        , [mtch]   <span class="ot">&lt;-</span> [allMatches getLineMatches]</a>
 <a class="sourceLine" id="cb31-9" title="9">        ]</a></code></pre></div>
 <p>The RE for merely recognising lines that contain match results in the input data come in two variants. We either extract the RE from the above <code>SearchReplace</code> template or rebuild the <code>[re|</code> … <code>]</code>. (They should of course be equivalent.)</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb32-1" title="1"><span class="ot">rex ::</span> <span class="dt">RE</span></a>
-<a class="sourceLine" id="cb32-2" title="2">rex <span class="fu">=</span> <span class="kw">case</span> <span class="dt">Direct</span> <span class="kw">of</span></a>
+<a class="sourceLine" id="cb32-2" title="2">rex <span class="ot">=</span> <span class="kw">case</span> <span class="dt">Direct</span> <span class="kw">of</span></a>
 <a class="sourceLine" id="cb32-3" title="3">  <span class="dt">Direct</span>  <span class="ot">-&gt;</span></a>
 <a class="sourceLine" id="cb32-4" title="4">    [re_|^ *${ht}(@{team}) +${hs}([0-9]+)-${as}([0-9]+) +(\([0-9]+-[0-9]+\) *)?${at}(@{team}) *(@.*)?$|] macs</a>
 <a class="sourceLine" id="cb32-5" title="5">  <span class="dt">Recycle</span> <span class="ot">-&gt;</span></a>
 <a class="sourceLine" id="cb32-6" title="6">    getSearch gameEdit</a>
 <a class="sourceLine" id="cb32-7" title="7"></a>
-<a class="sourceLine" id="cb32-8" title="8"><span class="kw">data</span> <span class="dt">REX</span> <span class="fu">=</span> <span class="dt">Direct</span> <span class="fu">|</span> <span class="dt">Recycle</span></a></code></pre></div>
+<a class="sourceLine" id="cb32-8" title="8"><span class="kw">data</span> <span class="dt">REX</span> <span class="ot">=</span> <span class="dt">Direct</span> <span class="op">|</span> <span class="dt">Recycle</span></a></code></pre></div>
 <h3>
 primParseGames
 </h3>
 <p>This variant of <code>funParseGames</code> uses <code>T.lines</code> and <code>?=~</code> instead of <code>grepFilter</code>.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb33-1" title="1"><span class="ot">primParseGames ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> [<span class="dt">Game</span>]</a>
-<a class="sourceLine" id="cb33-2" title="2">primParseGames txt <span class="fu">=</span></a>
-<a class="sourceLine" id="cb33-3" title="3">    [ <span class="dt">Game</span> (           mtch <span class="fu">!$$</span> [cp|ht|])</a>
-<a class="sourceLine" id="cb33-4" title="4">           (readText <span class="fu">$</span> mtch <span class="fu">!$$</span> [cp|hs|])</a>
-<a class="sourceLine" id="cb33-5" title="5">           (readText <span class="fu">$</span> mtch <span class="fu">!$$</span> [cp|as|])</a>
-<a class="sourceLine" id="cb33-6" title="6">           (           mtch <span class="fu">!$$</span> [cp|at|])</a>
-<a class="sourceLine" id="cb33-7" title="7">        <span class="fu">|</span> mtch <span class="ot">&lt;-</span> <span class="fu">map</span> (<span class="fu">?=~</span> rex) <span class="fu">$</span> T.lines txt</a>
+<a class="sourceLine" id="cb33-2" title="2">primParseGames txt <span class="ot">=</span></a>
+<a class="sourceLine" id="cb33-3" title="3">    [ <span class="dt">Game</span> (           mtch <span class="op">!$$</span> [cp|ht|])</a>
+<a class="sourceLine" id="cb33-4" title="4">           (readText <span class="op">$</span> mtch <span class="op">!$$</span> [cp|hs|])</a>
+<a class="sourceLine" id="cb33-5" title="5">           (readText <span class="op">$</span> mtch <span class="op">!$$</span> [cp|as|])</a>
+<a class="sourceLine" id="cb33-6" title="6">           (           mtch <span class="op">!$$</span> [cp|at|])</a>
+<a class="sourceLine" id="cb33-7" title="7">        <span class="op">|</span> mtch <span class="ot">&lt;-</span> <span class="fu">map</span> (<span class="op">?=~</span> rex) <span class="op">$</span> T.lines txt</a>
 <a class="sourceLine" id="cb33-8" title="8">        , matched mtch</a>
 <a class="sourceLine" id="cb33-9" title="9">        ]</a></code></pre></div>
 <h2 id="output">output</h2>
 <p>Write out/test the Table according to the Job output parameters.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb34-1" title="1"><span class="ot">output ::</span> <span class="dt">Job</span> <span class="ot">-&gt;</span> <span class="dt">Table</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb34-2" title="2">output jb<span class="fu">@</span><span class="dt">Job</span>{<span class="fu">..</span>} tbl <span class="fu">=</span> <span class="kw">case</span> jobIsTest <span class="kw">of</span></a>
-<a class="sourceLine" id="cb34-3" title="3">    <span class="dt">True</span>  <span class="ot">-&gt;</span> test_it <span class="fu">=&lt;&lt;</span> formatTable jb tbl</a>
+<a class="sourceLine" id="cb34-2" title="2">output jb<span class="op">@</span><span class="dt">Job</span>{<span class="op">..</span>} tbl <span class="ot">=</span> <span class="kw">case</span> jobIsTest <span class="kw">of</span></a>
+<a class="sourceLine" id="cb34-3" title="3">    <span class="dt">True</span>  <span class="ot">-&gt;</span> test_it <span class="op">=&lt;&lt;</span> formatTable jb tbl</a>
 <a class="sourceLine" id="cb34-4" title="4">    <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">case</span> jobOutput <span class="kw">of</span></a>
-<a class="sourceLine" id="cb34-5" title="5">      <span class="st">&quot;-&quot;</span> <span class="ot">-&gt;</span> T.putStr       <span class="fu">=&lt;&lt;</span> formatTable jb tbl</a>
-<a class="sourceLine" id="cb34-6" title="6">      fp  <span class="ot">-&gt;</span> T.writeFile fp <span class="fu">=&lt;&lt;</span> formatTable jb tbl</a>
+<a class="sourceLine" id="cb34-5" title="5">      <span class="st">&quot;-&quot;</span> <span class="ot">-&gt;</span> T.putStr       <span class="op">=&lt;&lt;</span> formatTable jb tbl</a>
+<a class="sourceLine" id="cb34-6" title="6">      fp  <span class="ot">-&gt;</span> T.writeFile fp <span class="op">=&lt;&lt;</span> formatTable jb tbl</a>
 <a class="sourceLine" id="cb34-7" title="7">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb34-8" title="8">    test_it txt <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb34-8" title="8">    test_it txt <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb34-9" title="9">      txt&#39; <span class="ot">&lt;-</span> T.readFile jobOutput</a>
-<a class="sourceLine" id="cb34-10" title="10">      <span class="kw">case</span> txt <span class="fu">==</span> txt&#39; <span class="kw">of</span></a>
+<a class="sourceLine" id="cb34-10" title="10">      <span class="kw">case</span> txt <span class="op">==</span> txt&#39; <span class="kw">of</span></a>
 <a class="sourceLine" id="cb34-11" title="11">        <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="fu">putStrLn</span> <span class="st">&quot;OK&quot;</span></a>
 <a class="sourceLine" id="cb34-12" title="12">        <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb34-13" title="13">          <span class="fu">putStrLn</span> <span class="st">&quot;Test Failed&quot;</span></a>
-<a class="sourceLine" id="cb34-14" title="14">          exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a></code></pre></div>
+<a class="sourceLine" id="cb34-14" title="14">          exitWith <span class="op">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a></code></pre></div>
 <p>Generate the markdown for a table and optionally use Pandoc to generate the Html.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" title="1"><span class="ot">formatTable ::</span> <span class="dt">Job</span> <span class="ot">-&gt;</span> <span class="dt">Table</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb35-2" title="2">formatTable <span class="dt">Job</span>{<span class="fu">..</span>} (<span class="dt">Table</span> ps) <span class="fu">=</span> to_html <span class="fu">$</span> T.unlines <span class="fu">$</span></a>
-<a class="sourceLine" id="cb35-3" title="3">    [ <span class="st">&quot;# &quot;</span> <span class="fu">M.&lt;&gt;</span> jobTitle</a>
+<a class="sourceLine" id="cb35-2" title="2">formatTable <span class="dt">Job</span>{<span class="op">..</span>} (<span class="dt">Table</span> ps) <span class="ot">=</span> to_html <span class="op">$</span> T.unlines <span class="op">$</span></a>
+<a class="sourceLine" id="cb35-3" title="3">    [ <span class="st">&quot;# &quot;</span> <span class="op">M.&lt;&gt;</span> jobTitle</a>
 <a class="sourceLine" id="cb35-4" title="4">    , <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb35-5" title="5">    , mk_row header_row</a>
 <a class="sourceLine" id="cb35-6" title="6">    , mk_row divider_row</a>
-<a class="sourceLine" id="cb35-7" title="7">    ] <span class="fu">++</span> <span class="fu">map</span> mk_row (<span class="fu">zipWith</span> gen_row [<span class="dv">1</span><span class="fu">..</span>] ps)</a>
+<a class="sourceLine" id="cb35-7" title="7">    ] <span class="op">++</span> <span class="fu">map</span> mk_row (<span class="fu">zipWith</span> gen_row [<span class="dv">1</span><span class="op">..</span>] ps)</a>
 <a class="sourceLine" id="cb35-8" title="8">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb35-9" title="9">    divider_row <span class="fu">=</span> <span class="fu">map</span> (T.map (<span class="fu">const</span> <span class="ch">&#39;-&#39;</span>)) header_row</a>
-<a class="sourceLine" id="cb35-10" title="10">    header_row  <span class="fu">=</span> <span class="fu">map</span> column_header [<span class="fu">minBound..maxBound</span>]</a>
+<a class="sourceLine" id="cb35-9" title="9">    divider_row <span class="ot">=</span> <span class="fu">map</span> (T.map (<span class="fu">const</span> <span class="ch">&#39;-&#39;</span>)) header_row</a>
+<a class="sourceLine" id="cb35-10" title="10">    header_row  <span class="ot">=</span> <span class="fu">map</span> column_header [<span class="fu">minBound</span><span class="op">..</span><span class="fu">maxBound</span>]</a>
 <a class="sourceLine" id="cb35-11" title="11"></a>
 <a class="sourceLine" id="cb35-12" title="12"><span class="ot">    mk_row ::</span> [<span class="dt">T.Text</span>] <span class="ot">-&gt;</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb35-13" title="13">    mk_row <span class="fu">=</span> T.intercalate <span class="st">&quot;|&quot;</span></a>
+<a class="sourceLine" id="cb35-13" title="13">    mk_row <span class="ot">=</span> T.intercalate <span class="st">&quot;|&quot;</span></a>
 <a class="sourceLine" id="cb35-14" title="14"></a>
 <a class="sourceLine" id="cb35-15" title="15"><span class="ot">    gen_row ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> (<span class="dt">Results</span>,<span class="dt">Team</span>) <span class="ot">-&gt;</span> [<span class="dt">T.Text</span>]</a>
-<a class="sourceLine" id="cb35-16" title="16">    gen_row i (r,t) <span class="fu">=</span> <span class="fu">map</span> (gen_field i t r) [<span class="fu">minBound..maxBound</span>]</a>
+<a class="sourceLine" id="cb35-16" title="16">    gen_row i (r,t) <span class="ot">=</span> <span class="fu">map</span> (gen_field i t r) [<span class="fu">minBound</span><span class="op">..</span><span class="fu">maxBound</span>]</a>
 <a class="sourceLine" id="cb35-17" title="17"></a>
 <a class="sourceLine" id="cb35-18" title="18"><span class="ot">    gen_field ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Team</span> <span class="ot">-&gt;</span> <span class="dt">Results</span> <span class="ot">-&gt;</span> <span class="dt">Col</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb35-19" title="19">    gen_field i tm <span class="dt">Results</span>{<span class="fu">..</span>} col <span class="fu">=</span> lj <span class="fu">$</span> <span class="kw">case</span> col <span class="kw">of</span></a>
+<a class="sourceLine" id="cb35-19" title="19">    gen_field i tm <span class="dt">Results</span>{<span class="op">..</span>} col <span class="ot">=</span> lj <span class="op">$</span> <span class="kw">case</span> col <span class="kw">of</span></a>
 <a class="sourceLine" id="cb35-20" title="20">        <span class="dt">Position</span>  <span class="ot">-&gt;</span> showText i</a>
 <a class="sourceLine" id="cb35-21" title="21">        <span class="dt">Club</span>      <span class="ot">-&gt;</span> tm</a>
 <a class="sourceLine" id="cb35-22" title="22">        <span class="dt">Played</span>    <span class="ot">-&gt;</span> showText   resultsGamesPlayed</a>
 <a class="sourceLine" id="cb35-23" title="23">        <span class="dt">Won</span>       <span class="ot">-&gt;</span> showText   resultsGamesWon</a>
 <a class="sourceLine" id="cb35-24" title="24">        <span class="dt">Drawn</span>     <span class="ot">-&gt;</span> showText   games_drawn</a>
-<a class="sourceLine" id="cb35-25" title="25">        <span class="dt">Lost</span>      <span class="ot">-&gt;</span> showText <span class="fu">$</span> resultsGamesPlayed <span class="fu">-</span></a>
-<a class="sourceLine" id="cb35-26" title="26">                            (resultsGamesWon <span class="fu">+</span> games_drawn)</a>
+<a class="sourceLine" id="cb35-25" title="25">        <span class="dt">Lost</span>      <span class="ot">-&gt;</span> showText <span class="op">$</span> resultsGamesPlayed <span class="op">-</span></a>
+<a class="sourceLine" id="cb35-26" title="26">                            (resultsGamesWon <span class="op">+</span> games_drawn)</a>
 <a class="sourceLine" id="cb35-27" title="27">        <span class="dt">GF</span>        <span class="ot">-&gt;</span> showText   resultsGoalsFor</a>
 <a class="sourceLine" id="cb35-28" title="28">        <span class="dt">GA</span>        <span class="ot">-&gt;</span> showText   resultsGoalsAgainst</a>
-<a class="sourceLine" id="cb35-29" title="29">        <span class="dt">GD</span>        <span class="ot">-&gt;</span> showText <span class="fu">$</span> resultsGoalsFor <span class="fu">-</span></a>
+<a class="sourceLine" id="cb35-29" title="29">        <span class="dt">GD</span>        <span class="ot">-&gt;</span> showText <span class="op">$</span> resultsGoalsFor <span class="op">-</span></a>
 <a class="sourceLine" id="cb35-30" title="30">                                        resultsGoalsAgainst</a>
 <a class="sourceLine" id="cb35-31" title="31">        <span class="dt">Points</span>    <span class="ot">-&gt;</span> showText   resultsPointsScored</a>
 <a class="sourceLine" id="cb35-32" title="32">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb35-33" title="33">        lj <span class="fu">=</span> T.justifyLeft wd <span class="ch">&#39; &#39;</span></a>
-<a class="sourceLine" id="cb35-34" title="34">        wd <span class="fu">=</span> T.length <span class="fu">$</span> column_header col</a>
+<a class="sourceLine" id="cb35-33" title="33">        lj <span class="ot">=</span> T.justifyLeft wd <span class="ch">&#39; &#39;</span></a>
+<a class="sourceLine" id="cb35-34" title="34">        wd <span class="ot">=</span> T.length <span class="op">$</span> column_header col</a>
 <a class="sourceLine" id="cb35-35" title="35"></a>
-<a class="sourceLine" id="cb35-36" title="36">        games_drawn <span class="fu">=</span> resultsPointsScored <span class="fu">-</span> win_points</a>
-<a class="sourceLine" id="cb35-37" title="37">        win_points  <span class="fu">=</span> resultsGamesWon <span class="fu">*</span> <span class="dv">3</span></a>
+<a class="sourceLine" id="cb35-36" title="36">        games_drawn <span class="ot">=</span> resultsPointsScored <span class="op">-</span> win_points</a>
+<a class="sourceLine" id="cb35-37" title="37">        win_points  <span class="ot">=</span> resultsGamesWon <span class="op">*</span> <span class="dv">3</span></a>
 <a class="sourceLine" id="cb35-38" title="38"></a>
-<a class="sourceLine" id="cb35-39" title="39">    to_html <span class="fu">=</span> <span class="kw">case</span> jobIsHtml <span class="kw">of</span></a>
+<a class="sourceLine" id="cb35-39" title="39">    to_html <span class="ot">=</span> <span class="kw">case</span> jobIsHtml <span class="kw">of</span></a>
 <a class="sourceLine" id="cb35-40" title="40">      <span class="dt">True</span>  <span class="ot">-&gt;</span> pandoc jobTitle</a>
 <a class="sourceLine" id="cb35-41" title="41">      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="fu">return</span></a>
 <a class="sourceLine" id="cb35-42" title="42"></a>
 <a class="sourceLine" id="cb35-43" title="43"><span class="kw">data</span> <span class="dt">Col</span></a>
-<a class="sourceLine" id="cb35-44" title="44">  <span class="fu">=</span> <span class="dt">Position</span></a>
-<a class="sourceLine" id="cb35-45" title="45">  <span class="fu">|</span> <span class="dt">Club</span></a>
-<a class="sourceLine" id="cb35-46" title="46">  <span class="fu">|</span> <span class="dt">Played</span></a>
-<a class="sourceLine" id="cb35-47" title="47">  <span class="fu">|</span> <span class="dt">Won</span></a>
-<a class="sourceLine" id="cb35-48" title="48">  <span class="fu">|</span> <span class="dt">Drawn</span></a>
-<a class="sourceLine" id="cb35-49" title="49">  <span class="fu">|</span> <span class="dt">Lost</span></a>
-<a class="sourceLine" id="cb35-50" title="50">  <span class="fu">|</span> <span class="dt">GF</span></a>
-<a class="sourceLine" id="cb35-51" title="51">  <span class="fu">|</span> <span class="dt">GA</span></a>
-<a class="sourceLine" id="cb35-52" title="52">  <span class="fu">|</span> <span class="dt">GD</span></a>
-<a class="sourceLine" id="cb35-53" title="53">  <span class="fu">|</span> <span class="dt">Points</span></a>
+<a class="sourceLine" id="cb35-44" title="44">  <span class="ot">=</span> <span class="dt">Position</span></a>
+<a class="sourceLine" id="cb35-45" title="45">  <span class="op">|</span> <span class="dt">Club</span></a>
+<a class="sourceLine" id="cb35-46" title="46">  <span class="op">|</span> <span class="dt">Played</span></a>
+<a class="sourceLine" id="cb35-47" title="47">  <span class="op">|</span> <span class="dt">Won</span></a>
+<a class="sourceLine" id="cb35-48" title="48">  <span class="op">|</span> <span class="dt">Drawn</span></a>
+<a class="sourceLine" id="cb35-49" title="49">  <span class="op">|</span> <span class="dt">Lost</span></a>
+<a class="sourceLine" id="cb35-50" title="50">  <span class="op">|</span> <span class="dt">GF</span></a>
+<a class="sourceLine" id="cb35-51" title="51">  <span class="op">|</span> <span class="dt">GA</span></a>
+<a class="sourceLine" id="cb35-52" title="52">  <span class="op">|</span> <span class="dt">GD</span></a>
+<a class="sourceLine" id="cb35-53" title="53">  <span class="op">|</span> <span class="dt">Points</span></a>
 <a class="sourceLine" id="cb35-54" title="54">  <span class="kw">deriving</span> (<span class="dt">Bounded</span>,<span class="dt">Enum</span>,<span class="dt">Show</span>)</a>
 <a class="sourceLine" id="cb35-55" title="55"></a>
 <a class="sourceLine" id="cb35-56" title="56"><span class="ot">column_header ::</span> <span class="dt">Col</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb35-57" title="57">column_header col <span class="fu">=</span> <span class="kw">case</span> col <span class="kw">of</span></a>
+<a class="sourceLine" id="cb35-57" title="57">column_header col <span class="ot">=</span> <span class="kw">case</span> col <span class="kw">of</span></a>
 <a class="sourceLine" id="cb35-58" title="58">  <span class="dt">Position</span>  <span class="ot">-&gt;</span> <span class="st">&quot;Pos&quot;</span></a>
 <a class="sourceLine" id="cb35-59" title="59">  <span class="dt">Club</span>      <span class="ot">-&gt;</span> <span class="st">&quot;Club                 &quot;</span></a>
-<a class="sourceLine" id="cb35-60" title="60">  _         <span class="ot">-&gt;</span> T.justifyLeft <span class="dv">7</span> <span class="ch">&#39; &#39;</span> <span class="fu">$</span> showText col</a></code></pre></div>
+<a class="sourceLine" id="cb35-60" title="60">  _         <span class="ot">-&gt;</span> T.justifyLeft <span class="dv">7</span> <span class="ch">&#39; &#39;</span> <span class="op">$</span> showText col</a></code></pre></div>
 <h2 id="parsecli">parseCLI</h2>
 <p>The command line parser generates a list of league-table generating/testing jobs for execution by the above <code>job</code> action. Non-league-table-generating CLI commands like <code>macros</code> for listing our RE table macros just do their thing and return an empty list of jobs.</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" title="1"><span class="ot">parseCLI ::</span> <span class="dt">IO</span> [<span class="dt">Job</span>]</a>
-<a class="sourceLine" id="cb36-2" title="2">parseCLI <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb36-2" title="2">parseCLI <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb36-3" title="3">  args <span class="ot">&lt;-</span> getArgs</a>
 <a class="sourceLine" id="cb36-4" title="4">  <span class="kw">case</span> args <span class="kw">of</span></a>
-<a class="sourceLine" id="cb36-5" title="5">    []                 <span class="ot">-&gt;</span> listMacros  <span class="fu">&gt;&gt;</span> testJob      <span class="co">-- test with canned vectors</span></a>
-<a class="sourceLine" id="cb36-6" title="6">    [<span class="st">&quot;test&quot;</span>]           <span class="ot">-&gt;</span> listMacros  <span class="fu">&gt;&gt;</span> testJob      <span class="co">--    &quot;</span></a>
+<a class="sourceLine" id="cb36-5" title="5">    []                 <span class="ot">-&gt;</span> listMacros  <span class="op">&gt;&gt;</span> testJob      <span class="co">-- test with canned vectors</span></a>
+<a class="sourceLine" id="cb36-6" title="6">    [<span class="st">&quot;test&quot;</span>]           <span class="ot">-&gt;</span> listMacros  <span class="op">&gt;&gt;</span> testJob      <span class="co">--    &quot;</span></a>
 <a class="sourceLine" id="cb36-7" title="7">    [<span class="st">&quot;setup-test&quot;</span>]     <span class="ot">-&gt;</span>                setupTestJob <span class="co">-- setup the test data, generating the golden data</span></a>
-<a class="sourceLine" id="cb36-8" title="8">    [<span class="st">&quot;update&quot;</span>]         <span class="ot">-&gt;</span> updateIndex <span class="fu">&gt;&gt;</span> updateJobs   <span class="co">-- update the website with latest data</span></a>
+<a class="sourceLine" id="cb36-8" title="8">    [<span class="st">&quot;update&quot;</span>]         <span class="ot">-&gt;</span> updateIndex <span class="op">&gt;&gt;</span> updateJobs   <span class="co">-- update the website with latest data</span></a>
 <a class="sourceLine" id="cb36-9" title="9">    [<span class="st">&quot;table&quot;</span>,pth]      <span class="ot">-&gt;</span> discover pth   <span class="dt">Nothing</span>      <span class="co">-- write out a full league table</span></a>
 <a class="sourceLine" id="cb36-10" title="10">    [<span class="st">&quot;table&quot;</span>,pth,sz_s]</a>
-<a class="sourceLine" id="cb36-11" title="11">      <span class="fu">|</span> <span class="dt">Just</span> sz <span class="ot">&lt;-</span> readMaybe sz_s</a>
-<a class="sourceLine" id="cb36-12" title="12">                       <span class="ot">-&gt;</span> discover pth <span class="fu">$</span> <span class="dt">Just</span> sz      <span class="co">-- write out a bounded league table</span></a>
-<a class="sourceLine" id="cb36-13" title="13">    [<span class="st">&quot;macros&quot;</span>]         <span class="ot">-&gt;</span> listMacros  <span class="fu">&gt;&gt;</span> <span class="fu">return</span> []    <span class="co">-- list the RE macros we are using to parse the data</span></a>
+<a class="sourceLine" id="cb36-11" title="11">      <span class="op">|</span> <span class="dt">Just</span> sz <span class="ot">&lt;-</span> readMaybe sz_s</a>
+<a class="sourceLine" id="cb36-12" title="12">                       <span class="ot">-&gt;</span> discover pth <span class="op">$</span> <span class="dt">Just</span> sz      <span class="co">-- write out a bounded league table</span></a>
+<a class="sourceLine" id="cb36-13" title="13">    [<span class="st">&quot;macros&quot;</span>]         <span class="ot">-&gt;</span> listMacros  <span class="op">&gt;&gt;</span> <span class="fu">return</span> []    <span class="co">-- list the RE macros we are using to parse the data</span></a>
 <a class="sourceLine" id="cb36-14" title="14">    _                  <span class="ot">-&gt;</span> <span class="kw">do</span>                          <span class="co">-- generate the usage message and fail</span></a>
 <a class="sourceLine" id="cb36-15" title="15">        pn <span class="ot">&lt;-</span> getProgName</a>
-<a class="sourceLine" id="cb36-16" title="16">        hPutStr stderr <span class="fu">$</span> prog pn</a>
+<a class="sourceLine" id="cb36-16" title="16">        hPutStr stderr <span class="op">$</span> prog pn</a>
 <a class="sourceLine" id="cb36-17" title="17">          [ <span class="st">&quot;[test]&quot;</span></a>
 <a class="sourceLine" id="cb36-18" title="18">          , <span class="st">&quot;setup-test&quot;</span></a>
 <a class="sourceLine" id="cb36-19" title="19">          , <span class="st">&quot;update&quot;</span></a>
 <a class="sourceLine" id="cb36-20" title="20">          , <span class="st">&quot;table   &lt;path&gt; [&lt;size&gt;]&quot;</span></a>
 <a class="sourceLine" id="cb36-21" title="21">          ]</a>
-<a class="sourceLine" id="cb36-22" title="22">        exitWith <span class="fu">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb36-22" title="22">        exitWith <span class="op">$</span> <span class="dt">ExitFailure</span> <span class="dv">1</span></a>
 <a class="sourceLine" id="cb36-23" title="23">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb36-24" title="24">    prog pn as <span class="fu">=</span> <span class="fu">unlines</span> <span class="fu">$</span> <span class="fu">zipWith</span> prog_ (pn <span class="fu">:</span> <span class="fu">repeat</span> pn&#39;) as</a>
+<a class="sourceLine" id="cb36-24" title="24">    prog pn as <span class="ot">=</span> <span class="fu">unlines</span> <span class="op">$</span> <span class="fu">zipWith</span> prog_ (pn <span class="op">:</span> <span class="fu">repeat</span> pn&#39;) as</a>
 <a class="sourceLine" id="cb36-25" title="25">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb36-26" title="26">        pn&#39;       <span class="fu">=</span> <span class="fu">map</span> (<span class="fu">const</span> <span class="ch">&#39; &#39;</span>) pn</a>
+<a class="sourceLine" id="cb36-26" title="26">        pn&#39;       <span class="ot">=</span> <span class="fu">map</span> (<span class="fu">const</span> <span class="ch">&#39; &#39;</span>) pn</a>
 <a class="sourceLine" id="cb36-27" title="27"></a>
-<a class="sourceLine" id="cb36-28" title="28">        prog_ p a <span class="fu">=</span> <span class="fu">unwords</span> [p,a]</a>
+<a class="sourceLine" id="cb36-28" title="28">        prog_ p a <span class="ot">=</span> <span class="fu">unwords</span> [p,a]</a>
 <a class="sourceLine" id="cb36-29" title="29"></a>
 <a class="sourceLine" id="cb36-30" title="30">testJob,<span class="ot"> setupTestJob ::</span> <span class="dt">IO</span> [<span class="dt">Job</span>]</a>
-<a class="sourceLine" id="cb36-31" title="31">testJob      <span class="fu">=</span> testJob_ <span class="dt">True</span></a>
-<a class="sourceLine" id="cb36-32" title="32">setupTestJob <span class="fu">=</span> testJob_ <span class="dt">False</span></a>
+<a class="sourceLine" id="cb36-31" title="31">testJob      <span class="ot">=</span> testJob_ <span class="dt">True</span></a>
+<a class="sourceLine" id="cb36-32" title="32">setupTestJob <span class="ot">=</span> testJob_ <span class="dt">False</span></a>
 <a class="sourceLine" id="cb36-33" title="33"></a>
 <a class="sourceLine" id="cb36-34" title="34"><span class="ot">testJob_ ::</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> [<span class="dt">Job</span>]</a>
-<a class="sourceLine" id="cb36-35" title="35">testJob_ is_t <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb36-35" title="35">testJob_ is_t <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb36-36" title="36">  createDirectoryIfMissing <span class="dt">True</span> <span class="st">&quot;data&quot;</span></a>
 <a class="sourceLine" id="cb36-37" title="37">  <span class="fu">return</span></a>
 <a class="sourceLine" id="cb36-38" title="38">    [ <span class="dt">Job</span></a>
-<a class="sourceLine" id="cb36-39" title="39">        { jobTitle  <span class="fu">=</span> <span class="st">&quot;Premier League 2015-16: Top 7&quot;</span></a>
-<a class="sourceLine" id="cb36-40" title="40">        , jobSize   <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">7</span></a>
-<a class="sourceLine" id="cb36-41" title="41">        , jobInputs <span class="fu">=</span></a>
+<a class="sourceLine" id="cb36-39" title="39">        { jobTitle  <span class="ot">=</span> <span class="st">&quot;Premier League 2015-16: Top 7&quot;</span></a>
+<a class="sourceLine" id="cb36-40" title="40">        , jobSize   <span class="ot">=</span> <span class="dt">Just</span> <span class="dv">7</span></a>
+<a class="sourceLine" id="cb36-41" title="41">        , jobInputs <span class="ot">=</span></a>
 <a class="sourceLine" id="cb36-42" title="42">            [ <span class="st">&quot;data/2015-16-premierleague.txt&quot;</span></a>
 <a class="sourceLine" id="cb36-43" title="43">            ]</a>
-<a class="sourceLine" id="cb36-44" title="44">        , jobIsTest <span class="fu">=</span> is_t</a>
-<a class="sourceLine" id="cb36-45" title="45">        , jobIsHtml <span class="fu">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb36-46" title="46">        , jobOutput <span class="fu">=</span> <span class="st">&quot;data/league-table.md&quot;</span></a>
+<a class="sourceLine" id="cb36-44" title="44">        , jobIsTest <span class="ot">=</span> is_t</a>
+<a class="sourceLine" id="cb36-45" title="45">        , jobIsHtml <span class="ot">=</span> <span class="dt">False</span></a>
+<a class="sourceLine" id="cb36-46" title="46">        , jobOutput <span class="ot">=</span> <span class="st">&quot;data/league-table.md&quot;</span></a>
 <a class="sourceLine" id="cb36-47" title="47">        }</a>
 <a class="sourceLine" id="cb36-48" title="48">    ]</a>
 <a class="sourceLine" id="cb36-49" title="49"></a>
 <a class="sourceLine" id="cb36-50" title="50"><span class="ot">updateJobs ::</span> <span class="dt">IO</span> [<span class="dt">Job</span>]</a>
-<a class="sourceLine" id="cb36-51" title="51">updateJobs <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb36-52" title="52">    dy <span class="ot">&lt;-</span> utctDay <span class="fu">&lt;$&gt;</span> getCurrentTime</a>
-<a class="sourceLine" id="cb36-53" title="53">    <span class="fu">return</span> <span class="fu">$</span> <span class="fu">concat</span> <span class="fu">$</span> <span class="fu">map</span> (mk dy) updateJobSpecs</a>
+<a class="sourceLine" id="cb36-51" title="51">updateJobs <span class="ot">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb36-52" title="52">    dy <span class="ot">&lt;-</span> utctDay <span class="op">&lt;$&gt;</span> getCurrentTime</a>
+<a class="sourceLine" id="cb36-53" title="53">    <span class="fu">return</span> <span class="op">$</span> <span class="fu">concat</span> <span class="op">$</span> <span class="fu">map</span> (mk dy) updateJobSpecs</a>
 <a class="sourceLine" id="cb36-54" title="54">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb36-55" title="55">    mk dy js<span class="fu">@</span><span class="dt">JobSpec</span>{<span class="fu">..</span>} <span class="fu">=</span></a>
+<a class="sourceLine" id="cb36-55" title="55">    mk dy js<span class="op">@</span><span class="dt">JobSpec</span>{<span class="op">..</span>} <span class="ot">=</span></a>
 <a class="sourceLine" id="cb36-56" title="56">        [ <span class="dt">Job</span></a>
-<a class="sourceLine" id="cb36-57" title="57">            { jobTitle  <span class="fu">=</span> T.unwords <span class="fu">$</span></a>
-<a class="sourceLine" id="cb36-58" title="58">                [ <span class="st">&quot;Premier League &quot;</span> <span class="fu">M.&lt;&gt;</span> T.pack jsSeason</a>
-<a class="sourceLine" id="cb36-59" title="59">                , <span class="fu">maybe</span> <span class="st">&quot;&quot;</span> (\n<span class="ot">-&gt;</span><span class="st">&quot;Top &quot;</span> <span class="fu">M.&lt;&gt;</span> showText n <span class="fu">M.&lt;&gt;</span> <span class="st">&quot; &quot;</span>) jsSize</a>
-<a class="sourceLine" id="cb36-60" title="60">                , <span class="st">&quot;[&quot;</span> <span class="fu">M.&lt;&gt;</span> showText dy <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;]&quot;</span></a>
+<a class="sourceLine" id="cb36-57" title="57">            { jobTitle  <span class="ot">=</span> T.unwords <span class="op">$</span></a>
+<a class="sourceLine" id="cb36-58" title="58">                [ <span class="st">&quot;Premier League &quot;</span> <span class="op">M.&lt;&gt;</span> T.pack jsSeason</a>
+<a class="sourceLine" id="cb36-59" title="59">                , <span class="fu">maybe</span> <span class="st">&quot;&quot;</span> (\n<span class="ot">-&gt;</span><span class="st">&quot;Top &quot;</span> <span class="op">M.&lt;&gt;</span> showText n <span class="op">M.&lt;&gt;</span> <span class="st">&quot; &quot;</span>) jsSize</a>
+<a class="sourceLine" id="cb36-60" title="60">                , <span class="st">&quot;[&quot;</span> <span class="op">M.&lt;&gt;</span> showText dy <span class="op">M.&lt;&gt;</span> <span class="st">&quot;]&quot;</span></a>
 <a class="sourceLine" id="cb36-61" title="61">                ]</a>
-<a class="sourceLine" id="cb36-62" title="62">            , jobSize   <span class="fu">=</span> jsSize</a>
-<a class="sourceLine" id="cb36-63" title="63">            , jobInputs <span class="fu">=</span></a>
+<a class="sourceLine" id="cb36-62" title="62">            , jobSize   <span class="ot">=</span> jsSize</a>
+<a class="sourceLine" id="cb36-63" title="63">            , jobInputs <span class="ot">=</span></a>
 <a class="sourceLine" id="cb36-64" title="64">                [ mkPath jsSeason <span class="st">&quot;1-premierleague-i.txt&quot;</span></a>
 <a class="sourceLine" id="cb36-65" title="65">                , mkPath jsSeason <span class="st">&quot;1-premierleague-ii.txt&quot;</span></a>
 <a class="sourceLine" id="cb36-66" title="66">                ]</a>
-<a class="sourceLine" id="cb36-67" title="67">            , jobIsTest <span class="fu">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb36-68" title="68">            , jobIsHtml <span class="fu">=</span> is_html</a>
-<a class="sourceLine" id="cb36-69" title="69">            , jobOutput <span class="fu">=</span> leagueTablesDir <span class="fu">&lt;/&gt;</span> tableFile js is_html</a>
+<a class="sourceLine" id="cb36-67" title="67">            , jobIsTest <span class="ot">=</span> <span class="dt">False</span></a>
+<a class="sourceLine" id="cb36-68" title="68">            , jobIsHtml <span class="ot">=</span> is_html</a>
+<a class="sourceLine" id="cb36-69" title="69">            , jobOutput <span class="ot">=</span> leagueTablesDir <span class="op">&lt;/&gt;</span> tableFile js is_html</a>
 <a class="sourceLine" id="cb36-70" title="70">            }</a>
-<a class="sourceLine" id="cb36-71" title="71">        <span class="fu">|</span> is_html <span class="ot">&lt;-</span> [<span class="dt">True</span>,<span class="dt">False</span>]</a>
+<a class="sourceLine" id="cb36-71" title="71">        <span class="op">|</span> is_html <span class="ot">&lt;-</span> [<span class="dt">True</span>,<span class="dt">False</span>]</a>
 <a class="sourceLine" id="cb36-72" title="72">        ]</a>
 <a class="sourceLine" id="cb36-73" title="73"></a>
 <a class="sourceLine" id="cb36-74" title="74"><span class="ot">updateIndex ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb36-75" title="75">updateIndex <span class="fu">=</span> pandoc title toc <span class="fu">&gt;&gt;=</span> T.writeFile index_file</a>
+<a class="sourceLine" id="cb36-75" title="75">updateIndex <span class="ot">=</span> pandoc title toc <span class="op">&gt;&gt;=</span> T.writeFile index_file</a>
 <a class="sourceLine" id="cb36-76" title="76">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb36-77" title="77">    toc <span class="fu">=</span> T.unlines <span class="fu">$</span></a>
-<a class="sourceLine" id="cb36-78" title="78">      [ <span class="st">&quot;# &quot;</span> <span class="fu">M.&lt;&gt;</span> title</a>
+<a class="sourceLine" id="cb36-77" title="77">    toc <span class="ot">=</span> T.unlines <span class="op">$</span></a>
+<a class="sourceLine" id="cb36-78" title="78">      [ <span class="st">&quot;# &quot;</span> <span class="op">M.&lt;&gt;</span> title</a>
 <a class="sourceLine" id="cb36-79" title="79">      , <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb36-80" title="80">      , mk_row [<span class="st">&quot;Season&quot;</span>, <span class="st">&quot;Top-N&quot;</span>, <span class="st">&quot;Html&quot;</span>, <span class="st">&quot;Text&quot;</span>]</a>
 <a class="sourceLine" id="cb36-81" title="81">      , mk_row [<span class="st">&quot;------&quot;</span>, <span class="st">&quot;-----&quot;</span>, <span class="st">&quot;----&quot;</span>, <span class="st">&quot;----&quot;</span>]</a>
-<a class="sourceLine" id="cb36-82" title="82">      ] <span class="fu">++</span></a>
+<a class="sourceLine" id="cb36-82" title="82">      ] <span class="op">++</span></a>
 <a class="sourceLine" id="cb36-83" title="83">      [ mk_row</a>
 <a class="sourceLine" id="cb36-84" title="84">          [ T.pack jsSeason</a>
 <a class="sourceLine" id="cb36-85" title="85">          , <span class="fu">maybe</span> <span class="st">&quot;all&quot;</span> showText jsSize</a>
-<a class="sourceLine" id="cb36-86" title="86">          , lk <span class="st">&quot;HTML&quot;</span> <span class="fu">$</span> T.pack <span class="fu">$</span> tableFile js <span class="dt">True</span></a>
-<a class="sourceLine" id="cb36-87" title="87">          , lk <span class="st">&quot;Text&quot;</span> <span class="fu">$</span> T.pack <span class="fu">$</span> tableFile js <span class="dt">False</span></a>
+<a class="sourceLine" id="cb36-86" title="86">          , lk <span class="st">&quot;HTML&quot;</span> <span class="op">$</span> T.pack <span class="op">$</span> tableFile js <span class="dt">True</span></a>
+<a class="sourceLine" id="cb36-87" title="87">          , lk <span class="st">&quot;Text&quot;</span> <span class="op">$</span> T.pack <span class="op">$</span> tableFile js <span class="dt">False</span></a>
 <a class="sourceLine" id="cb36-88" title="88">          ]</a>
-<a class="sourceLine" id="cb36-89" title="89">        <span class="fu">|</span> js<span class="fu">@</span><span class="dt">JobSpec</span>{<span class="fu">..</span>} <span class="ot">&lt;-</span> updateJobSpecs</a>
+<a class="sourceLine" id="cb36-89" title="89">        <span class="op">|</span> js<span class="op">@</span><span class="dt">JobSpec</span>{<span class="op">..</span>} <span class="ot">&lt;-</span> updateJobSpecs</a>
 <a class="sourceLine" id="cb36-90" title="90">        ]</a>
 <a class="sourceLine" id="cb36-91" title="91"></a>
-<a class="sourceLine" id="cb36-92" title="92">    title      <span class="fu">=</span> <span class="st">&quot;The League Tables&quot;</span></a>
-<a class="sourceLine" id="cb36-93" title="93">    index_file <span class="fu">=</span> leagueTablesDir <span class="fu">&lt;/&gt;</span> <span class="st">&quot;index.html&quot;</span></a>
+<a class="sourceLine" id="cb36-92" title="92">    title      <span class="ot">=</span> <span class="st">&quot;The League Tables&quot;</span></a>
+<a class="sourceLine" id="cb36-93" title="93">    index_file <span class="ot">=</span> leagueTablesDir <span class="op">&lt;/&gt;</span> <span class="st">&quot;index.html&quot;</span></a>
 <a class="sourceLine" id="cb36-94" title="94"></a>
-<a class="sourceLine" id="cb36-95" title="95">    mk_row     <span class="fu">=</span> T.intercalate <span class="st">&quot;|&quot;</span></a>
+<a class="sourceLine" id="cb36-95" title="95">    mk_row     <span class="ot">=</span> T.intercalate <span class="st">&quot;|&quot;</span></a>
 <a class="sourceLine" id="cb36-96" title="96"></a>
-<a class="sourceLine" id="cb36-97" title="97">    lk lab url <span class="fu">=</span> <span class="st">&quot;[&quot;</span> <span class="fu">M.&lt;&gt;</span> lab <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;](&quot;</span> <span class="fu">M.&lt;&gt;</span> url <span class="fu">M.&lt;&gt;</span> <span class="st">&quot;)&quot;</span></a>
+<a class="sourceLine" id="cb36-97" title="97">    lk lab url <span class="ot">=</span> <span class="st">&quot;[&quot;</span> <span class="op">M.&lt;&gt;</span> lab <span class="op">M.&lt;&gt;</span> <span class="st">&quot;](&quot;</span> <span class="op">M.&lt;&gt;</span> url <span class="op">M.&lt;&gt;</span> <span class="st">&quot;)&quot;</span></a>
 <a class="sourceLine" id="cb36-98" title="98"></a>
 <a class="sourceLine" id="cb36-99" title="99"><span class="ot">tableFile ::</span> <span class="dt">JobSpec</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span></a>
-<a class="sourceLine" id="cb36-100" title="100">tableFile <span class="dt">JobSpec</span>{<span class="fu">..</span>} is_html <span class="fu">=</span> jsSeason <span class="fu">++</span> <span class="st">&quot;-&quot;</span> <span class="fu">++</span> sze <span class="fu">&lt;.&gt;</span> ext</a>
+<a class="sourceLine" id="cb36-100" title="100">tableFile <span class="dt">JobSpec</span>{<span class="op">..</span>} is_html <span class="ot">=</span> jsSeason <span class="op">++</span> <span class="st">&quot;-&quot;</span> <span class="op">++</span> sze <span class="op">&lt;.&gt;</span> ext</a>
 <a class="sourceLine" id="cb36-101" title="101">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb36-102" title="102">    sze <span class="fu">=</span> <span class="fu">maybe</span> <span class="st">&quot;all&quot;</span> ((<span class="st">&quot;top-&quot;</span><span class="fu">++</span>)<span class="fu">.show</span>) jsSize</a>
-<a class="sourceLine" id="cb36-103" title="103">    ext <span class="fu">=</span> <span class="kw">if</span> is_html <span class="kw">then</span> <span class="st">&quot;html&quot;</span> <span class="kw">else</span> <span class="st">&quot;txt&quot;</span></a>
+<a class="sourceLine" id="cb36-102" title="102">    sze <span class="ot">=</span> <span class="fu">maybe</span> <span class="st">&quot;all&quot;</span> ((<span class="st">&quot;top-&quot;</span><span class="op">++</span>)<span class="op">.</span><span class="fu">show</span>) jsSize</a>
+<a class="sourceLine" id="cb36-103" title="103">    ext <span class="ot">=</span> <span class="kw">if</span> is_html <span class="kw">then</span> <span class="st">&quot;html&quot;</span> <span class="kw">else</span> <span class="st">&quot;txt&quot;</span></a>
 <a class="sourceLine" id="cb36-104" title="104"></a>
 <a class="sourceLine" id="cb36-105" title="105"><span class="ot">leagueTablesDir ::</span> <span class="dt">FilePath</span></a>
-<a class="sourceLine" id="cb36-106" title="106">leagueTablesDir <span class="fu">=</span> <span class="st">&quot;docs/league-tables&quot;</span></a>
+<a class="sourceLine" id="cb36-106" title="106">leagueTablesDir <span class="ot">=</span> <span class="st">&quot;docs/league-tables&quot;</span></a>
 <a class="sourceLine" id="cb36-107" title="107"></a>
 <a class="sourceLine" id="cb36-108" title="108"><span class="ot">updateJobSpecs ::</span> [<span class="dt">JobSpec</span>]</a>
-<a class="sourceLine" id="cb36-109" title="109">updateJobSpecs <span class="fu">=</span></a>
+<a class="sourceLine" id="cb36-109" title="109">updateJobSpecs <span class="ot">=</span></a>
 <a class="sourceLine" id="cb36-110" title="110">  [ <span class="dt">JobSpec</span> sn mb</a>
-<a class="sourceLine" id="cb36-111" title="111">    <span class="fu">|</span> sn <span class="ot">&lt;-</span> [<span class="st">&quot;2016-17&quot;</span>,<span class="st">&quot;2015-16&quot;</span>]</a>
-<a class="sourceLine" id="cb36-112" title="112">    , mb <span class="ot">&lt;-</span> <span class="dt">Nothing</span> <span class="fu">:</span> <span class="fu">map</span> <span class="dt">Just</span> [<span class="dv">6</span><span class="fu">..</span><span class="dv">10</span>]</a>
+<a class="sourceLine" id="cb36-111" title="111">    <span class="op">|</span> sn <span class="ot">&lt;-</span> [<span class="st">&quot;2016-17&quot;</span>,<span class="st">&quot;2015-16&quot;</span>]</a>
+<a class="sourceLine" id="cb36-112" title="112">    , mb <span class="ot">&lt;-</span> <span class="dt">Nothing</span> <span class="op">:</span> <span class="fu">map</span> <span class="dt">Just</span> [<span class="dv">6</span><span class="op">..</span><span class="dv">10</span>]</a>
 <a class="sourceLine" id="cb36-113" title="113">    ]</a>
 <a class="sourceLine" id="cb36-114" title="114"></a>
-<a class="sourceLine" id="cb36-115" title="115"><span class="kw">data</span> <span class="dt">JobSpec</span> <span class="fu">=</span></a>
+<a class="sourceLine" id="cb36-115" title="115"><span class="kw">data</span> <span class="dt">JobSpec</span> <span class="ot">=</span></a>
 <a class="sourceLine" id="cb36-116" title="116">  <span class="dt">JobSpec</span></a>
 <a class="sourceLine" id="cb36-117" title="117">    {<span class="ot"> jsSeason ::</span> <span class="dt">String</span></a>
 <a class="sourceLine" id="cb36-118" title="118">    ,<span class="ot"> jsSize   ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span></a>
@@ -578,58 +578,58 @@ primParseGames
 <a class="sourceLine" id="cb36-120" title="120">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
 <a class="sourceLine" id="cb36-121" title="121"></a>
 <a class="sourceLine" id="cb36-122" title="122"><span class="ot">discover ::</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> [<span class="dt">Job</span>]</a>
-<a class="sourceLine" id="cb36-123" title="123">discover fp mb <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb36-123" title="123">discover fp mb <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb36-124" title="124">  inps <span class="ot">&lt;-</span> dscvr candidates</a>
 <a class="sourceLine" id="cb36-125" title="125">  <span class="fu">return</span></a>
 <a class="sourceLine" id="cb36-126" title="126">    [ <span class="dt">Job</span></a>
-<a class="sourceLine" id="cb36-127" title="127">        { jobTitle  <span class="fu">=</span> <span class="fu">maybe</span> fp_t mk_ttl <span class="fu">$</span></a>
-<a class="sourceLine" id="cb36-128" title="128">              matchedText <span class="fu">$</span> fp_t <span class="fu">?=~</span> [re|[0-9]{4}-[0-9]{2}|]</a>
-<a class="sourceLine" id="cb36-129" title="129">        , jobSize   <span class="fu">=</span> mb</a>
-<a class="sourceLine" id="cb36-130" title="130">        , jobInputs <span class="fu">=</span> inps</a>
-<a class="sourceLine" id="cb36-131" title="131">        , jobIsTest <span class="fu">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb36-132" title="132">        , jobIsHtml <span class="fu">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb36-133" title="133">        , jobOutput <span class="fu">=</span> <span class="st">&quot;-&quot;</span></a>
+<a class="sourceLine" id="cb36-127" title="127">        { jobTitle  <span class="ot">=</span> <span class="fu">maybe</span> fp_t mk_ttl <span class="op">$</span></a>
+<a class="sourceLine" id="cb36-128" title="128">              matchedText <span class="op">$</span> fp_t <span class="op">?=~</span> [re|[0-9]{4}-[0-9]{2}|]</a>
+<a class="sourceLine" id="cb36-129" title="129">        , jobSize   <span class="ot">=</span> mb</a>
+<a class="sourceLine" id="cb36-130" title="130">        , jobInputs <span class="ot">=</span> inps</a>
+<a class="sourceLine" id="cb36-131" title="131">        , jobIsTest <span class="ot">=</span> <span class="dt">False</span></a>
+<a class="sourceLine" id="cb36-132" title="132">        , jobIsHtml <span class="ot">=</span> <span class="dt">False</span></a>
+<a class="sourceLine" id="cb36-133" title="133">        , jobOutput <span class="ot">=</span> <span class="st">&quot;-&quot;</span></a>
 <a class="sourceLine" id="cb36-134" title="134">        }</a>
 <a class="sourceLine" id="cb36-135" title="135">    ]</a>
 <a class="sourceLine" id="cb36-136" title="136">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb36-137" title="137">    fp_t            <span class="fu">=</span> T.pack fp</a>
+<a class="sourceLine" id="cb36-137" title="137">    fp_t            <span class="ot">=</span> T.pack fp</a>
 <a class="sourceLine" id="cb36-138" title="138"></a>
-<a class="sourceLine" id="cb36-139" title="139">    mk_ttl ssn      <span class="fu">=</span> <span class="st">&quot;Premier League &quot;</span> <span class="fu">M.&lt;&gt;</span> ssn</a>
+<a class="sourceLine" id="cb36-139" title="139">    mk_ttl ssn      <span class="ot">=</span> <span class="st">&quot;Premier League &quot;</span> <span class="op">M.&lt;&gt;</span> ssn</a>
 <a class="sourceLine" id="cb36-140" title="140"></a>
-<a class="sourceLine" id="cb36-141" title="141">    dscvr []        <span class="fu">=</span> <span class="fu">error</span> <span class="fu">$</span> fp <span class="fu">++</span> <span class="st">&quot;: no data found&quot;</span></a>
-<a class="sourceLine" id="cb36-142" title="142">    dscvr (fps<span class="fu">:</span>cds) <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb36-143" title="143">      ok <span class="ot">&lt;-</span> <span class="fu">and</span> <span class="fu">&lt;$&gt;</span> <span class="fu">mapM</span> doesFileExist fps</a>
+<a class="sourceLine" id="cb36-141" title="141">    dscvr []        <span class="ot">=</span> <span class="fu">error</span> <span class="op">$</span> fp <span class="op">++</span> <span class="st">&quot;: no data found&quot;</span></a>
+<a class="sourceLine" id="cb36-142" title="142">    dscvr (fps<span class="op">:</span>cds) <span class="ot">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb36-143" title="143">      ok <span class="ot">&lt;-</span> <span class="fu">and</span> <span class="op">&lt;$&gt;</span> <span class="fu">mapM</span> doesFileExist fps</a>
 <a class="sourceLine" id="cb36-144" title="144">      <span class="kw">case</span> ok <span class="kw">of</span></a>
 <a class="sourceLine" id="cb36-145" title="145">        <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="fu">return</span> fps</a>
 <a class="sourceLine" id="cb36-146" title="146">        <span class="dt">False</span> <span class="ot">-&gt;</span> dscvr cds</a>
 <a class="sourceLine" id="cb36-147" title="147"></a>
-<a class="sourceLine" id="cb36-148" title="148">    candidates <span class="fu">=</span></a>
+<a class="sourceLine" id="cb36-148" title="148">    candidates <span class="ot">=</span></a>
 <a class="sourceLine" id="cb36-149" title="149">      [ [ fp</a>
 <a class="sourceLine" id="cb36-150" title="150">        ]</a>
-<a class="sourceLine" id="cb36-151" title="151">      , [ data_dir <span class="fu">&lt;/&gt;</span> fp <span class="fu">&lt;/&gt;</span> <span class="st">&quot;1-premierleague.txt&quot;</span></a>
+<a class="sourceLine" id="cb36-151" title="151">      , [ data_dir <span class="op">&lt;/&gt;</span> fp <span class="op">&lt;/&gt;</span> <span class="st">&quot;1-premierleague.txt&quot;</span></a>
 <a class="sourceLine" id="cb36-152" title="152">        ]</a>
-<a class="sourceLine" id="cb36-153" title="153">      , [ data_dir <span class="fu">&lt;/&gt;</span> fp <span class="fu">&lt;/&gt;</span> <span class="st">&quot;1-premierleague-i.txt&quot;</span></a>
-<a class="sourceLine" id="cb36-154" title="154">        , data_dir <span class="fu">&lt;/&gt;</span> fp <span class="fu">&lt;/&gt;</span> <span class="st">&quot;1-premierleague-ii.txt&quot;</span></a>
+<a class="sourceLine" id="cb36-153" title="153">      , [ data_dir <span class="op">&lt;/&gt;</span> fp <span class="op">&lt;/&gt;</span> <span class="st">&quot;1-premierleague-i.txt&quot;</span></a>
+<a class="sourceLine" id="cb36-154" title="154">        , data_dir <span class="op">&lt;/&gt;</span> fp <span class="op">&lt;/&gt;</span> <span class="st">&quot;1-premierleague-ii.txt&quot;</span></a>
 <a class="sourceLine" id="cb36-155" title="155">        ]</a>
 <a class="sourceLine" id="cb36-156" title="156">      ]</a>
 <a class="sourceLine" id="cb36-157" title="157"></a>
 <a class="sourceLine" id="cb36-158" title="158"><span class="ot">mkPath ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span></a>
-<a class="sourceLine" id="cb36-159" title="159">mkPath ssn hlf <span class="fu">=</span> data_dir <span class="fu">&lt;/&gt;</span> ssn <span class="fu">&lt;/&gt;</span> hlf</a>
+<a class="sourceLine" id="cb36-159" title="159">mkPath ssn hlf <span class="ot">=</span> data_dir <span class="op">&lt;/&gt;</span> ssn <span class="op">&lt;/&gt;</span> hlf</a>
 <a class="sourceLine" id="cb36-160" title="160"></a>
 <a class="sourceLine" id="cb36-161" title="161"><span class="ot">data_dir ::</span> <span class="dt">FilePath</span></a>
-<a class="sourceLine" id="cb36-162" title="162">data_dir <span class="fu">=</span> <span class="st">&quot;../eng-england&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb36-162" title="162">data_dir <span class="ot">=</span> <span class="st">&quot;../eng-england&quot;</span></a></code></pre></div>
 <h2 id="pandoc">Pandoc</h2>
 <p>Use Pandoc to generate a an Html file from a title and markdown text.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb37-1" title="1"><span class="ot">pandoc ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb37-2" title="2">pandoc title txt <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb37-2" title="2">pandoc title txt <span class="ot">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb37-3" title="3">    T.writeFile inp_file   txt</a>
-<a class="sourceLine" id="cb37-4" title="4">    T.writeFile mda_file <span class="fu">$</span> T.unlines</a>
+<a class="sourceLine" id="cb37-4" title="4">    T.writeFile mda_file <span class="op">$</span> T.unlines</a>
 <a class="sourceLine" id="cb37-5" title="5">          [ <span class="st">&quot;---&quot;</span></a>
-<a class="sourceLine" id="cb37-6" title="6">          , <span class="st">&quot;title: &quot;</span> <span class="fu">M.&lt;&gt;</span> title</a>
+<a class="sourceLine" id="cb37-6" title="6">          , <span class="st">&quot;title: &quot;</span> <span class="op">M.&lt;&gt;</span> title</a>
 <a class="sourceLine" id="cb37-7" title="7">          , <span class="st">&quot;---&quot;</span></a>
 <a class="sourceLine" id="cb37-8" title="8">          ]</a>
-<a class="sourceLine" id="cb37-9" title="9">    <span class="fu">fmap</span> (<span class="fu">const</span> ()) <span class="fu">$</span></a>
-<a class="sourceLine" id="cb37-10" title="10">      SH.shelly <span class="fu">$</span> SH.verbosely <span class="fu">$</span></a>
+<a class="sourceLine" id="cb37-9" title="9">    <span class="fu">fmap</span> (<span class="fu">const</span> ()) <span class="op">$</span></a>
+<a class="sourceLine" id="cb37-10" title="10">      SH.shelly <span class="op">$</span> SH.verbosely <span class="op">$</span></a>
 <a class="sourceLine" id="cb37-11" title="11">        SH.run <span class="st">&quot;pandoc&quot;</span></a>
 <a class="sourceLine" id="cb37-12" title="12">          [ <span class="st">&quot;-f&quot;</span>, <span class="st">&quot;markdown+grid_tables&quot;</span></a>
 <a class="sourceLine" id="cb37-13" title="13">          , <span class="st">&quot;-t&quot;</span>, <span class="st">&quot;html5&quot;</span></a>
@@ -644,9 +644,9 @@ primParseGames
 <a class="sourceLine" id="cb37-22" title="22">          ]</a>
 <a class="sourceLine" id="cb37-23" title="23">    T.readFile out_file</a>
 <a class="sourceLine" id="cb37-24" title="24">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb37-25" title="25">    mda_file <span class="fu">=</span> <span class="st">&quot;tmp/metadata.markdown&quot;</span></a>
-<a class="sourceLine" id="cb37-26" title="26">    inp_file <span class="fu">=</span> <span class="st">&quot;tmp/pandoc-inp.md&quot;</span></a>
-<a class="sourceLine" id="cb37-27" title="27">    out_file <span class="fu">=</span> <span class="st">&quot;tmp/pandoc-out.html&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb37-25" title="25">    mda_file <span class="ot">=</span> <span class="st">&quot;tmp/metadata.markdown&quot;</span></a>
+<a class="sourceLine" id="cb37-26" title="26">    inp_file <span class="ot">=</span> <span class="st">&quot;tmp/pandoc-inp.md&quot;</span></a>
+<a class="sourceLine" id="cb37-27" title="27">    out_file <span class="ot">=</span> <span class="st">&quot;tmp/pandoc-out.html&quot;</span></a></code></pre></div>
 <h2 id="helpers">Helpers</h2>
 <p>The general helpers.</p>
 <h3>
@@ -654,40 +654,40 @@ edit
 </h3>
 <p>The <code>edit</code> function is a simple specialisation of the <code>regex</code> <code>sed'</code> function (defined below) that deletes every line in the file that edits every line in the file according to the given <code>SearchReplace</code> template, deleting all other lines. (It should probably be added to regex.)</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" title="1"><span class="ot">edit ::</span> <span class="dt">SearchReplace</span> <span class="dt">RE</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb38-2" title="2">edit sr txt <span class="fu">=</span> runIdentity <span class="fu">$</span> <span class="fu">flip</span> sed&#39; txt <span class="fu">$</span></a>
+<a class="sourceLine" id="cb38-2" title="2">edit sr txt <span class="ot">=</span> runIdentity <span class="op">$</span> <span class="fu">flip</span> sed&#39; txt <span class="op">$</span></a>
 <a class="sourceLine" id="cb38-3" title="3">    <span class="dt">Select</span></a>
 <a class="sourceLine" id="cb38-4" title="4">      [ <span class="dt">Template</span> sr</a>
-<a class="sourceLine" id="cb38-5" title="5">      , <span class="dt">LineEdit</span> [re|.*|] <span class="fu">$</span> \_ _ <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="dt">Delete</span></a>
+<a class="sourceLine" id="cb38-5" title="5">      , <span class="dt">LineEdit</span> [re|.*|] <span class="op">$</span> \_ _ <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="dt">Delete</span></a>
 <a class="sourceLine" id="cb38-6" title="6">      ]</a></code></pre></div>
 <h3>
 makeMacros and makeEnv
 </h3>
 <p>Construct a Macros table for compiling REs from a MacroEnv. (Something similar should probably be added to regex.)</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb39-1" title="1"><span class="ot">makeMacros ::</span> <span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">Macros</span> <span class="dt">RE</span></a>
-<a class="sourceLine" id="cb39-2" title="2">makeMacros ev <span class="fu">=</span> runIdentity <span class="fu">$</span></a>
+<a class="sourceLine" id="cb39-2" title="2">makeMacros ev <span class="ot">=</span> runIdentity <span class="op">$</span></a>
 <a class="sourceLine" id="cb39-3" title="3">    mkMacros mk TDFA.regexType <span class="dt">ExclCaptures</span> ev</a>
 <a class="sourceLine" id="cb39-4" title="4">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb39-5" title="5">    mk   <span class="fu">=</span> <span class="fu">maybe</span> oops <span class="dt">Identity</span> <span class="fu">.</span></a>
+<a class="sourceLine" id="cb39-5" title="5">    mk   <span class="ot">=</span> <span class="fu">maybe</span> oops <span class="dt">Identity</span> <span class="op">.</span></a>
 <a class="sourceLine" id="cb39-6" title="6">                TDFA.compileRegexWithOptions TDFA.noPreludeREOptions</a>
 <a class="sourceLine" id="cb39-7" title="7"></a>
-<a class="sourceLine" id="cb39-8" title="8">    oops <span class="fu">=</span> <span class="fu">error</span> <span class="st">&quot;makeMacros: unexpected RE compilation error&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb39-8" title="8">    oops <span class="ot">=</span> <span class="fu">error</span> <span class="st">&quot;makeMacros: unexpected RE compilation error&quot;</span></a></code></pre></div>
 <p>Construct a a <code>MacroEnv</code> from an association list of <code>MacroId</code> and <code>MacroDescriptior</code> constructor functions and the base <code>MacroEnv</code> (the macros that can be used inside the macros). (Something similar should probably be added to regex.)</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" title="1"><span class="ot">makeEnv ::</span> [(<span class="dt">MacroID</span>,<span class="dt">MacroEnv</span> <span class="ot">-&gt;</span> <span class="dt">MacroID</span> <span class="ot">-&gt;</span> <span class="dt">MacroDescriptor</span>)]</a>
 <a class="sourceLine" id="cb40-2" title="2">        <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span></a>
 <a class="sourceLine" id="cb40-3" title="3">        <span class="ot">-&gt;</span> <span class="dt">MacroEnv</span></a>
-<a class="sourceLine" id="cb40-4" title="4">makeEnv al ev0 <span class="fu">=</span> ev</a>
+<a class="sourceLine" id="cb40-4" title="4">makeEnv al ev0 <span class="ot">=</span> ev</a>
 <a class="sourceLine" id="cb40-5" title="5">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb40-6" title="6">    ev <span class="fu">=</span> ev0 <span class="ot">`HML.union`</span> HML.fromList</a>
-<a class="sourceLine" id="cb40-7" title="7">                  [ (mid, mk ev mid) <span class="fu">|</span> (mid,mk) <span class="ot">&lt;-</span> al ]</a></code></pre></div>
+<a class="sourceLine" id="cb40-6" title="6">    ev <span class="ot">=</span> ev0 <span class="ot">`HML.union`</span> HML.fromList</a>
+<a class="sourceLine" id="cb40-7" title="7">                  [ (mid, mk ev mid) <span class="op">|</span> (mid,mk) <span class="ot">&lt;-</span> al ]</a></code></pre></div>
 <h3>
 showText and readText
 </h3>
 <p>Variants of the standard functions that operate over <code>Text</code>.</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb41-1" title="1"><span class="ot">showText ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">T.Text</span></a>
-<a class="sourceLine" id="cb41-2" title="2">showText <span class="fu">=</span> T.pack <span class="fu">.</span> <span class="fu">show</span></a>
+<a class="sourceLine" id="cb41-2" title="2">showText <span class="ot">=</span> T.pack <span class="op">.</span> <span class="fu">show</span></a>
 <a class="sourceLine" id="cb41-3" title="3"></a>
 <a class="sourceLine" id="cb41-4" title="4"><span class="ot">readText ::</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> a</a>
-<a class="sourceLine" id="cb41-5" title="5">readText <span class="fu">=</span> fromMaybe (<span class="fu">error</span> <span class="st">&quot;readText&quot;</span>) <span class="fu">.</span> readMaybe <span class="fu">.</span> T.unpack</a></code></pre></div>
+<a class="sourceLine" id="cb41-5" title="5">readText <span class="ot">=</span> fromMaybe (<span class="fu">error</span> <span class="st">&quot;readText&quot;</span>) <span class="op">.</span> readMaybe <span class="op">.</span> T.unpack</a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

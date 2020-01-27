@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 </div>
 <div class='litcontent'>
-<header>
+<header id="title-block-header">
 <h1 class="title">re-tutorial.lhs</h1>
 </header>
 <h1 id="the-regex-tutorial">The regex Tutorial</h1>
@@ -121,49 +121,49 @@ The first thing you will have to do is enable <code>QuasiQuotes</code> as regex 
 <p>The boolean <code>matched</code> function,</p>
 <pre><code>matched :: Match a -&gt; Bool</code></pre>
 can be used to test whether a match was found:
-<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">?=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1">ghci<span class="op">&gt;</span> matched <span class="op">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="op">?=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="dt">True</span></a></code></pre></div>
 <p>To get the matched text use <code>matchText</code>,</p>
 <pre><code>matchedText :: Match a -&gt; Maybe a</code></pre>
 which returns <code>Nothing</code> if no match was found in the search string:
-<div class="sourceCode" id="cb9"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1">ghci<span class="fu">&gt;</span> matchedText <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">?=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
+<div class="sourceCode" id="cb9"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" title="1">ghci<span class="op">&gt;</span> matchedText <span class="op">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="op">?=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="dt">Just</span> <span class="st">&quot;2016-01-09&quot;</span></a></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" title="1">ghci<span class="fu">&gt;</span> matchedText <span class="fu">$</span> <span class="st">&quot;2015-12-5&quot;</span> <span class="fu">?=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
+<div class="sourceCode" id="cb10"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" title="1">ghci<span class="op">&gt;</span> matchedText <span class="op">$</span> <span class="st">&quot;2015-12-5&quot;</span> <span class="op">?=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
 <a class="sourceLine" id="cb10-2" title="2"><span class="dt">Nothing</span></a></code></pre></div>
 <h2 id="multiple-matches-with">Multiple <code>Matches</code> with <code>*=~</code></h2>
 <p>Use <code>*=~</code> to locate all of the non-overlapping substrings that match a RE,</p>
 <pre><code>(*=~)      :: String -&gt; RE -&gt; Matches String
 anyMatches :: Matches a -&gt; Bool</code></pre>
 <code>anyMatches</code> can be used to determine if any matches were found
-<div class="sourceCode" id="cb12"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" title="1">ghci<span class="fu">&gt;</span> anyMatches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
+<div class="sourceCode" id="cb12"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" title="1">ghci<span class="op">&gt;</span> anyMatches <span class="op">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="op">*=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
 <a class="sourceLine" id="cb12-2" title="2"><span class="dt">True</span></a></code></pre></div>
 and <code>countMatches</code> will tell us how many sub-strings matched:
-<div class="sourceCode" id="cb13"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
+<div class="sourceCode" id="cb13"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="op">*=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="dv">2</span></a></code></pre></div>
 <p><code>matches</code> will return all of the matches.</p>
 <pre><code>matches :: Natches a -&gt; [a]</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" title="1">ghci<span class="fu">&gt;</span> matches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
+<div class="sourceCode" id="cb15"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" title="1">ghci<span class="op">&gt;</span> matches <span class="op">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="op">*=~</span> [re|[0-9]{4}-[0-9]{2}-[0-9]{2}|]</a>
 <a class="sourceLine" id="cb15-2" title="2">[<span class="st">&quot;2016-01-09&quot;</span>,<span class="st">&quot;2015-10-05&quot;</span>]</a></code></pre></div>
 <h2 id="the-regex-macros-and-parsers">The <code>regex</code> Macros and Parsers</h2>
 <p>regex supports macros in regular expressions. There are a bunch of standard macros that you can just use, and you can define your own.</p>
 RE macros are enclosed in <code>@{</code> … ‘}’. By convention the macros in the standard environment start with a ‘%’. <code>@{%date}</code> will match an ISO 8601 date, this
-<div class="sourceCode" id="cb16"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> [re|@{%date}|]</a>
+<div class="sourceCode" id="cb16"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="op">*=~</span> [re|@{%date}|]</a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="dv">2</span></a></code></pre></div>
 <p>will pick out the two dates.</p>
 There are also parsing functions for analysing the matched text. The <code>@{%string}</code> macro will match quoted strings (in which double quotes can be escaped with backslashes in the usual way) and its companion <code>parseString</code> function will extract the string that was being quoted, interpreting any escaped double quotes:
-<div class="sourceCode" id="cb17"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" title="1">ghci<span class="fu">&gt;</span> <span class="fu">map</span> parseString <span class="fu">$</span> matches <span class="fu">$</span> <span class="st">&quot;\&quot;foo\&quot;, \&quot;bar\&quot; and a quote \&quot;\\\&quot;\&quot;&quot;</span> <span class="fu">*=~</span> [re|@{%string}|]</a>
+<div class="sourceCode" id="cb17"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" title="1">ghci<span class="op">&gt;</span> <span class="fu">map</span> parseString <span class="op">$</span> matches <span class="op">$</span> <span class="st">&quot;\&quot;foo\&quot;, \&quot;bar\&quot; and a quote \&quot;\\\&quot;\&quot;&quot;</span> <span class="op">*=~</span> [re|@{%string}|]</a>
 <a class="sourceLine" id="cb17-2" title="2">[<span class="dt">Just</span> <span class="st">&quot;foo&quot;</span>,<span class="dt">Just</span> <span class="st">&quot;bar&quot;</span>, <span class="dt">Just</span> <span class="st">&quot;\&quot;&quot;</span>]</a></code></pre></div>
 <p>See the <a href="http://macros.regex.uk">macro tables page</a> for details of the standard macros and their parsers.</p>
 <p>See the <a href="re-tutorial-testbench.html">testbench tutorial</a> for more on how you can develop, document and test RE macros with the regex test bench.</p>
 <h2 id="search-and-replace">Search and Replace</h2>
 <p>If you need to edit a string then <code>SearchReplace</code> <code>[ed|</code> … <code>|]</code> templates can be used with <code>?=~/</code> to replace a single instance or <code>*=~/</code> to replace all matching instances.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" title="1">ghci<span class="fu">&gt;</span> <span class="st">&quot;0000 40AA fab0&quot;</span> <span class="fu">?=~/</span> [ed|${adr}([0-9A-Fa-f]{4}):?///0x${adr}:|]</a>
+<div class="sourceCode" id="cb18"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" title="1">ghci<span class="op">&gt;</span> <span class="st">&quot;0000 40AA fab0&quot;</span> <span class="op">?=~/</span> [ed|${adr}([0-9A-Fa-f]{4}):?///0x${adr}:|]</a>
 <a class="sourceLine" id="cb18-2" title="2"><span class="st">&quot;0x0000: 40AA fab0&quot;</span></a></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" title="1">ghci<span class="fu">&gt;</span> <span class="st">&quot;0000: 40AA fab0&quot;</span> <span class="fu">*=~/</span> [ed|[0-9A-Fa-f]{4}///0x$0|]</a>
+<div class="sourceCode" id="cb19"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" title="1">ghci<span class="op">&gt;</span> <span class="st">&quot;0000: 40AA fab0&quot;</span> <span class="op">*=~/</span> [ed|[0-9A-Fa-f]{4}///0x$0|]</a>
 <a class="sourceLine" id="cb19-2" title="2"><span class="st">&quot;0x0000: 0x40AA 0xfab0&quot;</span></a></code></pre></div>
 <h2 id="specifying-options">Specifying Options</h2>
 By default regular expressions are of the multi-line case-sensitive variety so this
-<div class="sourceCode" id="cb20"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [re|[0-9a-f]{2}$|]</a>
+<div class="sourceCode" id="cb20"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="op">*=~</span> [re|[0-9a-f]{2}$|]</a>
 <a class="sourceLine" id="cb20-2" title="2"><span class="dv">2</span></a></code></pre></div>
 <p>will find 2 matches, the ‘$’ anchor matching each of the newlines, but only the first two lowercase hex numbers matching the RE. The case sensitivity and multiline-ness can be controled by selecting alternative parsers.</p>
 <table style="width:97%;">
@@ -209,25 +209,25 @@ By default regular expressions are of the multi-line case-sensitive variety so t
 </tbody>
 </table>
 So while the default setup
-<div class="sourceCode" id="cb21"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [reMultilineSensitive|[0-9a-f]{2}$|]</a>
+<div class="sourceCode" id="cb21"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="op">*=~</span> [reMultilineSensitive|[0-9a-f]{2}$|]</a>
 <a class="sourceLine" id="cb21-2" title="2"><span class="dv">2</span></a></code></pre></div>
 finds 2 matches, a case-insensitive RE
-<div class="sourceCode" id="cb22"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [reMultilineInsensitive|[0-9a-f]{2}$|]</a>
+<div class="sourceCode" id="cb22"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="op">*=~</span> [reMultilineInsensitive|[0-9a-f]{2}$|]</a>
 <a class="sourceLine" id="cb22-2" title="2"><span class="dv">4</span></a></code></pre></div>
 finds 4 matches, while a non-multiline RE
-<div class="sourceCode" id="cb23"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb23-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [reBlockSensitive|[0-9a-f]{2}$|]</a>
+<div class="sourceCode" id="cb23"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb23-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="op">*=~</span> [reBlockSensitive|[0-9a-f]{2}$|]</a>
 <a class="sourceLine" id="cb23-2" title="2"><span class="dv">0</span></a></code></pre></div>
 finds no matches but a non-multiline, case-insensitive match
-<div class="sourceCode" id="cb24"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" title="1">ghci<span class="fu">&gt;</span> countMatches <span class="fu">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="fu">*=~</span> [reBlockInsensitive|[0-9a-f]{2}$|]</a>
+<div class="sourceCode" id="cb24"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" title="1">ghci<span class="op">&gt;</span> countMatches <span class="op">$</span> <span class="st">&quot;0a\nbb\nFe\nA5&quot;</span> <span class="op">*=~</span> [reBlockInsensitive|[0-9a-f]{2}$|]</a>
 <a class="sourceLine" id="cb24-2" title="2"><span class="dv">1</span></a></code></pre></div>
 <p>finds the final match.</p>
 For the hard of typing the shortforms are available.
-<div class="sourceCode" id="cb25"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" title="1">ghci<span class="fu">&gt;</span> matched <span class="fu">$</span> <span class="st">&quot;SuperCaliFragilisticExpialidocious&quot;</span> <span class="fu">?=~</span> [reMI|supercalifragilisticexpialidocious|]</a>
+<div class="sourceCode" id="cb25"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" title="1">ghci<span class="op">&gt;</span> matched <span class="op">$</span> <span class="st">&quot;SuperCaliFragilisticExpialidocious&quot;</span> <span class="op">?=~</span> [reMI|supercalifragilisticexpialidocious|]</a>
 <a class="sourceLine" id="cb25-2" title="2"><span class="dt">True</span></a></code></pre></div>
 <h2 id="compiling-and-escaping">Compiling and Escaping</h2>
 <p>It is possible to compile a dynamically aquired RE string at run-time using <code>compileRegex</code>:</p>
 <pre><code>compileRegex :: (Functor m, Monad m) =&gt; String -&gt; m RE</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" title="1">ghci<span class="fu">&gt;</span> matches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> (<span class="fu">either</span> <span class="fu">error</span> <span class="fu">id</span> <span class="fu">$</span> compileRegex <span class="st">&quot;[0-9]{4}-[0-9]{2}-[0-9]{2}&quot;</span>)</a>
+<div class="sourceCode" id="cb27"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" title="1">ghci<span class="op">&gt;</span> matches <span class="op">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="op">*=~</span> (<span class="fu">maybe</span> (<span class="fu">error</span> <span class="st">&quot;evalme_CPL_01&quot;</span>) <span class="fu">id</span> <span class="op">$</span> compileRegex <span class="st">&quot;[0-9]{4}-[0-9]{2}-[0-9]{2}&quot;</span>)</a>
 <a class="sourceLine" id="cb27-2" title="2">[<span class="st">&quot;2016-01-09&quot;</span>,<span class="st">&quot;2015-10-05&quot;</span>]</a></code></pre></div>
 <p>These will compile the RE using the default multiline, case-sensitive options, but you can specify the options dynamically using <code>compileRegexWith</code>:</p>
 <pre><code>compileRegexWith :: (Functor m, Monad m) =&gt; SimpleREOptions -&gt; String -&gt; m RE</code></pre>
@@ -236,13 +236,13 @@ For the hard of typing the shortforms are available.
 <div class="sourceCode" id="cb29"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb29-1" title="1"><span class="co">-- | the default API uses these simple, universal RE options,</span></a>
 <a class="sourceLine" id="cb29-2" title="2"><span class="co">-- which get auto-converted into the apropriate back-end &#39;REOptions_&#39;</span></a>
 <a class="sourceLine" id="cb29-3" title="3"><span class="kw">data</span> <span class="dt">SimpleREOptions</span></a>
-<a class="sourceLine" id="cb29-4" title="4">  <span class="fu">=</span> <span class="dt">MultilineSensitive</span>        <span class="co">-- ^ case-sensitive with ^ and $ matching the start and end of a line</span></a>
-<a class="sourceLine" id="cb29-5" title="5">  <span class="fu">|</span> <span class="dt">MultilineInsensitive</span>      <span class="co">-- ^ case-insensitive with ^ and $ matsh the start and end of a line</span></a>
-<a class="sourceLine" id="cb29-6" title="6">  <span class="fu">|</span> <span class="dt">BlockSensitive</span>            <span class="co">-- ^ case-sensitive with ^ and $ matching the start and end of the input text</span></a>
-<a class="sourceLine" id="cb29-7" title="7">  <span class="fu">|</span> <span class="dt">BlockInsensitive</span>          <span class="co">-- ^ case-insensitive with ^ and $ matching the start and end of the input text</span></a>
+<a class="sourceLine" id="cb29-4" title="4">  <span class="ot">=</span> <span class="dt">MultilineSensitive</span>        <span class="co">-- ^ case-sensitive with ^ and $ matching the start and end of a line</span></a>
+<a class="sourceLine" id="cb29-5" title="5">  <span class="op">|</span> <span class="dt">MultilineInsensitive</span>      <span class="co">-- ^ case-insensitive with ^ and $ matsh the start and end of a line</span></a>
+<a class="sourceLine" id="cb29-6" title="6">  <span class="op">|</span> <span class="dt">BlockSensitive</span>            <span class="co">-- ^ case-sensitive with ^ and $ matching the start and end of the input text</span></a>
+<a class="sourceLine" id="cb29-7" title="7">  <span class="op">|</span> <span class="dt">BlockInsensitive</span>          <span class="co">-- ^ case-insensitive with ^ and $ matching the start and end of the input text</span></a>
 <a class="sourceLine" id="cb29-8" title="8">  <span class="kw">deriving</span> (<span class="dt">Bounded</span>,<span class="dt">Enum</span>,<span class="dt">Eq</span>,<span class="dt">Ord</span>,<span class="dt">Show</span>)</a></code></pre></div>
 </div>
-<div class="sourceCode" id="cb30"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb30-1" title="1">ghci<span class="fu">&gt;</span> matches <span class="fu">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="fu">*=~</span> (<span class="fu">either</span> <span class="fu">error</span> <span class="fu">id</span> <span class="fu">$</span> compileRegexWith <span class="dt">MultilineSensitive</span> <span class="st">&quot;[0-9]{4}-[0-9]{2}-[0-9]{2}&quot;</span>)</a>
+<div class="sourceCode" id="cb30"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb30-1" title="1">ghci<span class="op">&gt;</span> matches <span class="op">$</span> <span class="st">&quot;2016-01-09 2015-12-5 2015-10-05&quot;</span> <span class="op">*=~</span> (<span class="fu">maybe</span> (<span class="fu">error</span> <span class="st">&quot;evalme_CPL_01&quot;</span>) <span class="fu">id</span> <span class="op">$</span> compileRegexWith <span class="dt">MultilineSensitive</span> <span class="st">&quot;[0-9]{4}-[0-9]{2}-[0-9]{2}&quot;</span>)</a>
 <a class="sourceLine" id="cb30-2" title="2">[<span class="st">&quot;2016-01-09&quot;</span>,<span class="st">&quot;2015-10-05&quot;</span>]</a></code></pre></div>
 <p>If you need to compile <code>SearchReplace</code> templates for use with <code>?=~/</code> and <code>*=~/</code> then the <code>compileSearchReplace</code> and <code>compileSearchReplaceWith</code>,</p>
 <pre><code>compileSearchReplace     :: (Monad m, Functor m, IsRegex RE s) =&gt; String -&gt; String -&gt; m (SearchReplace RE s)
@@ -250,10 +250,10 @@ compileSearchReplaceWith :: (Monad m, Functor m, IsRegex RE s) =&gt; SimpleREOpt
 <p>work analagously to <code>compileRegex</code> and <code>compileRegexWith</code>, with the RE and replacement template (either side of the ‘///’ in the <code>[ed|...///...|]</code> quasi quoters) being passed into these functions in two separate strings, to compile to the <code>SearchReplace</code> type expected by the <code>?=~/</code> and <code>*=~/</code> operators.</p>
 <div class="includedcodeblock">
 <div class="sourceCode" id="cb32"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb32-1" title="1"><span class="co">-- | contains a compiled RE and replacement template</span></a>
-<a class="sourceLine" id="cb32-2" title="2"><span class="kw">data</span> <span class="dt">SearchReplace</span> re s <span class="fu">=</span></a>
+<a class="sourceLine" id="cb32-2" title="2"><span class="kw">data</span> <span class="dt">SearchReplace</span> re s <span class="ot">=</span></a>
 <a class="sourceLine" id="cb32-3" title="3">  <span class="dt">SearchReplace</span></a>
-<a class="sourceLine" id="cb32-4" title="4">    {<span class="ot"> getSearch   ::</span> <span class="fu">!</span>re    <span class="co">-- ^ the RE to match a string to replace</span></a>
-<a class="sourceLine" id="cb32-5" title="5">    ,<span class="ot"> getTemplate ::</span> <span class="fu">!</span>s     <span class="co">-- ^ the replacement template with ${cap}</span></a>
+<a class="sourceLine" id="cb32-4" title="4">    {<span class="ot"> getSearch   ::</span> <span class="op">!</span>re    <span class="co">-- ^ the RE to match a string to replace</span></a>
+<a class="sourceLine" id="cb32-5" title="5">    ,<span class="ot"> getTemplate ::</span> <span class="op">!</span>s     <span class="co">-- ^ the replacement template with ${cap}</span></a>
 <a class="sourceLine" id="cb32-6" title="6">                            <span class="co">-- used to identify a capture (by number or</span></a>
 <a class="sourceLine" id="cb32-7" title="7">                            <span class="co">-- name if one was given) and &#39;$$&#39; being</span></a>
 <a class="sourceLine" id="cb32-8" title="8">                            <span class="co">-- used to escape a single &#39;$&#39;</span></a>
@@ -263,17 +263,17 @@ compileSearchReplaceWith :: (Monad m, Functor m, IsRegex RE s) =&gt; SimpleREOpt
 <p>The <code>escape</code> and <code>escapeWith</code> functions are special compilers that compile a string into a RE that should match itself, which is assumed to be embedded in a complex RE to be compiled.</p>
 <pre><code>escape :: (Functor m, Monad m) =&gt; (String-&gt;String) -&gt; String -&gt; m RE</code></pre>
 The function pased in the first argument to <code>escape</code> takes the RE string that will match the string passed in the second argument and yields the RE to be compiled, which is returned from the parsing action.
-<div class="sourceCode" id="cb34"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb34-1" title="1">ghci<span class="fu">&gt;</span> <span class="st">&quot;fooe{0}bar&quot;</span> <span class="fu">*=~/</span> <span class="dt">SearchReplace</span> (<span class="fu">either</span> <span class="fu">error</span> <span class="fu">id</span> <span class="fu">$</span> escape <span class="fu">id</span> <span class="st">&quot;e{0}&quot;</span>) <span class="st">&quot;&quot;</span></a>
+<div class="sourceCode" id="cb34"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb34-1" title="1">ghci<span class="op">&gt;</span> <span class="st">&quot;fooe{0}bar&quot;</span> <span class="op">*=~/</span> <span class="dt">SearchReplace</span> (<span class="fu">maybe</span> (<span class="fu">error</span> <span class="st">&quot;evalme_CPL_03&quot;</span>) <span class="fu">id</span> <span class="op">$</span> escape <span class="fu">id</span> <span class="st">&quot;e{0}&quot;</span>) <span class="st">&quot;&quot;</span></a>
 <a class="sourceLine" id="cb34-2" title="2"><span class="st">&quot;foobar&quot;</span></a></code></pre></div>
 <h2 id="the-classic-regex-base-match-operators">The Classic regex-base Match Operators</h2>
 The original <code>=~</code> and <code>=~~</code> match operators are still available for those that have mastered them.
-<div class="sourceCode" id="cb35"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" title="1">ghci<span class="fu">&gt;</span> <span class="st">&quot;bar&quot;</span>    <span class="fu">=~</span>  [re|(foo|bar)|]<span class="ot"> ::</span> <span class="dt">Bool</span></a>
+<div class="sourceCode" id="cb35"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" title="1">ghci<span class="op">&gt;</span> <span class="st">&quot;bar&quot;</span>    <span class="op">=~</span>  [re|(foo|bar)|]<span class="ot"> ::</span> <span class="dt">Bool</span></a>
 <a class="sourceLine" id="cb35-2" title="2"><span class="dt">True</span> </a></code></pre></div>
-<div class="sourceCode" id="cb36"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" title="1">ghci<span class="fu">&gt;</span> <span class="st">&quot;quux&quot;</span>   <span class="fu">=~</span>  [re|(foo|bar)|]<span class="ot"> ::</span> <span class="dt">Bool</span></a>
+<div class="sourceCode" id="cb36"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" title="1">ghci<span class="op">&gt;</span> <span class="st">&quot;quux&quot;</span>   <span class="op">=~</span>  [re|(foo|bar)|]<span class="ot"> ::</span> <span class="dt">Bool</span></a>
 <a class="sourceLine" id="cb36-2" title="2"><span class="dt">False</span></a></code></pre></div>
-<div class="sourceCode" id="cb37"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb37-1" title="1">ghci<span class="fu">&gt;</span> <span class="st">&quot;foobar&quot;</span> <span class="fu">=~</span>  [re|(foo|bar)|]<span class="ot"> ::</span> <span class="dt">Int</span></a>
+<div class="sourceCode" id="cb37"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb37-1" title="1">ghci<span class="op">&gt;</span> <span class="st">&quot;foobar&quot;</span> <span class="op">=~</span>  [re|(foo|bar)|]<span class="ot"> ::</span> <span class="dt">Int</span></a>
 <a class="sourceLine" id="cb37-2" title="2"><span class="dv">2</span></a></code></pre></div>
-<div class="sourceCode" id="cb38"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" title="1">ghci<span class="fu">&gt;</span> <span class="st">&quot;foo&quot;</span>    <span class="fu">=~~</span> [re|bar|]<span class="ot">       ::</span> <span class="dt">Maybe</span> <span class="dt">String</span></a>
+<div class="sourceCode" id="cb38"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" title="1">ghci<span class="op">&gt;</span> <span class="st">&quot;foo&quot;</span>    <span class="op">=~~</span> [re|bar|]<span class="ot">       ::</span> <span class="dt">Maybe</span> <span class="dt">String</span></a>
 <a class="sourceLine" id="cb38-2" title="2"><span class="dt">Nothing</span></a></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
