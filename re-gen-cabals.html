@@ -402,7 +402,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-20" title="20">  establish nm nm</a>
 <a class="sourceLine" id="cb2-21" title="21">  SH.shelly <span class="op">$</span> SH.verbosely <span class="op">$</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb2-22" title="22">    SH.cp readme <span class="st">&quot;README.markdown&quot;</span></a>
-<a class="sourceLine" id="cb2-23" title="23">    SH.run_ <span class="st">&quot;stack&quot;</span> [<span class="st">&quot;sdist&quot;</span>,<span class="st">&quot;--stack-yaml&quot;</span>,<span class="st">&quot;stack-8.0.yaml&quot;</span>]</a>
+<a class="sourceLine" id="cb2-23" title="23">    SH.run_ <span class="st">&quot;stack&quot;</span> [<span class="st">&quot;sdist&quot;</span>,<span class="st">&quot;--stack-yaml&quot;</span>,<span class="st">&quot;stack-8.8.yaml&quot;</span>]</a>
 <a class="sourceLine" id="cb2-24" title="24">    (pth,tb) <span class="ot">&lt;-</span> analyse_so <span class="op">&lt;$&gt;</span> SH.lastStderr</a>
 <a class="sourceLine" id="cb2-25" title="25">    SH.cp (SH.fromText <span class="op">$</span> pth) <span class="op">$</span> SH.fromText <span class="op">$</span> <span class="st">&quot;releases/&quot;</span> <span class="op">M.&lt;&gt;</span> tb</a>
 <a class="sourceLine" id="cb2-26" title="26">  <span class="kw">where</span></a>
