@@ -5,74 +5,75 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>regex – Text.RE.ZeInternals.NamedCaptures</title>
-  <style type="text/css">
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
-  </style>
-  <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="lib/lhs-styles.css" />
   <link rel="stylesheet" href="lib/bs.css" />
@@ -97,202 +98,202 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header">
 <h1 class="title">Text.RE.ZeInternals.NamedCaptures</h1>
 </header>
-<div class="sourceCode" id="cb1"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" title="1"><span class="ot">{-# LANGUAGE DeriveGeneric              #-}</span></a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="ot">{-# LANGUAGE CPP                        #-}</span></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="pp">#if __GLASGOW_HASKELL__ &gt;= 800</span></a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="ot">{-# LANGUAGE TemplateHaskellQuotes      #-}</span></a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="pp">#else</span></a>
-<a class="sourceLine" id="cb1-7" title="7"><span class="ot">{-# LANGUAGE QuasiQuotes                #-}</span></a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="ot">{-# LANGUAGE TemplateHaskell            #-}</span></a>
-<a class="sourceLine" id="cb1-9" title="9"><span class="pp">#endif</span></a>
-<a class="sourceLine" id="cb1-10" title="10"></a>
-<a class="sourceLine" id="cb1-11" title="11"><span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.NamedCaptures</span></a>
-<a class="sourceLine" id="cb1-12" title="12">  ( cp</a>
-<a class="sourceLine" id="cb1-13" title="13">  , extractNamedCaptures</a>
-<a class="sourceLine" id="cb1-14" title="14">  , idFormatTokenREOptions</a>
-<a class="sourceLine" id="cb1-15" title="15">  , <span class="dt">Token</span>(<span class="op">..</span>)</a>
-<a class="sourceLine" id="cb1-16" title="16">  , validToken</a>
-<a class="sourceLine" id="cb1-17" title="17">  , formatTokens</a>
-<a class="sourceLine" id="cb1-18" title="18">  , formatTokens&#39;</a>
-<a class="sourceLine" id="cb1-19" title="19">  , formatTokens0</a>
-<a class="sourceLine" id="cb1-20" title="20">  , scan</a>
-<a class="sourceLine" id="cb1-21" title="21">  ) <span class="kw">where</span></a>
-<a class="sourceLine" id="cb1-22" title="22"></a>
-<a class="sourceLine" id="cb1-23" title="23"><span class="kw">import</span>           <span class="dt">Data.Char</span></a>
-<a class="sourceLine" id="cb1-24" title="24"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.HashMap.Strict</span>          <span class="kw">as</span> <span class="dt">HM</span></a>
-<a class="sourceLine" id="cb1-25" title="25"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span>                    <span class="kw">as</span> <span class="dt">T</span></a>
-<a class="sourceLine" id="cb1-26" title="26"><span class="kw">import</span>           <span class="dt">GHC.Generics</span></a>
-<a class="sourceLine" id="cb1-27" title="27"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Language.Haskell.TH</span>          <span class="kw">as</span> <span class="dt">TH</span></a>
-<a class="sourceLine" id="cb1-28" title="28"><span class="kw">import</span>           <span class="dt">Language.Haskell.TH.Quote</span></a>
-<a class="sourceLine" id="cb1-29" title="29"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.PreludeMacros</span></a>
-<a class="sourceLine" id="cb1-30" title="30"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.QQ</span></a>
-<a class="sourceLine" id="cb1-31" title="31"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.TestBench</span></a>
-<a class="sourceLine" id="cb1-32" title="32"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Tools.Lex</span></a>
-<a class="sourceLine" id="cb1-33" title="33"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.CaptureID</span></a>
-<a class="sourceLine" id="cb1-34" title="34"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.Match</span></a>
-<a class="sourceLine" id="cb1-35" title="35"><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.Poss</span></a>
-<a class="sourceLine" id="cb1-36" title="36"><span class="kw">import</span>           <span class="dt">Text.Regex.TDFA</span></a>
-<a class="sourceLine" id="cb1-37" title="37"></a>
-<a class="sourceLine" id="cb1-38" title="38"></a>
-<a class="sourceLine" id="cb1-39" title="39"><span class="co">-- | quasi quoter for CaptureID: @[cp|0|]@, @[cp|0|]@, etc.,</span></a>
-<a class="sourceLine" id="cb1-40" title="40"><span class="co">-- indexing captures by classic positional numbers, and @[cp|foo|]@,</span></a>
-<a class="sourceLine" id="cb1-41" title="41"><span class="co">-- etc., referencing a named capture @[re| ... ${foo}( ... ) ... |]@.</span></a>
-<a class="sourceLine" id="cb1-42" title="42"><span class="ot">cp ::</span> <span class="dt">QuasiQuoter</span></a>
-<a class="sourceLine" id="cb1-43" title="43">cp <span class="ot">=</span></a>
-<a class="sourceLine" id="cb1-44" title="44">    (qq0 <span class="st">&quot;cp&quot;</span>)</a>
-<a class="sourceLine" id="cb1-45" title="45">      { quoteExp <span class="ot">=</span> parse_capture</a>
-<a class="sourceLine" id="cb1-46" title="46">      }</a>
-<a class="sourceLine" id="cb1-47" title="47"></a>
-<a class="sourceLine" id="cb1-48" title="48"><span class="co">-- | extract the CaptureNames from an RE or return an error diagnostic</span></a>
-<a class="sourceLine" id="cb1-49" title="49"><span class="co">-- if the RE is not well formed; also returs the total number of captures</span></a>
-<a class="sourceLine" id="cb1-50" title="50"><span class="co">-- in the RE</span></a>
-<a class="sourceLine" id="cb1-51" title="51"><span class="ot">extractNamedCaptures ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> ((<span class="dt">Int</span>,<span class="dt">CaptureNames</span>),<span class="dt">String</span>)</a>
-<a class="sourceLine" id="cb1-52" title="52">extractNamedCaptures s <span class="ot">=</span> <span class="dt">Right</span> (analyseTokens tks,formatTokens tks)</a>
-<a class="sourceLine" id="cb1-53" title="53">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb1-54" title="54">    tks <span class="ot">=</span> scan s</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE DeriveGeneric              #-}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="ot">{-# LANGUAGE RecordWildCards            #-}</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="ot">{-# LANGUAGE CPP                        #-}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="pp">#if __GLASGOW_HASKELL__ &gt;= 800</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="ot">{-# LANGUAGE TemplateHaskellQuotes      #-}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="pp">#else</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="ot">{-# LANGUAGE QuasiQuotes                #-}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="ot">{-# LANGUAGE TemplateHaskell            #-}</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a><span class="pp">#endif</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Text.RE.ZeInternals.NamedCaptures</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>  ( cp</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>  , extractNamedCaptures</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a>  , idFormatTokenREOptions</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>  , <span class="dt">Token</span>(<span class="op">..</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>  , validToken</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a>  , formatTokens</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>  , formatTokens&#39;</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a>  , formatTokens0</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a>  , scan</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a>  ) <span class="kw">where</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Data.Char</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.HashMap.Strict</span>          <span class="kw">as</span> <span class="dt">HM</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span>                    <span class="kw">as</span> <span class="dt">T</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">GHC.Generics</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Language.Haskell.TH</span>          <span class="kw">as</span> <span class="dt">TH</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Language.Haskell.TH.Quote</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.PreludeMacros</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.QQ</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.TestBench</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Tools.Lex</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.CaptureID</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.Match</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Text.RE.ZeInternals.Types.Poss</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Text.Regex.TDFA</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true"></a><span class="co">-- | quasi quoter for CaptureID: @[cp|0|]@, @[cp|0|]@, etc.,</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true"></a><span class="co">-- indexing captures by classic positional numbers, and @[cp|foo|]@,</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true"></a><span class="co">-- etc., referencing a named capture @[re| ... ${foo}( ... ) ... |]@.</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true"></a><span class="ot">cp ::</span> <span class="dt">QuasiQuoter</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true"></a>cp <span class="ot">=</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true"></a>    (qq0 <span class="st">&quot;cp&quot;</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true"></a>      { quoteExp <span class="ot">=</span> parse_capture</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true"></a>      }</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true"></a><span class="co">-- | extract the CaptureNames from an RE or return an error diagnostic</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true"></a><span class="co">-- if the RE is not well formed; also returs the total number of captures</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true"></a><span class="co">-- in the RE</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true"></a><span class="ot">extractNamedCaptures ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> ((<span class="dt">Int</span>,<span class="dt">CaptureNames</span>),<span class="dt">String</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true"></a>extractNamedCaptures s <span class="ot">=</span> <span class="dt">Right</span> (analyseTokens tks,formatTokens tks)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true"></a>  <span class="kw">where</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true"></a>    tks <span class="ot">=</span> scan s</span></code></pre></div>
 <h2 id="token">Token</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" title="1"><span class="co">-- | our RE scanner returns a list of these tokens</span></a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw">data</span> <span class="dt">Token</span></a>
-<a class="sourceLine" id="cb2-3" title="3">  <span class="ot">=</span> <span class="dt">ECap</span> (<span class="dt">Maybe</span> <span class="dt">String</span>)</a>
-<a class="sourceLine" id="cb2-4" title="4">  <span class="op">|</span> <span class="dt">PGrp</span></a>
-<a class="sourceLine" id="cb2-5" title="5">  <span class="op">|</span> <span class="dt">PCap</span></a>
-<a class="sourceLine" id="cb2-6" title="6">  <span class="op">|</span> <span class="dt">Bra</span></a>
-<a class="sourceLine" id="cb2-7" title="7">  <span class="op">|</span> <span class="dt">BS</span>          <span class="dt">Char</span></a>
-<a class="sourceLine" id="cb2-8" title="8">  <span class="op">|</span> <span class="dt">Other</span>       <span class="dt">Char</span></a>
-<a class="sourceLine" id="cb2-9" title="9">  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Generic</span>,<span class="dt">Eq</span>)</a>
-<a class="sourceLine" id="cb2-10" title="10"></a>
-<a class="sourceLine" id="cb2-11" title="11"><span class="co">-- | check that a token is well formed</span></a>
-<a class="sourceLine" id="cb2-12" title="12"><span class="ot">validToken ::</span> <span class="dt">Token</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></a>
-<a class="sourceLine" id="cb2-13" title="13">validToken tkn <span class="ot">=</span> <span class="kw">case</span> tkn <span class="kw">of</span></a>
-<a class="sourceLine" id="cb2-14" title="14">    <span class="dt">ECap</span>  mb <span class="ot">-&gt;</span> <span class="fu">maybe</span> <span class="dt">True</span> check_ecap mb</a>
-<a class="sourceLine" id="cb2-15" title="15">    <span class="dt">PGrp</span>     <span class="ot">-&gt;</span> <span class="dt">True</span></a>
-<a class="sourceLine" id="cb2-16" title="16">    <span class="dt">PCap</span>     <span class="ot">-&gt;</span> <span class="dt">True</span></a>
-<a class="sourceLine" id="cb2-17" title="17">    <span class="dt">Bra</span>      <span class="ot">-&gt;</span> <span class="dt">True</span></a>
-<a class="sourceLine" id="cb2-18" title="18">    <span class="dt">BS</span>    c  <span class="ot">-&gt;</span> is_dot c</a>
-<a class="sourceLine" id="cb2-19" title="19">    <span class="dt">Other</span> c  <span class="ot">-&gt;</span> is_dot c</a>
-<a class="sourceLine" id="cb2-20" title="20">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb2-21" title="21">    check_ecap s <span class="ot">=</span> <span class="fu">not</span> (<span class="fu">null</span> s) <span class="op">&amp;&amp;</span> <span class="fu">all</span> not_br s</a>
-<a class="sourceLine" id="cb2-22" title="22">    is_dot     c <span class="ot">=</span> c<span class="op">/=</span><span class="ch">&#39;\n&#39;</span></a>
-<a class="sourceLine" id="cb2-23" title="23">    not_br     c <span class="ot">=</span> <span class="fu">not</span> <span class="op">$</span> c <span class="ot">`elem`</span> <span class="st">&quot;{}\n&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co">-- | our RE scanner returns a list of these tokens</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Token</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  <span class="ot">=</span> <span class="dt">ECap</span> (<span class="dt">Maybe</span> <span class="dt">String</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">PGrp</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">PCap</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">Bra</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">BS</span>          <span class="dt">Char</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">Other</span>       <span class="dt">Char</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Generic</span>,<span class="dt">Eq</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a><span class="co">-- | check that a token is well formed</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a><span class="ot">validToken ::</span> <span class="dt">Token</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>validToken tkn <span class="ot">=</span> <span class="kw">case</span> tkn <span class="kw">of</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>    <span class="dt">ECap</span>  mb <span class="ot">-&gt;</span> <span class="fu">maybe</span> <span class="dt">True</span> check_ecap mb</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>    <span class="dt">PGrp</span>     <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>    <span class="dt">PCap</span>     <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a>    <span class="dt">Bra</span>      <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>    <span class="dt">BS</span>    c  <span class="ot">-&gt;</span> is_dot c</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>    <span class="dt">Other</span> c  <span class="ot">-&gt;</span> is_dot c</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a>  <span class="kw">where</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true"></a>    check_ecap s <span class="ot">=</span> <span class="fu">not</span> (<span class="fu">null</span> s) <span class="op">&amp;&amp;</span> <span class="fu">all</span> not_br s</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true"></a>    is_dot     c <span class="ot">=</span> c<span class="op">/=</span><span class="ch">&#39;\n&#39;</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true"></a>    not_br     c <span class="ot">=</span> <span class="fu">not</span> <span class="op">$</span> c <span class="ot">`elem`</span> <span class="st">&quot;{}\n&quot;</span></span></code></pre></div>
 <h2 id="analysing-token---capturenames">Analysing <a href="#token">Token</a> -&gt; CaptureNames</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" title="1"><span class="co">-- | analyse a token stream, returning the number of captures and the</span></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co">-- &#39;CaptureNames&#39;</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="ot">analyseTokens ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> (<span class="dt">Int</span>,<span class="dt">CaptureNames</span>)</a>
-<a class="sourceLine" id="cb3-4" title="4">analyseTokens tks0 <span class="ot">=</span> <span class="kw">case</span> count_em <span class="dv">1</span> tks0 <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-5" title="5">    (n,as) <span class="ot">-&gt;</span> (n<span class="op">-</span><span class="dv">1</span>, HM.fromList as)</a>
-<a class="sourceLine" id="cb3-6" title="6">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb3-7" title="7">    count_em n []       <span class="ot">=</span> (n,[])</a>
-<a class="sourceLine" id="cb3-8" title="8">    count_em n (tk<span class="op">:</span>tks) <span class="ot">=</span> <span class="kw">case</span> count_em (n <span class="ot">`seq`</span> n<span class="op">+</span>d) tks <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-9" title="9">        (n&#39;,as) <span class="ot">-&gt;</span> (n&#39;,bd<span class="op">++</span>as)</a>
-<a class="sourceLine" id="cb3-10" title="10">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb3-11" title="11">        (d,bd) <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-12" title="12">          <span class="dt">ECap</span> (<span class="dt">Just</span> nm) <span class="ot">-&gt;</span> (,) <span class="dv">1</span> [(<span class="dt">CaptureName</span> <span class="op">$</span> T.pack nm,<span class="dt">CaptureOrdinal</span> n)]</a>
-<a class="sourceLine" id="cb3-13" title="13">          <span class="dt">ECap</span>  <span class="dt">Nothing</span>  <span class="ot">-&gt;</span> (,) <span class="dv">1</span> []</a>
-<a class="sourceLine" id="cb3-14" title="14">          <span class="dt">PGrp</span>           <span class="ot">-&gt;</span> (,) <span class="dv">0</span> []</a>
-<a class="sourceLine" id="cb3-15" title="15">          <span class="dt">PCap</span>           <span class="ot">-&gt;</span> (,) <span class="dv">1</span> []</a>
-<a class="sourceLine" id="cb3-16" title="16">          <span class="dt">Bra</span>            <span class="ot">-&gt;</span> (,) <span class="dv">1</span> []</a>
-<a class="sourceLine" id="cb3-17" title="17">          <span class="dt">BS</span>    _        <span class="ot">-&gt;</span> (,) <span class="dv">0</span> []</a>
-<a class="sourceLine" id="cb3-18" title="18">          <span class="dt">Other</span> _        <span class="ot">-&gt;</span> (,) <span class="dv">0</span> []</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co">-- | analyse a token stream, returning the number of captures and the</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="co">-- &#39;CaptureNames&#39;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="ot">analyseTokens ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> (<span class="dt">Int</span>,<span class="dt">CaptureNames</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>analyseTokens tks0 <span class="ot">=</span> <span class="kw">case</span> count_em <span class="dv">1</span> tks0 <span class="kw">of</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>    (n,as) <span class="ot">-&gt;</span> (n<span class="op">-</span><span class="dv">1</span>, HM.fromList as)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>  <span class="kw">where</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>    count_em n []       <span class="ot">=</span> (n,[])</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>    count_em n (tk<span class="op">:</span>tks) <span class="ot">=</span> <span class="kw">case</span> count_em (n <span class="ot">`seq`</span> n<span class="op">+</span>d) tks <span class="kw">of</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>        (n&#39;,as) <span class="ot">-&gt;</span> (n&#39;,bd<span class="op">++</span>as)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>      <span class="kw">where</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>        (d,bd) <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>          <span class="dt">ECap</span> (<span class="dt">Just</span> nm) <span class="ot">-&gt;</span> (,) <span class="dv">1</span> [(<span class="dt">CaptureName</span> <span class="op">$</span> T.pack nm,<span class="dt">CaptureOrdinal</span> n)]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>          <span class="dt">ECap</span>  <span class="dt">Nothing</span>  <span class="ot">-&gt;</span> (,) <span class="dv">1</span> []</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a>          <span class="dt">PGrp</span>           <span class="ot">-&gt;</span> (,) <span class="dv">0</span> []</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>          <span class="dt">PCap</span>           <span class="ot">-&gt;</span> (,) <span class="dv">1</span> []</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a>          <span class="dt">Bra</span>            <span class="ot">-&gt;</span> (,) <span class="dv">1</span> []</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a>          <span class="dt">BS</span>    _        <span class="ot">-&gt;</span> (,) <span class="dv">0</span> []</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a>          <span class="dt">Other</span> _        <span class="ot">-&gt;</span> (,) <span class="dv">0</span> []</span></code></pre></div>
 <h2 id="scanning-regex-strings">Scanning Regex Strings</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" title="1"><span class="co">-- | scan a RE string into a list of RE Token</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="ot">scan ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [<span class="dt">Token</span>]</a>
-<a class="sourceLine" id="cb4-3" title="3">scan <span class="ot">=</span> alex&#39; match al <span class="op">$</span> oops <span class="st">&quot;top&quot;</span></a>
-<a class="sourceLine" id="cb4-4" title="4">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="ot">    al ::</span> [(<span class="dt">Regex</span>,<span class="dt">Match</span> <span class="dt">String</span><span class="ot">-&gt;</span><span class="dt">Maybe</span> <span class="dt">Token</span>)]</a>
-<a class="sourceLine" id="cb4-6" title="6">    al <span class="ot">=</span></a>
-<a class="sourceLine" id="cb4-7" title="7">      [ mk <span class="st">&quot;\\$\\{([^{}]+)\\}\\(&quot;</span> <span class="op">$</span>         <span class="dt">ECap</span> <span class="op">.</span> <span class="dt">Just</span> <span class="op">.</span> x_1</a>
-<a class="sourceLine" id="cb4-8" title="8">      , mk <span class="st">&quot;\\$\\(&quot;</span>               <span class="op">$</span> <span class="fu">const</span> <span class="op">$</span> <span class="dt">ECap</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb4-9" title="9">      , mk <span class="st">&quot;\\(\\?:&quot;</span>              <span class="op">$</span> <span class="fu">const</span>   <span class="dt">PGrp</span></a>
-<a class="sourceLine" id="cb4-10" title="10">      , mk <span class="st">&quot;\\(\\?&quot;</span>               <span class="op">$</span> <span class="fu">const</span>   <span class="dt">PCap</span></a>
-<a class="sourceLine" id="cb4-11" title="11">      , mk <span class="st">&quot;\\(&quot;</span>                  <span class="op">$</span> <span class="fu">const</span>   <span class="dt">Bra</span></a>
-<a class="sourceLine" id="cb4-12" title="12">      , mk <span class="st">&quot;\\\\(.)&quot;</span>              <span class="op">$</span>         <span class="dt">BS</span>    <span class="op">.</span> s2c <span class="op">.</span> x_1</a>
-<a class="sourceLine" id="cb4-13" title="13">      , mk <span class="st">&quot;(.|\n)&quot;</span>               <span class="op">$</span>         <span class="dt">Other</span> <span class="op">.</span> s2c <span class="op">.</span> x_1</a>
-<a class="sourceLine" id="cb4-14" title="14">      ]</a>
-<a class="sourceLine" id="cb4-15" title="15"></a>
-<a class="sourceLine" id="cb4-16" title="16">    x_1     <span class="ot">=</span> captureText <span class="op">$</span> <span class="dt">IsCaptureOrdinal</span> <span class="op">$</span> <span class="dt">CaptureOrdinal</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb4-17" title="17"></a>
-<a class="sourceLine" id="cb4-18" title="18">    s2c [c] <span class="ot">=</span> c</a>
-<a class="sourceLine" id="cb4-19" title="19">    s2c _   <span class="ot">=</span> oops <span class="st">&quot;s2c&quot;</span></a>
-<a class="sourceLine" id="cb4-20" title="20"></a>
-<a class="sourceLine" id="cb4-21" title="21">    mk s f  <span class="ot">=</span> (poss <span class="fu">error</span> <span class="fu">id</span> <span class="op">$</span> makeRegexM s,<span class="dt">Just</span> <span class="op">.</span> f)</a>
-<a class="sourceLine" id="cb4-22" title="22"></a>
-<a class="sourceLine" id="cb4-23" title="23">    oops  m <span class="ot">=</span> <span class="fu">error</span> <span class="op">$</span> <span class="st">&quot;NamedCaptures.scan: &quot;</span> <span class="op">++</span> m</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co">-- | scan a RE string into a list of RE Token</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="ot">scan ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [<span class="dt">Token</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>scan <span class="ot">=</span> alex&#39; match al <span class="op">$</span> oops <span class="st">&quot;top&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>  <span class="kw">where</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="ot">    al ::</span> [(<span class="dt">Regex</span>,<span class="dt">Match</span> <span class="dt">String</span><span class="ot">-&gt;</span><span class="dt">Maybe</span> <span class="dt">Token</span>)]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>    al <span class="ot">=</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>      [ mk <span class="st">&quot;\\$\\{([^{}]+)\\}\\(&quot;</span> <span class="op">$</span>         <span class="dt">ECap</span> <span class="op">.</span> <span class="dt">Just</span> <span class="op">.</span> x_1</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>      , mk <span class="st">&quot;\\$\\(&quot;</span>               <span class="op">$</span> <span class="fu">const</span> <span class="op">$</span> <span class="dt">ECap</span> <span class="dt">Nothing</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>      , mk <span class="st">&quot;\\(\\?:&quot;</span>              <span class="op">$</span> <span class="fu">const</span>   <span class="dt">PGrp</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>      , mk <span class="st">&quot;\\(\\?&quot;</span>               <span class="op">$</span> <span class="fu">const</span>   <span class="dt">PCap</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a>      , mk <span class="st">&quot;\\(&quot;</span>                  <span class="op">$</span> <span class="fu">const</span>   <span class="dt">Bra</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a>      , mk <span class="st">&quot;\\\\(.)&quot;</span>              <span class="op">$</span>         <span class="dt">BS</span>    <span class="op">.</span> s2c <span class="op">.</span> x_1</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a>      , mk <span class="st">&quot;(.|\n)&quot;</span>               <span class="op">$</span>         <span class="dt">Other</span> <span class="op">.</span> s2c <span class="op">.</span> x_1</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a>      ]</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a>    x_1     <span class="ot">=</span> captureText <span class="op">$</span> <span class="dt">IsCaptureOrdinal</span> <span class="op">$</span> <span class="dt">CaptureOrdinal</span> <span class="dv">1</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a>    s2c [c] <span class="ot">=</span> c</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a>    s2c _   <span class="ot">=</span> oops <span class="st">&quot;s2c&quot;</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true"></a>    mk s f  <span class="ot">=</span> (poss <span class="fu">error</span> <span class="fu">id</span> <span class="op">$</span> makeRegexM s,<span class="dt">Just</span> <span class="op">.</span> f)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true"></a>    oops  m <span class="ot">=</span> <span class="fu">error</span> <span class="op">$</span> <span class="st">&quot;NamedCaptures.scan: &quot;</span> <span class="op">++</span> m</span></code></pre></div>
 <h2 id="parsing-captures">Parsing captures</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" title="1"><span class="ot">parse_capture ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">TH.Q</span> <span class="dt">TH.Exp</span></a>
-<a class="sourceLine" id="cb5-2" title="2">parse_capture s <span class="ot">=</span> <span class="kw">case</span> <span class="fu">all</span> <span class="fu">isDigit</span> s <span class="kw">of</span></a>
-<a class="sourceLine" id="cb5-3" title="3">  <span class="dt">True</span>  <span class="ot">-&gt;</span> [<span class="op">|</span><span class="dt">IsCaptureOrdinal</span> <span class="op">$</span> <span class="dt">CaptureOrdinal</span> <span class="op">$</span> <span class="fu">read</span> s<span class="op">|</span>]</a>
-<a class="sourceLine" id="cb5-4" title="4">  <span class="dt">False</span> <span class="ot">-&gt;</span> [<span class="op">|</span><span class="dt">IsCaptureName</span>    <span class="op">$</span> <span class="dt">CaptureName</span> <span class="op">$</span> T.pack  s<span class="op">|</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">parse_capture ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">TH.Q</span> <span class="dt">TH.Exp</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>parse_capture s <span class="ot">=</span> <span class="kw">case</span> <span class="fu">all</span> <span class="fu">isDigit</span> s <span class="kw">of</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>  <span class="dt">True</span>  <span class="ot">-&gt;</span> [<span class="op">|</span><span class="dt">IsCaptureOrdinal</span> <span class="op">$</span> <span class="dt">CaptureOrdinal</span> <span class="op">$</span> <span class="fu">read</span> s<span class="op">|</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>  <span class="dt">False</span> <span class="ot">-&gt;</span> [<span class="op">|</span><span class="dt">IsCaptureName</span>    <span class="op">$</span> <span class="dt">CaptureName</span> <span class="op">$</span> T.pack  s<span class="op">|</span>]</span></code></pre></div>
 <h2 id="formatting-token">Formatting <a href="#token">Token</a></h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" title="1"><span class="co">-- | format [Token] into an RE string</span></a>
-<a class="sourceLine" id="cb6-2" title="2"><span class="ot">formatTokens ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb6-3" title="3">formatTokens <span class="ot">=</span> formatTokens&#39; defFormatTokenREOptions</a>
-<a class="sourceLine" id="cb6-4" title="4"></a>
-<a class="sourceLine" id="cb6-5" title="5"><span class="co">-- | options for the general Token formatter below</span></a>
-<a class="sourceLine" id="cb6-6" title="6"><span class="kw">data</span> <span class="dt">FormatTokenREOptions</span> <span class="ot">=</span></a>
-<a class="sourceLine" id="cb6-7" title="7">  <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-8" title="8">    {<span class="ot"> _fto_regex_type ::</span> <span class="dt">Maybe</span> <span class="dt">RegexType</span>    <span class="co">-- ^ Posix, PCRE or indeterminate REs?</span></a>
-<a class="sourceLine" id="cb6-9" title="9">    ,<span class="ot"> _fto_min_caps   ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ remove captures where possible</span></a>
-<a class="sourceLine" id="cb6-10" title="10">    ,<span class="ot"> _fto_incl_caps  ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ include the captures in the output</span></a>
-<a class="sourceLine" id="cb6-11" title="11">    }</a>
-<a class="sourceLine" id="cb6-12" title="12">  <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
-<a class="sourceLine" id="cb6-13" title="13"></a>
-<a class="sourceLine" id="cb6-14" title="14"><span class="co">-- | the default configuration for the Token formatter</span></a>
-<a class="sourceLine" id="cb6-15" title="15"><span class="ot">defFormatTokenREOptions ::</span> <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-16" title="16">defFormatTokenREOptions <span class="ot">=</span></a>
-<a class="sourceLine" id="cb6-17" title="17">  <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-18" title="18">    { _fto_regex_type <span class="ot">=</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb6-19" title="19">    , _fto_min_caps   <span class="ot">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb6-20" title="20">    , _fto_incl_caps  <span class="ot">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb6-21" title="21">    }</a>
-<a class="sourceLine" id="cb6-22" title="22"></a>
-<a class="sourceLine" id="cb6-23" title="23"><span class="co">-- | a configuration that will preserve the parsed regular expression</span></a>
-<a class="sourceLine" id="cb6-24" title="24"><span class="co">-- in the output</span></a>
-<a class="sourceLine" id="cb6-25" title="25"><span class="ot">idFormatTokenREOptions ::</span> <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-26" title="26">idFormatTokenREOptions <span class="ot">=</span></a>
-<a class="sourceLine" id="cb6-27" title="27">  <span class="dt">FormatTokenREOptions</span></a>
-<a class="sourceLine" id="cb6-28" title="28">    { _fto_regex_type <span class="ot">=</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb6-29" title="29">    , _fto_min_caps   <span class="ot">=</span> <span class="dt">False</span></a>
-<a class="sourceLine" id="cb6-30" title="30">    , _fto_incl_caps  <span class="ot">=</span> <span class="dt">True</span></a>
-<a class="sourceLine" id="cb6-31" title="31">    }</a>
-<a class="sourceLine" id="cb6-32" title="32"></a>
-<a class="sourceLine" id="cb6-33" title="33"><span class="co">-- | the general Token formatter, generating REs according to the options</span></a>
-<a class="sourceLine" id="cb6-34" title="34"><span class="ot">formatTokens&#39; ::</span> <span class="dt">FormatTokenREOptions</span> <span class="ot">-&gt;</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb6-35" title="35">formatTokens&#39; <span class="dt">FormatTokenREOptions</span>{<span class="op">..</span>} <span class="ot">=</span> <span class="fu">foldr</span> f <span class="st">&quot;&quot;</span></a>
-<a class="sourceLine" id="cb6-36" title="36">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-37" title="37">    f tk tl <span class="ot">=</span> t_s <span class="op">++</span> tl</a>
-<a class="sourceLine" id="cb6-38" title="38">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-39" title="39">        t_s <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
-<a class="sourceLine" id="cb6-40" title="40">          <span class="dt">ECap</span>  mb <span class="ot">-&gt;</span> ecap mb</a>
-<a class="sourceLine" id="cb6-41" title="41">          <span class="dt">PGrp</span>     <span class="ot">-&gt;</span> <span class="kw">if</span> <span class="fu">maybe</span> <span class="dt">False</span> isTDFA _fto_regex_type <span class="kw">then</span> <span class="st">&quot;(&quot;</span> <span class="kw">else</span> <span class="st">&quot;(?:&quot;</span></a>
-<a class="sourceLine" id="cb6-42" title="42">          <span class="dt">PCap</span>     <span class="ot">-&gt;</span> <span class="st">&quot;(?&quot;</span></a>
-<a class="sourceLine" id="cb6-43" title="43">          <span class="dt">Bra</span>      <span class="ot">-&gt;</span> bra _fto_min_caps</a>
-<a class="sourceLine" id="cb6-44" title="44">          <span class="dt">BS</span>    c  <span class="ot">-&gt;</span> <span class="st">&quot;\\&quot;</span> <span class="op">++</span> [c]</a>
-<a class="sourceLine" id="cb6-45" title="45">          <span class="dt">Other</span> c  <span class="ot">-&gt;</span> [c]</a>
-<a class="sourceLine" id="cb6-46" title="46"></a>
-<a class="sourceLine" id="cb6-47" title="47">    ecap mb <span class="ot">=</span> <span class="kw">case</span> _fto_incl_caps <span class="kw">of</span></a>
-<a class="sourceLine" id="cb6-48" title="48">      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="kw">case</span> mb <span class="kw">of</span></a>
-<a class="sourceLine" id="cb6-49" title="49">        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="st">&quot;$(&quot;</span></a>
-<a class="sourceLine" id="cb6-50" title="50">        <span class="dt">Just</span> nm <span class="ot">-&gt;</span> <span class="st">&quot;${&quot;</span><span class="op">++</span>nm<span class="op">++</span><span class="st">&quot;}(&quot;</span></a>
-<a class="sourceLine" id="cb6-51" title="51">      <span class="dt">False</span> <span class="ot">-&gt;</span> bra _fto_min_caps</a>
-<a class="sourceLine" id="cb6-52" title="52"></a>
-<a class="sourceLine" id="cb6-53" title="53">    bra mc  <span class="ot">=</span> <span class="kw">case</span> mc <span class="op">&amp;&amp;</span> <span class="fu">maybe</span> <span class="dt">False</span> isPCRE _fto_regex_type <span class="kw">of</span></a>
-<a class="sourceLine" id="cb6-54" title="54">      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="st">&quot;(?:&quot;</span></a>
-<a class="sourceLine" id="cb6-55" title="55">      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></a></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode literate haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" title="1"><span class="co">-- this is a reference of formatTokens defFormatTokenREOptions,</span></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="co">-- used for testing the latter</span></a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="ot">formatTokens0 ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb7-4" title="4">formatTokens0 <span class="ot">=</span> <span class="fu">foldr</span> f <span class="st">&quot;&quot;</span></a>
-<a class="sourceLine" id="cb7-5" title="5">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb7-6" title="6">    f tk tl <span class="ot">=</span> t_s <span class="op">++</span> tl</a>
-<a class="sourceLine" id="cb7-7" title="7">      <span class="kw">where</span></a>
-<a class="sourceLine" id="cb7-8" title="8">        t_s <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></a>
-<a class="sourceLine" id="cb7-9" title="9">          <span class="dt">ECap</span>  _ <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></a>
-<a class="sourceLine" id="cb7-10" title="10">          <span class="dt">PGrp</span>    <span class="ot">-&gt;</span> <span class="st">&quot;(?:&quot;</span></a>
-<a class="sourceLine" id="cb7-11" title="11">          <span class="dt">PCap</span>    <span class="ot">-&gt;</span> <span class="st">&quot;(?&quot;</span></a>
-<a class="sourceLine" id="cb7-12" title="12">          <span class="dt">Bra</span>     <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></a>
-<a class="sourceLine" id="cb7-13" title="13">          <span class="dt">BS</span>    c <span class="ot">-&gt;</span> <span class="st">&quot;\\&quot;</span> <span class="op">++</span> [c]</a>
-<a class="sourceLine" id="cb7-14" title="14">          <span class="dt">Other</span> c <span class="ot">-&gt;</span> [c]</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co">-- | format [Token] into an RE string</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="ot">formatTokens ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>formatTokens <span class="ot">=</span> formatTokens&#39; defFormatTokenREOptions</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="co">-- | options for the general Token formatter below</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">FormatTokenREOptions</span> <span class="ot">=</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>  <span class="dt">FormatTokenREOptions</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>    {<span class="ot"> _fto_regex_type ::</span> <span class="dt">Maybe</span> <span class="dt">RegexType</span>    <span class="co">-- ^ Posix, PCRE or indeterminate REs?</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>    ,<span class="ot"> _fto_min_caps   ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ remove captures where possible</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>    ,<span class="ot"> _fto_incl_caps  ::</span> <span class="dt">Bool</span>               <span class="co">-- ^ include the captures in the output</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>    }</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a><span class="co">-- | the default configuration for the Token formatter</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a><span class="ot">defFormatTokenREOptions ::</span> <span class="dt">FormatTokenREOptions</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a>defFormatTokenREOptions <span class="ot">=</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a>  <span class="dt">FormatTokenREOptions</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a>    { _fto_regex_type <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a>    , _fto_min_caps   <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a>    , _fto_incl_caps  <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true"></a>    }</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true"></a><span class="co">-- | a configuration that will preserve the parsed regular expression</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true"></a><span class="co">-- in the output</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true"></a><span class="ot">idFormatTokenREOptions ::</span> <span class="dt">FormatTokenREOptions</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true"></a>idFormatTokenREOptions <span class="ot">=</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true"></a>  <span class="dt">FormatTokenREOptions</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true"></a>    { _fto_regex_type <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true"></a>    , _fto_min_caps   <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true"></a>    , _fto_incl_caps  <span class="ot">=</span> <span class="dt">True</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true"></a>    }</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true"></a><span class="co">-- | the general Token formatter, generating REs according to the options</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true"></a><span class="ot">formatTokens&#39; ::</span> <span class="dt">FormatTokenREOptions</span> <span class="ot">-&gt;</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true"></a>formatTokens&#39; <span class="dt">FormatTokenREOptions</span>{<span class="op">..</span>} <span class="ot">=</span> <span class="fu">foldr</span> f <span class="st">&quot;&quot;</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true"></a>  <span class="kw">where</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true"></a>    f tk tl <span class="ot">=</span> t_s <span class="op">++</span> tl</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true"></a>      <span class="kw">where</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true"></a>        t_s <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true"></a>          <span class="dt">ECap</span>  mb <span class="ot">-&gt;</span> ecap mb</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true"></a>          <span class="dt">PGrp</span>     <span class="ot">-&gt;</span> <span class="kw">if</span> <span class="fu">maybe</span> <span class="dt">False</span> isTDFA _fto_regex_type <span class="kw">then</span> <span class="st">&quot;(&quot;</span> <span class="kw">else</span> <span class="st">&quot;(?:&quot;</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true"></a>          <span class="dt">PCap</span>     <span class="ot">-&gt;</span> <span class="st">&quot;(?&quot;</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true"></a>          <span class="dt">Bra</span>      <span class="ot">-&gt;</span> bra _fto_min_caps</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true"></a>          <span class="dt">BS</span>    c  <span class="ot">-&gt;</span> <span class="st">&quot;\\&quot;</span> <span class="op">++</span> [c]</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true"></a>          <span class="dt">Other</span> c  <span class="ot">-&gt;</span> [c]</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true"></a></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true"></a>    ecap mb <span class="ot">=</span> <span class="kw">case</span> _fto_incl_caps <span class="kw">of</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true"></a>      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="kw">case</span> mb <span class="kw">of</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="st">&quot;$(&quot;</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true"></a>        <span class="dt">Just</span> nm <span class="ot">-&gt;</span> <span class="st">&quot;${&quot;</span><span class="op">++</span>nm<span class="op">++</span><span class="st">&quot;}(&quot;</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true"></a>      <span class="dt">False</span> <span class="ot">-&gt;</span> bra _fto_min_caps</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true"></a></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true"></a>    bra mc  <span class="ot">=</span> <span class="kw">case</span> mc <span class="op">&amp;&amp;</span> <span class="fu">maybe</span> <span class="dt">False</span> isPCRE _fto_regex_type <span class="kw">of</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true"></a>      <span class="dt">True</span>  <span class="ot">-&gt;</span> <span class="st">&quot;(?:&quot;</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true"></a>      <span class="dt">False</span> <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co">-- this is a reference of formatTokens defFormatTokenREOptions,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="co">-- used for testing the latter</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="ot">formatTokens0 ::</span> [<span class="dt">Token</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>formatTokens0 <span class="ot">=</span> <span class="fu">foldr</span> f <span class="st">&quot;&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>  <span class="kw">where</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>    f tk tl <span class="ot">=</span> t_s <span class="op">++</span> tl</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>      <span class="kw">where</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>        t_s <span class="ot">=</span> <span class="kw">case</span> tk <span class="kw">of</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>          <span class="dt">ECap</span>  _ <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>          <span class="dt">PGrp</span>    <span class="ot">-&gt;</span> <span class="st">&quot;(?:&quot;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a>          <span class="dt">PCap</span>    <span class="ot">-&gt;</span> <span class="st">&quot;(?&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a>          <span class="dt">Bra</span>     <span class="ot">-&gt;</span> <span class="st">&quot;(&quot;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a>          <span class="dt">BS</span>    c <span class="ot">-&gt;</span> <span class="st">&quot;\\&quot;</span> <span class="op">++</span> [c]</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true"></a>          <span class="dt">Other</span> c <span class="ot">-&gt;</span> [c]</span></code></pre></div>
 </div>    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
